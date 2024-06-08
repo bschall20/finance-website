@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link:hover, .dropdown-item:hover {
+    background-color: rgba(0, 255, 0, 0.712);
+    background-color: #87F569;
+  }
+
+  @media screen and (min-width: 992px) {
+    /* space out nav dropdown properly on bigger screens until navbar minimizes */
+    #basic-nav-dropdown {
+      padding-left: 2.2rem;
+      padding-right: 2.2rem;
+    }
+  }
+
+  .nav-link:last-of-type {
+    background-color: #F569DA;
+  }
+
+  #basic-nav-dropdown {
+    /* to negate above code and match background color */
+    background-color: rgb(248, 249, 250);
+  }
+
+  .nav-link:last-child:hover, #basic-nav-dropdown:hover, .dropdown-item:nth-child(-n + 5):hover {
+    background-color: #87F569;
+  }
