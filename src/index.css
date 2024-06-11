@@ -44,52 +44,101 @@
 
 
   #home {
+    /* background-color: #1C2758;
+    color: white; */
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 62.5%;
+    margin: auto;
+    gap: 2rem;
+  }
+
+  /* Home Intro */
+  .homeIntro {
     background-color: #1C2758;
     color: white;
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    flex-direction: column;
-    height: 50vh;
-    width: 62.5%;
-    margin: auto;
-  }
-
-  .homeIntro {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     gap: 10rem;
-    height: 100%;
-    width: 100%;
+    height: 50vh;
   }
-
+  /* Intro Left */
   .homeIntro h2 {
     font-size: 2.2rem;
   }
-
-  .homeIntro p {
+  .homeIntro p, .home2Info p {
     font-size: 1.1rem;
     margin: .5rem 0rem 1.2rem 0rem;
   }
-
   .homeIntro button {
     width: 50%;
   }
-
   .homeIntroL {
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin-left: 10rem;
   }
-
+  /* Intro Right */
   .lifeBlocks {
     border-bottom-left-radius: 100px;
     height: 100%;
-    /* width: 110%; */
   }
-
   .homeIntroR {
     height: 100%;
+  }
+
+  /* Home 2 Section */
+  .home2 {
+    /* background-color: #F8F9FA; */
+    background-color: #dddddd;
+    border-bottom-left-radius: 100px;
+    border-top-right-radius: 100px;
+    /* background-color: #6C757D; */
+    /* color: white; */
+    color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25vh;
+    width: 65%;
+  }
+
+  .home2Info {
+    text-align: center;
+    width: 60%;
+  }
+  .home2Info h2 {
+    font-size: 1.75rem;
+  }
+
+  /* Home Cards Section */
+  .homeCards {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 10rem;
+  }
+
+  .card {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding-top: 1rem;
+    position: relative;
+    top: 0;
+    transition: top ease 0.5s;
+  }
+
+  .cardImg {
+    height: 45px;
+    width: 45px;
+  }
+  .card:hover {
+    top: -10px;
   }
