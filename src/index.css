@@ -3,21 +3,12 @@
     padding: 0;
   }
 
-  .nav-link:hover, .dropdown-item:hover {
-    background-color: rgba(0, 255, 0, 0.712);
-    background-color: #87F569;
-  }
-
   @media screen and (min-width: 992px) {
     /* space out nav dropdown properly on bigger screens until navbar minimizes */
     #basic-nav-dropdown {
-      padding-left: 2.2rem;
+      padding-left: 1.2rem;
       padding-right: 2.2rem;
     }
-  }
-
-  .nav-link:last-of-type {
-    background-color: #F569DA;
   }
 
   #basic-nav-dropdown {
@@ -25,6 +16,80 @@
     background-color: rgb(248, 249, 250);
   }
 
-  .nav-link:last-child:hover, #basic-nav-dropdown:hover, .dropdown-item:nth-child(-n + 5):hover {
-    background-color: #87F569;
+  .dropdown-item:hover, .navbar-nav .nav-link:hover, #basic-nav-dropdown:hover, .dropdown-item:hover {
+    background-color: #1C2758;
+    color: white !important;
+  }
+  .dropdown-item:hover {
+    background-color: #1C2758 !important;
+  }
+
+  .nav-item:last-of-type {
+    /* background-color: #08AA66; */
+    background-color: #198754;
+  }
+  .signInNav:hover{
+    /* background-color: #00804A !important; */
+    background-color: #157347 !important;
+  }
+  
+
+
+  /**************************************/
+  /**************************************/
+  /****************HOME******************/
+  /**************************************/
+  /**************************************/
+
+
+
+  #home {
+    background-color: #1C2758;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    height: 50vh;
+    width: 62.5%;
+    margin: auto;
+  }
+
+  .homeIntro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10rem;
+    height: 100%;
+    width: 100%;
+  }
+
+  .homeIntro h2 {
+    font-size: 2.2rem;
+  }
+
+  .homeIntro p {
+    font-size: 1.1rem;
+    margin: .5rem 0rem 1.2rem 0rem;
+  }
+
+  .homeIntro button {
+    width: 50%;
+  }
+
+  .homeIntroL {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 10rem;
+  }
+
+  .lifeBlocks {
+    border-bottom-left-radius: 100px;
+    height: 100%;
+    /* width: 110%; */
+  }
+
+  .homeIntroR {
+    height: 100%;
   }
