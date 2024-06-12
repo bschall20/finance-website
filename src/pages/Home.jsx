@@ -85,8 +85,24 @@ function Home() {
       </div>
 
 
-      <div>
-        
+      <div className="homeOutro">
+        <div className="homeOutroL">
+          <h2>
+            Visualize All of Your <br /> Finances in One Place.
+          </h2>
+          <p>
+            Personalize all of your incomes and expenses with graphic charts to
+            better plan for your future.
+          </p>
+          <button className="btn btn-success">Sign Up Today.</button>
+        </div>
+        <div className="homeOutroR">
+          <img
+            src={LifeBlocks}
+            alt="Life Building Blocks"
+            className="lifeBlocks"
+          />
+        </div>
       </div>
 
 

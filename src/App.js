@@ -13,6 +13,7 @@ import Account from "./pages/Account.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import SignOut from "./pages/SignOut.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import Footer from "./components/Footer.jsx"
 import "./index.css";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route exact path='/signout' element={<SignOut />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
+        <Footer />
       </Router>
     </div>
   );

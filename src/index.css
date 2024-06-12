@@ -1,7 +1,13 @@
-* {
+  * {
     margin: 0;
     padding: 0;
   }
+
+  /**************************************/
+  /**************************************/
+  /****************NAV******************/
+  /**************************************/
+  /**************************************/
 
   @media screen and (min-width: 992px) {
     /* space out nav dropdown properly on bigger screens until navbar minimizes */
@@ -51,7 +57,7 @@
     flex-direction: column;
     width: 62.5%;
     margin: auto;
-    gap: 2rem;
+    gap: 5rem;
   }
 
   /* Home Intro */
@@ -120,7 +126,6 @@
     justify-content: flex-start;
     flex-direction: column;
     gap: 2rem;
-    margin-bottom: 10rem;
   }
 
   .card {
@@ -142,3 +147,56 @@
   .card:hover {
     top: -10px;
   }
+
+
+    /* Home Intro */
+    .homeOutro {
+      background-color: #1C2758;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10rem;
+      height: 50vh;
+      margin-bottom: 5rem;
+      /* width: 100vw; */
+    }
+    /* Intro Left */
+    .homeOutro h2 {
+      font-size: 2.2rem;
+    }
+    .homeOutro p, .home2Info p {
+      font-size: 1.1rem;
+      margin: .5rem 0rem 1.2rem 0rem;
+    }
+    .homeOutro button {
+      width: 50%;
+    }
+    .homeOutroL {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      margin-left: 10rem;
+    }
+    /* Intro Right */
+    .lifeBlocks {
+      border-bottom-left-radius: 100px;
+      height: 100%;
+    }
+    .homeOutroR {
+      height: 100%;
+    }
+
+
+
+  /**************************************/
+  /**************************************/
+  /***************FOOTER*****************/
+  /**************************************/
+  /**************************************/
+
+#footer {
+  background-color: #1C2758;
+  height: 20vh;
+}
+
+
