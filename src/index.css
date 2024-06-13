@@ -50,8 +50,6 @@
 
 
   #home {
-    /* background-color: #1C2758;
-    color: white; */
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -151,39 +149,42 @@
 
     /* Home Intro */
     .homeOutro {
-      background-color: #1C2758;
+      background-color: #269db2;
       color: white;
       display: flex;
       align-items: center;
-      gap: 10rem;
+      justify-content: center;
+      /* gap: 10rem; */
       height: 50vh;
-      margin-bottom: 5rem;
-      /* width: 100vw; */
+      /* margin-bottom: 5rem; */
+      width: 100vw;
     }
-    /* Intro Left */
-    .homeOutro h2 {
+    .homeOutroContent{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10rem;
+      height: 100%;
+      width: 62%;
+    }
+    /* Outro Right */
+    .homeOutroContent h2 {
       font-size: 2.2rem;
     }
-    .homeOutro p, .home2Info p {
+    .homeOutroContent p{
       font-size: 1.1rem;
-      margin: .5rem 0rem 1.2rem 0rem;
+      margin: .5rem 0rem 0rem 0rem;
     }
-    .homeOutro button {
-      width: 50%;
-    }
-    .homeOutroL {
+    .homeOutroR {
       display: flex;
       justify-content: center;
       flex-direction: column;
-      margin-left: 10rem;
+      margin-right: 10rem;
     }
-    /* Intro Right */
-    .lifeBlocks {
-      border-bottom-left-radius: 100px;
+    /* Outro Left */
+    .relaxImg, .homeOutroL {
       height: 100%;
-    }
-    .homeOutroR {
-      height: 100%;
+      border-bottom-right-radius: 100px;
     }
 
 
@@ -197,6 +198,65 @@
 #footer {
   background-color: #1C2758;
   height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* gap: 8rem; */
 }
+
+.footerContent {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+
+.footerBoxL, .footerBoxR {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.footerBoxL {
+  border-right: 1px solid lightgray;
+  padding-right: 5rem;
+}
+.footerBoxR {
+  /* border-left: 1px solid lightgray; */
+  /* padding-left: 2rem; */
+  flex-direction:row
+}
+.connectFooter, .navigateFooter {
+  color: white;
+  font-size: 1.5rem;
+}
+.connectLogo {
+  height: 25px;
+  width: 25px;
+  margin: 0 1rem;
+  color: white;
+  position: relative;
+  top: 0;
+  transition: top ease 0.5s;
+}
+.connectLogo:hover {
+  top: -10px;
+  color: lightgray;
+}
+.copyrightFooter, .footerBrand a, .footerBoxR p a{
+  font-size: 1rem;
+  color: white;
+  text-decoration: none;
+}
+.footerBoxR p {
+  margin: 0 0 0 2rem;
+}
+.footerBrand a:hover, .footerBoxR p a:hover {
+  color: lightgray;
+  text-decoration: underline;
+}
+
+
 
 

@@ -1,5 +1,6 @@
 import React from "react";
 import LifeBlocks from "../images/life-blocks.jpg";
+import Relax from "../images/relax.jpg"
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import { FaHandHoldingDollar } from "react-icons/fa6";
@@ -84,28 +85,25 @@ function Home() {
         </CardGroup>
       </div>
 
-
       <div className="homeOutro">
-        <div className="homeOutroL">
-          <h2>
-            Visualize All of Your <br /> Finances in One Place.
-          </h2>
-          <p>
-            Personalize all of your incomes and expenses with graphic charts to
-            better plan for your future.
-          </p>
-          <button className="btn btn-success">Sign Up Today.</button>
-        </div>
-        <div className="homeOutroR">
-          <img
-            src={LifeBlocks}
-            alt="Life Building Blocks"
-            className="lifeBlocks"
-          />
+        <div className="homeOutroContent">
+          <div className="homeOutroL">
+            <img
+              src={Relax}
+              alt="Girl leaning against wall with headphones in."
+              className="relaxImg"
+            />
+          </div>
+          <div className="homeOutroR">
+            <h2>
+              Kickback and Relax.
+            </h2>
+            <p>
+              Relax and remain stress-free on the state of your financials with our advanced planning for your future.
+            </p>
+          </div>
         </div>
       </div>
-
-
     </div>
   );
 }
