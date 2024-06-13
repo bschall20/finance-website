@@ -51,11 +51,25 @@
 
   #home {
     display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    background-color: rgba(255, 255, 255, 1);
+    opacity: 1;
+    background-image: radial-gradient(circle at center center, rgba(248,249,250,1), rgba(255, 255, 255, 1)), repeating-radial-gradient(circle at center center, rgba(248,249,250,1), rgba(248,249,250,1), 40px, transparent 80px, transparent 40px);
+    background-blend-mode: multiply;
+    /* background-color: rgba(67, 103, 140, 1);
+opacity: 1;
+background-image: radial-gradient(circle at center center, rgba(248,249,250,1), rgba(67, 103, 140, 1)), repeating-radial-gradient(circle at center center, rgba(248,249,250,1), rgba(248,249,250,1), 40px, transparent 80px, transparent 40px);
+background-blend-mode: multiply; */
+}
+
+  .homeSlim {
+    display: flex;
     align-items: center;
     flex-direction: column;
-    width: 62.5%;
     margin: auto;
     gap: 5rem;
+    width: 62.5%;
   }
 
   /* Home Intro */
@@ -157,7 +171,8 @@
       /* gap: 10rem; */
       height: 50vh;
       /* margin-bottom: 5rem; */
-      width: 100vw;
+      /* width: 100vw; */
+      width: 100%;
     }
     .homeOutroContent{
       display: flex;
@@ -165,7 +180,7 @@
       justify-content: center;
       gap: 10rem;
       height: 100%;
-      width: 62%;
+      width: 62.5%;
     }
     /* Outro Right */
     .homeOutroContent h2 {
@@ -186,6 +201,45 @@
       height: 100%;
       border-bottom-right-radius: 100px;
     }
+
+
+  /**************************************/
+  /**************************************/
+  /****************ABOUT*****************/
+  /**************************************/
+  /**************************************/
+    #about, .aboutIntro, .aboutInfo1 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #about {
+      flex-direction: column;
+      gap: 2rem;
+    }
+   .aboutIntro {
+    width: 100%;
+    background: linear-gradient(to right, #1C2758, transparent 90%), url('./images/about.jpg');
+    background-size: cover;
+    color: #1C2758;
+    font-size: 3rem;
+    gap: 10rem;
+    height: 50vh;
+    }
+   /* .aboutIntro h2 {
+    font-size: 3rem;
+    color: #1C2758;
+   } */
+   .aboutInfo1 {
+    flex-direction: column;
+    text-align: center;
+    /* height: 20vh; */
+    width: 62.5%;
+   }
+
+
+
+
 
 
 
@@ -215,18 +269,13 @@
 .footerBoxL, .footerBoxR {
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start;
-  flex-direction: column;
 }
 .footerBoxL {
+  flex-direction: column;
   border-right: 1px solid lightgray;
   padding-right: 5rem;
 }
-.footerBoxR {
-  /* border-left: 1px solid lightgray; */
-  /* padding-left: 2rem; */
-  flex-direction:row
-}
+
 .connectFooter, .navigateFooter {
   color: white;
   font-size: 1.5rem;

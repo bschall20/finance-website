@@ -14,7 +14,7 @@ function Footer() {
         <div id="footer">
             <div className="footerContent">
             <div className="footerBoxL">
-                <p className="connectFooter">Connect With Us: 
+                <p className="connectFooter pt-3">Connect With Us: 
                     <a href="https://www.facebook.com" target="_blank" rel="noreferrer"><FaSquareFacebook className="connectLogo ms-2 me-1 mb-1"/></a>
                     <a href="https://www.x.com" target="_blank" rel="noreferrer"><FaSquareXTwitter className="connectLogo mx-1 mb-1"/></a>
                     <a href="https://www.instagram.com" target="_blank" rel="noreferrer"><FaSquareInstagram className="connectLogo mx-1 mb-1"/></a>
