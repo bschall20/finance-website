@@ -8,6 +8,11 @@
   /****************NAV******************/
   /**************************************/
   /**************************************/
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   @media screen and (min-width: 992px) {
     /* space out nav dropdown properly on bigger screens until navbar minimizes */
@@ -165,9 +170,7 @@ background-blend-mode: multiply; */
     .homeOutro {
       background-color: #269db2;
       color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+
       /* gap: 10rem; */
       height: 50vh;
       /* margin-bottom: 5rem; */
@@ -175,9 +178,6 @@ background-blend-mode: multiply; */
       width: 100%;
     }
     .homeOutroContent{
-      display: flex;
-      align-items: center;
-      justify-content: center;
       gap: 10rem;
       height: 100%;
       width: 62.5%;
@@ -205,35 +205,114 @@ background-blend-mode: multiply; */
 
   /**************************************/
   /**************************************/
+  /***************CONTACT****************/
+  /**************************************/
+  /**************************************/
+  .pageIntro {
+    color: white;
+    /* font-size: 15rem; */
+    /* gap: 10rem; */
+    height: 50vh;
+    width: 100%;
+  }
+
+  .pageIntro h2 {
+    font-size: 3rem;
+  }
+
+  #contact {
+    flex-direction: column;
+    /* gap: 2rem; */
+  }
+  .contactIntro {
+    background: linear-gradient(to left, #1C2758, transparent 90%), url('./images/contact.jpg');
+    background-size: cover;
+  }
+
+  .contactContent {
+    flex-direction: row;
+    gap: 3rem;
+    margin: 5rem auto;
+    width: 62.5%;
+  }
+
+  .contactInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 5rem;
+    width: 100%;
+  }
+
+  .contactForm {
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    margin-right: 5rem;
+    padding: 2rem;
+    width: 100%;
+  }
+
+
+  /**************************************/
+  /**************************************/
   /****************ABOUT*****************/
   /**************************************/
   /**************************************/
-    #about, .aboutIntro, .aboutInfo1 {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
     #about {
       flex-direction: column;
-      gap: 2rem;
+      /* gap: 2rem; */
     }
    .aboutIntro {
-    width: 100%;
     background: linear-gradient(to right, #1C2758, transparent 90%), url('./images/about.jpg');
     background-size: cover;
-    color: #1C2758;
-    font-size: 3rem;
-    gap: 10rem;
-    height: 50vh;
     }
-   /* .aboutIntro h2 {
-    font-size: 3rem;
-    color: #1C2758;
-   } */
    .aboutInfo1 {
-    flex-direction: column;
+    flex-direction: row;
     text-align: center;
-    /* height: 20vh; */
+    width: 62.5%;
+   }
+   .aboutImg {
+    border: 15px solid #dddddd;
+    border-radius: 15px;
+    /* position: relative;
+    top: 0;
+    right: 0; */
+    transition: all ease 1s;
+   }
+   .aboutImg:hover {
+    /* right: -20px;
+    top: -20px; */
+    border-color: #1C2758;
+   }
+   .aboutInfo1L, .aboutInfo1R {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: start;
+    width: 100%;
+   }
+   .missionStatement {
+    background-color: #0DCAF0;
+    border: 1px solid gray;
+    border-radius: 15px;
+    padding: 1.2rem;
+    position: relative;
+    top: 0;
+    transition: top ease 0.5s;
+   }
+   .missionStatement:hover {
+    top: -20px;
+   }
+
+   .aboutInfo2 {
+    background-color: #1C2758;
+    border-radius: 15px;
+    justify-content: space-evenly;
+    color: white;
+    text-align: center;
+    width: 62.5%;
+   }
+
+   .aboutInfo3 {
+    gap: 5rem;
     width: 62.5%;
    }
 

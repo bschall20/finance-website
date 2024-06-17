@@ -88,8 +88,8 @@ function Home() {
         </div>
       </div>
 
-      <div className="homeOutro">
-        <div className="homeOutroContent">
+      <div className="homeOutro center">
+        <div className="homeOutroContent center">
           <div className="homeOutroL">
             <img
               src={Relax}
