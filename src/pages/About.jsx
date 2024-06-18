@@ -105,14 +105,14 @@ function About() {
       <div className="center aboutInfo3 mb-5">
         <div>
           <p style={{ color: "#1C2758" }}>WHY CHOOSE BUILD MY FINANCE?</p>
-          <h3 className="mb-3">Easy Access to Top Financial Products</h3>
+          <h3 className="mb-3">Easy Access to Your Financials</h3>
           <p>
-            We have established strong partnerships with leading financial
-            companies & Banks to ensure you have access to the best loans,
-            credit cards, insurance plans, and more. We work tirelessly to find
-            the most competitive offers for our clients.
+            We have established detailed graphics mixed with your financial numbers 
+            to aid in finding your spending patterns and assist you with whatever goals
+            you may have. From you, your family, or your business, we're here to assist you
+            and your future.
           </p>
-          <Button variant="info">Let's Get Started</Button>
+          <a href="/contact"><Button variant="info">Let's Get Started</Button></a>
         </div>
         <Row xs={1} md={2} className="g-4">
           <Col>
