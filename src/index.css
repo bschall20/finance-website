@@ -282,6 +282,7 @@ background-blend-mode: multiply; */
     /* right: -20px;
     top: -20px; */
     border-color: #1C2758;
+    color: #000;
    }
    .aboutInfo1L, .aboutInfo1R {
     flex-direction: column;
@@ -296,9 +297,10 @@ background-blend-mode: multiply; */
     padding: 1.2rem;
     position: relative;
     top: 0;
-    transition: top ease 0.5s;
+    transition: all ease 0.5s;
    }
    .missionStatement:hover {
+    background-color: #3ADAFA;
     top: -20px;
    }
 

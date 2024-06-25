@@ -144,7 +144,7 @@ function About() {
             </Card>
           </Col>
           <Col>
-            <Card className="my-4">
+            <Card className="my-4" style={{backgroundColor: "#0DCAF0"}}>
               <FaPuzzlePiece
                 variant="top"
                 style={{ width: "35px", height: "35px" }}
