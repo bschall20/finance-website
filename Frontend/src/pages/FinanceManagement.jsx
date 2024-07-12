@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PieChart from "../components/PieChart";
+//import sql from "../db.js"
 
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -8,6 +9,26 @@ import Row from "react-bootstrap/Row";
 import InputGroup from "react-bootstrap/InputGroup";
 
 function FinanceManagement() {
+
+
+  const getData = async () => {
+    try { 
+      const response = await fetch(`http://localhost:8000/expense`);
+      const expenseJSON = await response.json();
+      console.log(expenseJSON)
+      // console.log(expenseJSON[0].title);
+      // console.log(parseInt(expenseJSON[0].amount));
+      // console.log(expenseJSON[0].expense_type);
+      // return (expenseJSON)
+      setExpense(expenseJSON);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // useEffect(() => getData, [])
+
+  const [expense, setExpense] = useState([])
   const [mortgageRent, setMortgageRent] = useState(0);
   const [utilities, setUtilities] = useState(0);
   const [insurance, setInsurance] = useState(0);
@@ -26,6 +47,7 @@ function FinanceManagement() {
   ]);
 
   useEffect(() => {
+    getData();
     setSeries([
       mortgageRent,
       utilities,
@@ -35,13 +57,31 @@ function FinanceManagement() {
       food,
       other,
     ]);
-  }, [mortgageRent, utilities, insurance, loans, transportation, food, other]);
+  }, [mortgageRent, utilities, insurance, loans, transportation, food, other, ]);
+
+  // useEffect(() => {
+  //   setExpense(getData());
+  //   setSeries([
+  //     mortgageRent,
+  //     utilities,
+  //     insurance,
+  //     loans,
+  //     transportation,
+  //     food,
+  //     other,
+  //   ]);
+  // }, [mortgageRent, utilities, insurance, loans, transportation, food, other]);
 
 
   function HandleSubmit(e) {
-    let title = e.target[0].value;
-    let amount = parseInt(e.target[1].value);
-    let type = e.target[2].value;
+    // let title = e.target[0].value;
+    // let amount = parseInt(e.target[1].value);
+    // let type = e.target[2].value;
+
+    let title = expense[0].title;
+    let amount = parseInt(expense[0].amount);
+    let type = expense[0].expense_type;
+
     console.log(`Title: ${title}`);
     console.log(`Title type: ${typeof title}`);
     console.log(amount);
@@ -64,10 +104,11 @@ function FinanceManagement() {
     } else if (type === "other") {
       setOther(other + amount);
     } else {
-      alert("Please use a proper type.");
+      alert("Please select a proper type.");
     }
+    
 
-    e.preventDefault();
+    e.preventDefault();       // REMOVE ONCE DATA SUBMITS AND READS FROM A DB? REFRESHES PAGE WHICH IS FINE ONCE DATA SAVES.
   }
 
   return (
@@ -81,7 +122,7 @@ function FinanceManagement() {
           <Col>
             <Form.Group as={Col}>
               <Form.Label>Title</Form.Label>
-              <Form.Control type="" placeholder="Enter Expense Title" />
+              <Form.Control type="" placeholder="Enter Expense Title" required/>
             </Form.Group>
           </Col>
 
@@ -90,7 +131,7 @@ function FinanceManagement() {
             <InputGroup className="mb-3">
               <InputGroup.Text>$</InputGroup.Text>
               {/* <Form.Control aria-label="Amount spent" /> */}
-              <Form.Control aria-label="Amount (to the nearest dollar)" />
+              <Form.Control aria-label="Amount (to the nearest dollar)" required/>
               <InputGroup.Text>.00</InputGroup.Text>
             </InputGroup>
           </Col>
