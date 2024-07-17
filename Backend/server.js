@@ -1,15 +1,14 @@
 const PORT = process.env.PORT ?? 8000;
 const express = require('express');
+//const { v4: uuidv4 } = require('uuid');
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
 const pool = require('./db');
 require('dotenv').config();
 
-// app.get('/', (req, res) => {
-//     res.send('hello Brennan')
-// })
 
-app.use(cors())
+app.use(cors());
+app.use(express.json());
 
 app.get('/expense', async (req, res) => {
     try {
@@ -18,6 +17,20 @@ app.get('/expense', async (req, res) => {
     } catch (err) {
         console.log(err);
         // console.error(error);
+    }
+})
+
+
+app.post('/expense', (req, res) => {
+    const {title, amount, expense_type } = req.body;
+    console.log(`info from req. body: ${title}, ${amount}, ${expense_type}`)
+    //const id = uuidv4();
+    try {
+        pool.query('INSERT INTO user_expense(title, amount, expense_type) VALUES($1, $2, $3)',
+            [title, amount, expense_type]
+        )
+    } catch (err) {
+        console.log(err);
     }
 })
 
