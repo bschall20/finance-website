@@ -8,22 +8,9 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import InputGroup from "react-bootstrap/InputGroup";
 
+import Table from "react-bootstrap/Table";
+
 function FinanceManagement() {
-  // const [title, setTitle] = useState("howdy test");
-  // const [amount, setAmount] = useState(0);
-  // const [expenseType, setExpenseType] = useState("fake expense type");
-  // const [data, setData] = useState({
-  //   dataTitle: title,
-  //   dataAmount: amount,
-  //   dataType: expenseType
-  // })
-
-  const [data, setData] = useState({
-    title: "",
-    amount: "",
-    expense_type: "",
-  });
-
   const [expense, setExpense] = useState([]);
   let mortgage_rent = 0;
   let utilities = 0;
@@ -32,24 +19,7 @@ function FinanceManagement() {
   let transportation = 0;
   let food = 0;
   let other = 0;
-  // let series = [];
 
-  // const [mortgageRent, setMortgageRent] = useState(1);
-  // const [utilities, setUtilities] = useState(1);
-  // const [insurance, setInsurance] = useState(1);
-  // const [loans, setLoans] = useState(1);
-  // const [transportation, setTransportation] = useState(1);
-  // const [food, setFood] = useState(1);
-  // const [other, setOther] = useState(1);
-  // const [series, setSeries] = useState([
-  //   mortgage_rent,
-  //   utilities,
-  //   insurance,
-  //   loans,
-  //   transportation,
-  //   food,
-  //   other,
-  // ]);
 
   const getData = async () => {
     try {
@@ -57,25 +27,21 @@ function FinanceManagement() {
       const expenseJSON = await response.json();
       console.log("expense JSON:");
       console.log(expenseJSON);
-      // console.log(expenseJSON[0].title);
-      // console.log(parseInt(expenseJSON[0].amount));
-      // console.log(expenseJSON[0].expense_type);
-      // return (expenseJSON)
       setExpense(expenseJSON);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const postData = async () => {
+  const postData = async (formTitle, formAmount, formType) => {
     try {
       const response = await fetch("http://localhost:8000/expense", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: data.title,
-          amount: parseFloat(data.amount),
-          expense_type: data.expense_type,
+          title: formTitle,
+          amount: parseFloat(formAmount),
+          expense_type: formType,
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -84,149 +50,84 @@ function FinanceManagement() {
     }
   };
 
+  const editData = async(e) => {
+    e.preventDefault();    
+    try {
+      const response = await fetch(`http://localhost:8000/expense`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify()                                  ///////////////////EDIT
+      });
+      console.log(`edit has been clicked for ${e.title}`);
+      if (response.status === 200){
+        //show data edit screen again and call data as it failed to come back
+      }
+    } catch (err){
+      console.log(err);
+    }
+
+  };
+
+  const deleteData = async(e) => {
+    console.log("delete has been clicked")
+  };
+
+
+  // function editData(title, amount, expense_type) {
+  //   console.log(`Clicked edit for ${title}`)
+  // }
+
+  // function deleteData(title, amount, expense_type) {
+  //   console.log(`Clicked delete for ${title}`)
+  // }
+
+
   useEffect(() => {
-    postData();
     getData();
-
-    // setTitle();
-    // setAmount();
-    // setExpenseType();
-    // setData(title, amount, expenseType);
-    // console.log(`This is current data title: ${data.dataTitle}`)
-    // console.log(`This is current data amount: ${data.dataAmount}`)
-    // console.log(`This is current data type: ${data.dataType}`)
-    // setSeries([
-    //   mortgage_rent,
-    //   utilities,
-    //   insurance,
-    //   loans,
-    //   transportation,
-    //   food,
-    //   other,
-    // ]);
-  }, [
-    // mortgage_rent,
-    // utilities,
-    // insurance,
-    // loans,
-    // transportation,
-    // food,
-    // other,
-    data,
-  ]);
-
-  // useEffect(() => {
-  //   setExpense(getData());
-  //   setSeries([
-  //     mortgageRent,
-  //     utilities,
-  //     insurance,
-  //     loans,
-  //     transportation,
-  //     food,
-  //     other,
-  //   ]);
-  // }, [mortgageRent, utilities, insurance, loans, transportation, food, other]);
+  }, []);
 
   function HandleSubmit(e) {
-    // setTitle(e.target[0].value);
-    // setAmount(parseInt(e.target[1].value));
-    // setExpenseType(e.target[2].value);
-
-    // console.log(`HERE IS THE DATA: ${data}`)
-
-    // console.log(`e.target: ${e.target}`)
-
-    // let title = expense[0].title;
-    // let amount = parseInt(expense[0].amount);
-    // let type = expense[0].expense_type;
-
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
     let formType = e.target[2].value;
 
-    setData({
-      title: formTitle,
-      amount: formAmount,
-      expense_type: formType,
-    });
-
-    // console.log(`HERE IS THE DATA: ${data}`)
-
-    console.log(`Title: ${formTitle}`);
-    console.log(`Title type: ${typeof formTitle}`);
-    console.log(formAmount);
-    console.log(`Amount type: ${typeof formAmount}`);
-    console.log(formType);
-    console.log(`Type type: ${typeof formType}`);
-
-    // if (formType === "mortgage_rent") {
-    //   setMortgageRent(mortgageRent + formAmount);
-    // } else if (formType === "utilities") {
-    //   setUtilities(utilities + formAmount);
-    // } else if (formType === "insurance") {
-    //   setInsurance(insurance + formAmount);
-    // } else if (formType === "loans") {
-    //   setLoans(loans + formAmount);
-    // } else if (formType === "transportation") {
-    //   setTransportation(transportation + formAmount);
-    // } else if (formType === "food") {
-    //   setFood(food + formAmount);
-    // } else if (formType === "other") {
-    //   setOther(other + formAmount);
-    // } else {
-    //   alert("Please select a proper type.");
-    // }
-
-    postData();
+    if (formType === "TypeOfExpense"){
+      return null
+    }
+    else{ postData(formTitle, formAmount, formType); }
     //e.preventDefault(); // REMOVE ONCE DATA SUBMITS AND READS FROM A DB? REFRESHES PAGE WHICH IS FINE ONCE DATA SAVES.
   }
 
   expense.map((dataObj) => {
-    let formType = dataObj.expense_type;
+    // let formTitle = dataObj.title;
     let formAmount = dataObj.amount;
+    let formType = dataObj.expense_type;
     //key = {index}
-    // console.log(`THIS IS EXPENSE TYPE FROM EXPENSE.MAP: ${formType}`);
-    // console.log(`THIS IS AMOUNT FROM EXPENSE.MAP: ${formAmount}`);
-    // console.log(`Mortgage/Rent: ${mortgage_rent}`);
-    // console.log(`Utilities: ${utilities}`);
-    // console.log(`Insurance: ${insurance}`);
-    // console.log(`Loans: ${loans}`);
-    // console.log(`Transportation: ${transportation}`);
-    // console.log(`Food: ${food}`);
-    // console.log(`Other: ${other}`);
 
-    if (formType === "mortgage_rent") {
+    if (formType === "Mortgage/Rent") {
       return (mortgage_rent += formAmount);
-    } else if (formType === "utilities") {
+    } else if (formType === "Utilities") {
       return (utilities += formAmount);
-    } else if (formType === "insurance") {
+    } else if (formType === "Insurance") {
       return (insurance += formAmount);
-    } else if (formType === "loans") {
+    } else if (formType === "Loans") {
       return (loans += formAmount);
-    } else if (formType === "transportation") {
+    } else if (formType === "Transportation") {
       return (transportation += formAmount);
-    } else if (formType === "food") {
+    } else if (formType === "Food") {
       return (food += formAmount);
-    } else if (formType === "other") {
+    } else if (formType === "Other") {
       return (other += formAmount);
     } else {
-      console.log("null form entry");
+      return console.log("null form entry");
     }
-
-    // else {
-    //   alert("Please select a proper type.");
-    // }
   });
 
-  // console.log("This is series:");
-  // console.log(series);
-
   return (
-    <div>
+    <div id="financeManagement">
       <Form
-        style={{ width: "50%" }}
-        className="mx-auto mt-5"
+        // style={{ width: "50%" }}
+        // className="mx-auto mt-5"
         onSubmit={HandleSubmit}
       >
         <Row className="mb-3">
@@ -262,26 +163,25 @@ function FinanceManagement() {
           className="mb-3"
           name="expense_type"
         >
-          <option>Type of Expense</option>
-          <option value="mortgage_rent">Mortgage/Rent</option>
-          <option value="utilities">Utilities</option>
-          <option value="insurance">Insurance</option>
-          <option value="loans">Loans</option>
-          <option value="transportation">Transportation</option>
-          <option value="food">Food</option>
-          <option value="other">Other</option>
+          <option value="TypeOfExpense">Type of Expense</option>
+          <option value="Mortgage/Rent">Mortgage/Rent</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Insurance">Insurance</option>
+          <option value="Loans">Loans</option>
+          <option value="Transportation">Transportation</option>
+          <option value="Food">Food</option>
+          <option value="Other">Other</option>
         </Form.Select>
 
         <Form.Group as={Row} className="mb-3">
           <Col sm={{ span: 10 }}>
-            <Button type="submit" variant="success">
+            <Button type="submit" variant="success" onClick={postData}>
               Submit Expense
             </Button>
           </Col>
         </Form.Group>
       </Form>
 
-      <p>This is the Finance Management page.</p>
       <div className="chart">
         <PieChart
           series={[
@@ -295,6 +195,42 @@ function FinanceManagement() {
           ]}
         />
       </div>
+
+      <Table
+        striped
+        bordered
+        hover
+        style={{ margin: "3.5rem auto" }}
+      >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Expense Type</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {expense
+            ? expense.map((dataObj, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{dataObj.title}</td>
+                    <td>{dataObj.amount}</td>
+                    <td>{dataObj.expense_type}</td>
+                    {/* <td className="tableEdit" style={{paddingLeft: '0px', paddingRight: '0px'}} onClick={editData(dataObj.title, dataObj.amount, dataObj.expense_type)}>edit</td>
+                    <td className="tableDelete" style={{paddingLeft: '0px', paddingRight: '0px'}} onClick={deleteData(dataObj.title, dataObj.amount, dataObj.expense_type)}>X</td> */}
+                    <td className="tableEdit" style={{paddingLeft: '0px', paddingRight: '0px'}} onClick={editData}>edit</td>
+                    <td className="tableDelete" style={{paddingLeft: '0px', paddingRight: '0px'}} onClick={deleteData}>X</td>
+                  </tr>
+                );
+              })
+            : null}
+        </tbody>
+      </Table>
     </div>
   );
 }

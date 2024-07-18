@@ -10,6 +10,7 @@ require('dotenv').config();
 app.use(cors());
 app.use(express.json());
 
+// Get all user expenses data
 app.get('/expense', async (req, res) => {
     try {
         const expense = await pool.query('SELECT * FROM user_expense');
@@ -21,6 +22,7 @@ app.get('/expense', async (req, res) => {
 })
 
 
+// Post new expense to database
 app.post('/expense', (req, res) => {
     const {title, amount, expense_type } = req.body;
     console.log(`info from req. body: ${title}, ${amount}, ${expense_type}`)
@@ -34,6 +36,19 @@ app.post('/expense', (req, res) => {
     }
 })
 
+
+// Edit a users expense in database
+app.put('/expense/:id', async (req, res) => {
+    // const { id } = req.params;
+    const {id, title, amount, expense_type} = req.body;
+    try {
+        const editExpense = await pool.query('UPDATE user_expense SET title = $2, amount = $3, expense_type = $4 WHERE id = $1',
+            [id, title, amount, expense_type])
+        res.json(editExpense)
+    } catch (err) {
+        console.log(err)
+    }
+})
 
 
 app.listen(PORT, ()=> console.log(`Server running on PORT ${PORT}`))

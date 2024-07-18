@@ -205,6 +205,29 @@ background-blend-mode: multiply; */
 
   /**************************************/
   /**************************************/
+  /*********FINANCE MANAGEMENT***********/
+  /**************************************/
+  /**************************************/  
+    #financeManagement{
+      margin: 3.5rem auto;
+      width: 65%;
+    }
+
+    .tableEdit, .tableDelete{
+      text-align: center;
+    }
+    .tableEdit:hover, .tableDelete:hover {
+      background-color: #157347;
+      color: white;
+      cursor: pointer;
+    }
+    .tableDelete:hover {
+      background-color: #D60027;
+    }
+
+
+  /**************************************/
+  /**************************************/
   /***************CONTACT****************/
   /**************************************/
   /**************************************/
@@ -317,9 +340,7 @@ background-blend-mode: multiply; */
     gap: 5rem;
     width: 62.5%;
    }
-
-
-
+   
 
 
 
