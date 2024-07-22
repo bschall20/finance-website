@@ -38,13 +38,26 @@ app.post('/expense', (req, res) => {
 
 
 // Edit a users expense in database
-app.put('/expense/:id', async (req, res) => {
+app.put('/expense', async (req, res) => {
     // const { id } = req.params;
     const {id, title, amount, expense_type} = req.body;
     try {
         const editExpense = await pool.query('UPDATE user_expense SET title = $2, amount = $3, expense_type = $4 WHERE id = $1',
             [id, title, amount, expense_type])
         res.json(editExpense)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+
+// DELETE a users expense in database
+app.delete('/expense', async (req, res) => {
+    const {id} = req.body;
+    try {
+        const deleteExpense = await pool.query('DELETE FROM user_expense WHERE id = $1',
+            [id])
+        res.json(deleteExpense)
     } catch (err) {
         console.log(err)
     }
