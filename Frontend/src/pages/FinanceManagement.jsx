@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import EditModal from "../components/EditModal"
+import EditModal from "../components/EditModal";
 import PieChart from "../components/PieChart";
 //import sql from "../db.js"
 
@@ -14,6 +14,8 @@ import Table from "react-bootstrap/Table";
 function FinanceManagement() {
   const [modalShow, setModalShow] = useState(false);
   const [expense, setExpense] = useState([]);
+  const [modalData, setModalData] = useState({});
+  const [modalNum, setModalNum] = useState(0);
   let mortgage_rent = 0;
   let utilities = 0;
   let insurance = 0;
@@ -21,7 +23,6 @@ function FinanceManagement() {
   let transportation = 0;
   let food = 0;
   let other = 0;
-
 
   const getData = async () => {
     try {
@@ -52,85 +53,75 @@ function FinanceManagement() {
     }
   };
 
-  const editData = async(e, formTitle, formAmount, formType) => {
-    // e.preventDefault();    
-    try {
-      const response = await fetch(`http://localhost:8000/expense`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: formTitle,
-          amount: parseFloat(formAmount),
-          expense_type: formType,
-        }),                               ///////////////////EDIT
-      });
-      console.log(`edit has been clicked for ${response.title}`);
-      if (response.status === 200){
-        console.log("reponse status is 200")
-        //Insert show modal to false so modal goes away
-        getData();
-      }
-    } catch (err){
-      console.log(err);
-    }
+  // const editData = async(e, formTitle, formAmount, formType) => {
+  //   // e.preventDefault();
+  //   try {
+  //     const response = await fetch(`http://localhost:8000/expense`, {
+  //       method: "PUT",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         title: formTitle,
+  //         amount: parseFloat(formAmount),
+  //         expense_type: formType,
+  //       }),                               ///////////////////EDIT
+  //     });
+  //     console.log(`edit has been clicked for ${response.title}`);
+  //     if (response.status === 200){
+  //       console.log("reponse status is 200")
+  //       //Insert show modal to false so modal goes away
+  //       getData();
+  //     }
+  //   } catch (err){
+  //     console.log(err);
+  //   }
+  // };
 
-  };
-
-  const deleteData = async(dataID) => {
+  const deleteData = async (dataID) => {
     //  MAKE THIS CALL A MODAL TO VERIFY DELETE. DON'T JUST DELETE ON CLICK.
     try {
       const response = await fetch(`http://localhost:8000/expense`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id: dataID
+          id: dataID,
         }),
       });
-      if (response.status === 200){
+      if (response.status === 200) {
         getData();
       }
       // console.log(`delete has been clicked where id = `)
       // console.log(dataID)
-    } catch (err){
+    } catch (err) {
       console.log(err);
     }
   };
 
-
-
-
-
   useEffect(() => {
     getData();
-  }, [ ]);
+  }, []);
 
-
-  function editExpense(formID, formTitle, formAmount, formType) {
-    console.log(`edit has been clicked for id: `);
-    console.log(formID)
-    setModalShow(true);
-
-    return <EditModal 
-      show={modalShow}
-      onHide={() => setModalShow(false)}
-      id = {formID}
-      title = {formTitle}
-      amount = {formAmount}
-      expenseType = {formType}
-    />
-  }
-
-
+  // const editExpenses = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:8000/expense`);
+  //     const expenseJSON = await response.json();
+  //     console.log("expense JSON:");
+  //     console.log(expenseJSON);
+  //     setExpense(expenseJSON);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   function HandleSubmit(e) {
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
     let formType = e.target[2].value;
 
-    if (formType === "TypeOfExpense"){
-      return null
+    if (formType === "TypeOfExpense") {
+      return null;
+    } else {
+      postData(formTitle, formAmount, formType);
     }
-    else{ postData(formTitle, formAmount, formType); }
     //e.preventDefault(); // REMOVE ONCE DATA SUBMITS AND READS FROM A DB? REFRESHES PAGE WHICH IS FINE ONCE DATA SAVES.
   }
 
@@ -232,12 +223,7 @@ function FinanceManagement() {
         />
       </div>
 
-      <Table
-        striped
-        bordered
-        hover
-        style={{ margin: "3.5rem auto" }}
-      >
+      <Table striped bordered hover style={{ margin: "3.5rem auto" }}>
         <thead>
           <tr>
             <th>#</th>
@@ -259,27 +245,38 @@ function FinanceManagement() {
                     <td>{dataObj.expense_type}</td>
                     {/* <td className="tableEdit" style={{paddingLeft: '0px', paddingRight: '0px'}} onClick={editData}>edit</td> */}
 
+                    <td
+                      className="tableEdit"
+                      style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                      onClick={() => {
+                        setModalShow(true);
+                        setModalData(dataObj);
+                        setModalNum(index + 1);
+                      }}
+                    >
+                      edit
+                    </td>
 
-                    {/* <td className="tableEdit" style={{paddingLeft: '0px', paddingRight: '0px'}} 
-                    onClick={() => setModalShow(true)}>edit</td>
-                    <EditModal 
-                      show={modalShow}
-                      onHide={() => setModalShow(false)}
-                      // id = {dataObj.id}
-                      number = {index + 1}
-                      title = {dataObj.title}
-                      amount = {dataObj.amount}
-                      expensetype = {dataObj.expense_type}
-                    /> */}
-  
-                      <td className="tableEdit" style={{paddingLeft: '0px', paddingRight: '0px'}} 
-                      onClick={() => editExpense(dataObj.id, dataObj.title, dataObj.amount, dataObj.expense_type)}>edit</td>
-
-                    <td className="tableDelete" style={{paddingLeft: '0px', paddingRight: '0px'}} onClick={() => deleteData(dataObj.id)}>X</td>
+                    <td
+                      className="tableDelete"
+                      style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                      onClick={() => deleteData(dataObj.id)}
+                    >
+                      X
+                    </td>
                   </tr>
                 );
               })
             : null}
+          <EditModal
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            expensetype={modalData.expense_type}
+          />
         </tbody>
       </Table>
     </div>

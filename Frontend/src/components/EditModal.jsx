@@ -20,12 +20,13 @@ function EditModal(props) {
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Edit Expense: 
+            {/* {console.log("Modal should be showing.")} */}
           </Modal.Title>
         </Modal.Header>
 
 
         <Modal.Body>
-          <h4>{props.number}. {props.title}</h4>
+          <h4>{props.num}. {props.title}</h4>
           <p>Amount: {props.amount}</p>
           <p>Expense Type: {props.expensetype}</p>
         </Modal.Body>
