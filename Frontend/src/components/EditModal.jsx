@@ -1,13 +1,15 @@
 import React from "react";
+import ExpenseForm from "./ExpenseForm";
 
-import Button from "react-bootstrap/Button";
+// import Col from "react-bootstrap/Col";
+// import Form from "react-bootstrap/Form";
+// import Row from "react-bootstrap/Row";
+// import InputGroup from "react-bootstrap/InputGroup";
+
+// import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 function EditModal(props) {
-//   const [show, setShow] = useState(false);
-
-//   const handleClose = () => setShow(false);
-//   const handleShow = () => setShow(true);
 
   return (
     <>
@@ -19,23 +21,33 @@ function EditModal(props) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Edit Expense: 
-            {/* {console.log("Modal should be showing.")} */}
+            Edit Expense:
           </Modal.Title>
         </Modal.Header>
 
-
         <Modal.Body>
-          <h4>{props.num}. {props.title}</h4>
-          <p>Amount: {props.amount}</p>
-          <p>Expense Type: {props.expensetype}</p>
+
+          <ExpenseForm
+            title={props.title}
+            amount={props.amount}
+            expensetype={props.expensetype}
+            id={props.id}
+            showsubmit={false}
+            postexpense={false}
+            onHide={props.onHide}
+          />
+
+
         </Modal.Body>
 
-
-        <Modal.Footer>
-          <Button onClick={props.onHide}>Close</Button>
-          {/* Add save button that closes on click but also saves to db on update */}
-        </Modal.Footer>
+        {/* <Modal.Footer style={{display: "flex"}}>
+          <Button variant="danger" onClick={props.onHide}>
+            Close
+          </Button>
+          <Button type="submit" variant="success" onClick={editData}>
+            Submit Change
+          </Button>
+        </Modal.Footer> */}
       </Modal>
     </>
   );

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import EditModal from "../components/EditModal";
 import PieChart from "../components/PieChart";
 //import sql from "../db.js"
+import ExpenseForm from "../components/ExpenseForm";
 
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import InputGroup from "react-bootstrap/InputGroup";
+// import Button from "react-bootstrap/Button";
+// import Col from "react-bootstrap/Col";
+// import Form from "react-bootstrap/Form";
+// import Row from "react-bootstrap/Row";
+// import InputGroup from "react-bootstrap/InputGroup";
 
 import Table from "react-bootstrap/Table";
 
@@ -36,45 +37,13 @@ function FinanceManagement() {
     }
   };
 
-  const postData = async (formTitle, formAmount, formType) => {
-    try {
-      const response = await fetch("http://localhost:8000/expense", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: formTitle,
-          amount: parseFloat(formAmount),
-          expense_type: formType,
-        }),
-      });
-      console.log(`This is the response: ${response}`);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // Sort data by ID # because it got out of order somehow? Look into.
+  expense.sort(function (a, b) {
+    return parseFloat(a.id) - parseFloat(b.id);
+  });
 
-  // const editData = async(e, formTitle, formAmount, formType) => {
-  //   // e.preventDefault();
-  //   try {
-  //     const response = await fetch(`http://localhost:8000/expense`, {
-  //       method: "PUT",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         title: formTitle,
-  //         amount: parseFloat(formAmount),
-  //         expense_type: formType,
-  //       }),                               ///////////////////EDIT
-  //     });
-  //     console.log(`edit has been clicked for ${response.title}`);
-  //     if (response.status === 200){
-  //       console.log("reponse status is 200")
-  //       //Insert show modal to false so modal goes away
-  //       getData();
-  //     }
-  //   } catch (err){
-  //     console.log(err);
-  //   }
-  // };
+
+
 
   const deleteData = async (dataID) => {
     //  MAKE THIS CALL A MODAL TO VERIFY DELETE. DON'T JUST DELETE ON CLICK.
@@ -89,8 +58,6 @@ function FinanceManagement() {
       if (response.status === 200) {
         getData();
       }
-      // console.log(`delete has been clicked where id = `)
-      // console.log(dataID)
     } catch (err) {
       console.log(err);
     }
@@ -100,31 +67,9 @@ function FinanceManagement() {
     getData();
   }, []);
 
-  // const editExpenses = async () => {
-  //   try {
-  //     const response = await fetch(`http://localhost:8000/expense`);
-  //     const expenseJSON = await response.json();
-  //     console.log("expense JSON:");
-  //     console.log(expenseJSON);
-  //     setExpense(expenseJSON);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
-  function HandleSubmit(e) {
-    let formTitle = e.target[0].value;
-    let formAmount = parseInt(e.target[1].value);
-    let formType = e.target[2].value;
 
-    if (formType === "TypeOfExpense") {
-      return null;
-    } else {
-      postData(formTitle, formAmount, formType);
-    }
-    //e.preventDefault(); // REMOVE ONCE DATA SUBMITS AND READS FROM A DB? REFRESHES PAGE WHICH IS FINE ONCE DATA SAVES.
-  }
-
+  // MAP THROUGH DATA TO GRAB IT AND SET TOTAL AMOUNTS FOR PIE CHART.
   expense.map((dataObj) => {
     // let formTitle = dataObj.title;
     let formAmount = dataObj.amount;
@@ -152,62 +97,10 @@ function FinanceManagement() {
 
   return (
     <div id="financeManagement">
-      <Form
-        // style={{ width: "50%" }}
-        // className="mx-auto mt-5"
-        onSubmit={HandleSubmit}
-      >
-        <Row className="mb-3">
-          <Col>
-            <Form.Group as={Col}>
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type=""
-                placeholder="Enter Expense Title"
-                required
-                name="title"
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Label>Amount Spent</Form.Label>
-            <InputGroup className="mb-3">
-              <InputGroup.Text>$</InputGroup.Text>
-              {/* <Form.Control aria-label="Amount spent" /> */}
-              <Form.Control
-                aria-label="Amount (to the nearest dollar)"
-                required
-                name="amount"
-              />
-              <InputGroup.Text>.00</InputGroup.Text>
-            </InputGroup>
-          </Col>
-        </Row>
-
-        <Form.Select
-          aria-label="Default select example"
-          className="mb-3"
-          name="expense_type"
-        >
-          <option value="TypeOfExpense">Type of Expense</option>
-          <option value="Mortgage/Rent">Mortgage/Rent</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Insurance">Insurance</option>
-          <option value="Loans">Loans</option>
-          <option value="Transportation">Transportation</option>
-          <option value="Food">Food</option>
-          <option value="Other">Other</option>
-        </Form.Select>
-
-        <Form.Group as={Row} className="mb-3">
-          <Col sm={{ span: 10 }}>
-            <Button type="submit" variant="success" onClick={postData}>
-              Submit Expense
-            </Button>
-          </Col>
-        </Form.Group>
-      </Form>
+      <ExpenseForm 
+      postexpense={true}
+      showsubmit={true}
+      />
 
       <div className="chart">
         <PieChart
@@ -243,8 +136,6 @@ function FinanceManagement() {
                     <td>{dataObj.title}</td>
                     <td>{dataObj.amount}</td>
                     <td>{dataObj.expense_type}</td>
-                    {/* <td className="tableEdit" style={{paddingLeft: '0px', paddingRight: '0px'}} onClick={editData}>edit</td> */}
-
                     <td
                       className="tableEdit"
                       style={{ paddingLeft: "0px", paddingRight: "0px" }}
@@ -276,6 +167,11 @@ function FinanceManagement() {
             title={modalData.title}
             amount={modalData.amount}
             expensetype={modalData.expense_type}
+            // postexpense={false}
+            // setexpense={() => setExpense}
+            // getdata={() => getData()}
+            // handlesubmit={() => HandleSubmit()}
+            // editdata={() => editData()}
           />
         </tbody>
       </Table>
