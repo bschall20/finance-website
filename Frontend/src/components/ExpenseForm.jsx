@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -8,25 +9,25 @@ import InputGroup from "react-bootstrap/InputGroup";
 // import EditModal from "./EditModal";
 
 function ExpenseForm(props) {
-  const [expense, setExpense] = useState([]);
+  // const [expense, setExpense] = useState([]);
   // const [postExpense, setPostExpense] = useState(props.postExpense);
 
-  const getData = async () => {
-    try {
-      const response = await fetch(`http://localhost:8000/expense`);
-      const expenseJSON = await response.json();
-      //   console.log("expense JSON:");
-      //   console.log(expenseJSON);
-      setExpense(expenseJSON);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const getData = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:8000/expense`);
+  //     // const expenseJSON = await response.json();
+  //     //   console.log("expense JSON:");
+  //     //   console.log(expenseJSON);
+  //     // setExpense(expenseJSON);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   // Sort data by ID # because it got out of order somehow? Look into.
-  expense.sort(function (a, b) {
-    return parseFloat(a.id) - parseFloat(b.id);
-  });
+  // expense.sort(function (a, b) {
+  //   return parseFloat(a.id) - parseFloat(b.id);
+  // });
 
   const postData = async (formTitle, formAmount, formType) => {
     try {
@@ -70,7 +71,7 @@ function ExpenseForm(props) {
         console.log(formType)
         console.log("reponse status is 200");
         //Insert show modal to false so modal goes away?
-        getData();
+        // getData();
       }
     } catch (err) {
       console.log(err);
@@ -78,7 +79,7 @@ function ExpenseForm(props) {
   };
 
   useEffect(() => {
-    getData();
+    // getData();
   }, []);
 
   function HandleSubmit(e) {
@@ -202,7 +203,7 @@ function ExpenseForm(props) {
 
             <Button
             //   type="null"
-              variant="danger"
+              variant="secondary"
               className="me-3"
               onClick={props.onHide}
             >

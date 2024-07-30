@@ -225,6 +225,18 @@ background-blend-mode: multiply; */
       background-color: #D60027;
     }
 
+    .tableHeader:hover {
+      cursor: pointer;
+    }
+
+    .deleteTitle {
+      font-weight: 900;
+    }
+
+    .deleteInfo {
+      font-weight: 500;
+    }
+
 
   /**************************************/
   /**************************************/
