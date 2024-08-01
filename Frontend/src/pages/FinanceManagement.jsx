@@ -5,6 +5,8 @@ import PieChart from "../components/PieChart";
 //import sql from "../db.js"
 import ExpenseForm from "../components/ExpenseForm";
 import { FaSort } from "react-icons/fa";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 
 // import Button from "react-bootstrap/Button";
 // import Col from "react-bootstrap/Col";
@@ -18,6 +20,7 @@ function FinanceManagement() {
   const [editModalShow, setEditModalShow] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [expense, setExpense] = useState([]);
+  const [expenseCopy, setExpenseCopy] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalNum, setModalNum] = useState(0);
   let mortgage_rent = 0;
@@ -35,6 +38,12 @@ function FinanceManagement() {
       console.log("expense JSON:");
       console.log(expenseJSON);
       setExpense(
+        expenseJSON.sort(function (a, b) {
+          // Sort by date later (newest at top)
+          return parseFloat(a.id) - parseFloat(b.id);
+        })
+      );
+      setExpenseCopy(
         expenseJSON.sort(function (a, b) {
           // Sort by date later (newest at top)
           return parseFloat(a.id) - parseFloat(b.id);
@@ -92,6 +101,27 @@ function FinanceManagement() {
         return compareStrings(b.title, a.title);
       });
       setTitleOrder(0);
+    }
+  };
+  // Sort table by TITLE SEARCH
+  // const [titleSearch, setTitleSearch] = useState(0);
+  const titleSearchSort = (e) => {
+    let lowerSearch = e.target.value.toLowerCase();
+
+    // let expenseCopy = expense;
+
+    try {
+      let result = expenseCopy.filter((a) => {
+        let lowerExpenseTitle = a.title.toLowerCase();
+        if (lowerExpenseTitle.includes(lowerSearch)) {
+          return a;
+        } else {return 0}
+      });
+      // setTitleSearch(titleSearch + 1)
+      setExpense(result);
+
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -175,6 +205,11 @@ function FinanceManagement() {
     }
   });
 
+  // const HandleChange = (e)=>{
+  //   e.preventDefault();
+  //   console.log(e.target.value);
+  // }
+
   return (
     <div id="financeManagement">
       <ExpenseForm postexpense={true} showsubmit={true} />
@@ -196,17 +231,29 @@ function FinanceManagement() {
       <Table striped bordered hover style={{ margin: "3.5rem auto" }}>
         <thead>
           <tr>
-            <th className="tableHeader" onClick={() => idSort()}>
-              # <FaSort />
+            <th>
+              # <FaSort onClick={() => idSort()} className="tableSort" />
             </th>
-            <th className="tableHeader" onClick={() => titleSort()}>
-              Title <FaSort />
+            <th className="tableTitle">
+              Title{" "}
+              <FaSort
+                className="tableSort me-4 mb-1"
+                onClick={() => titleSort()}
+              />
+              <InputGroup
+                style={{ width: "60%", display: "flex" }}
+                onChange={titleSearchSort}
+              >
+                <Form.Control aria-label="Title" />
+              </InputGroup>
             </th>
-            <th className="tableHeader" onClick={() => amountSort()}>
-              Amount <FaSort />
+            <th>
+              Amount{" "}
+              <FaSort className="tableSort" onClick={() => amountSort()} />
             </th>
-            <th className="tableHeader" onClick={() => expenseTypeSort()}>
-              Expense Type <FaSort />
+            <th>
+              Expense Type{" "}
+              <FaSort className="tableSort" onClick={() => expenseTypeSort()} />
             </th>
             <th></th>
             <th></th>

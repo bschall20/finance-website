@@ -213,6 +213,12 @@ background-blend-mode: multiply; */
       width: 65%;
     }
 
+    .tableTitle {
+      display: flex;
+      flex-direction: row;
+      align-items: end;
+    }
+
     .tableEdit, .tableDelete{
       text-align: center;
     }
@@ -225,7 +231,7 @@ background-blend-mode: multiply; */
       background-color: #D60027;
     }
 
-    .tableHeader:hover {
+    .tableSort:hover {
       cursor: pointer;
     }
 
