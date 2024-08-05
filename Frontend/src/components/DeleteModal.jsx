@@ -49,6 +49,7 @@ function DeleteModal(props) {
           </p>
           <p className="deleteTitle">Amount: <span className="deleteInfo">{props.amount}</span></p>
           <p className="deleteTitle">Expense Type: <span className="deleteInfo">{props.expensetype}</span></p>
+          <p className="deleteTitle">Date: <span className="deleteInfo">{props.date}</span></p>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.onHide} variant="secondary">

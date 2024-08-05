@@ -23,6 +23,8 @@ function FinanceManagement() {
   const [expenseCopy, setExpenseCopy] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalNum, setModalNum] = useState(0);
+  const [defaultTitleSearch, setDefaultTitleSearch] = useState("");
+  const [defaultDate, setDefaultDate] = useState("");
   let mortgage_rent = 0;
   let utilities = 0;
   let insurance = 0;
@@ -46,6 +48,9 @@ function FinanceManagement() {
       setExpenseCopy(
         expenseJSON.sort(function (a, b) {
           // Sort by date later (newest at top)
+          // Will have to grab mm/dd/yyyy numbers to order. so 0-1, 3-4, and 6-9 numbers and sort
+                // ex: 08/01/2024 = 08012024 => turn to integer and order by number
+                // make sure it comes out as either mm/dd/yyyy (as calendar says) or if it comes out as yyyy/mm/dd like table says
           return parseFloat(a.id) - parseFloat(b.id);
         })
       );
@@ -54,16 +59,6 @@ function FinanceManagement() {
     }
   };
 
-  // Sort data by ID # because it got out of order somehow? Look into.
-  // expense.sort(function (a, b) {
-  //   return parseFloat(a.id) - parseFloat(b.id);
-  // });
-
-  // const expenseSort = () => {
-  //   expense.sort(function (a, b) {
-  //     return parseFloat(a.id) - parseFloat(b.id);
-  //   })
-  // }
 
   // Table string comparator to all lower case
   const compareStrings = (a, b) => {
@@ -104,22 +99,20 @@ function FinanceManagement() {
     }
   };
   // Sort table by TITLE SEARCH
-  // const [titleSearch, setTitleSearch] = useState(0);
   const titleSearchSort = (e) => {
+    setDefaultDate("")
+    setDefaultTitleSearch(e.target.value)
     let lowerSearch = e.target.value.toLowerCase();
-
-    // let expenseCopy = expense;
-
     try {
       let result = expenseCopy.filter((a) => {
         let lowerExpenseTitle = a.title.toLowerCase();
         if (lowerExpenseTitle.includes(lowerSearch)) {
           return a;
-        } else {return 0}
+        } else {
+          return 0;
+        }
       });
-      // setTitleSearch(titleSearch + 1)
       setExpense(result);
-
     } catch (err) {
       console.log(err);
     }
@@ -154,6 +147,28 @@ function FinanceManagement() {
         return compareStrings(b.expense_type, a.expense_type);
       });
       setExpenseTypeOrder(0);
+    }
+  };
+
+  // Sort table by DATE
+  const dateSort = (e) => {
+    setDefaultDate(e.target.value);
+    setDefaultTitleSearch("");
+    let dateSearch = e.target.value;
+    console.log(e.target.value);
+    try {
+      let result = expenseCopy.filter((a) => {
+        let expenseDate = a.date;
+        if (dateSearch === expenseDate) {
+          return a;
+        } else {return 0;}
+      });
+
+      if (dateSearch === ""){
+        setExpense(expenseCopy)
+      } else {setExpense(result)}
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -209,7 +224,6 @@ function FinanceManagement() {
   //   e.preventDefault();
   //   console.log(e.target.value);
   // }
-
   return (
     <div id="financeManagement">
       <ExpenseForm postexpense={true} showsubmit={true} />
@@ -236,15 +250,13 @@ function FinanceManagement() {
             </th>
             <th className="tableTitle">
               Title{" "}
-              <FaSort
-                className="tableSort me-4 mb-1"
-                onClick={() => titleSort()}
-              />
+              <FaSort className="tableSort mb-1" onClick={() => titleSort()} />
               <InputGroup
                 style={{ width: "60%", display: "flex" }}
-                onChange={titleSearchSort}
+                // onChange={titleSearchSort}
+                // value={defaultTitleSearch}
               >
-                <Form.Control aria-label="Title" />
+                <Form.Control aria-label="Title" onChange={titleSearchSort} value={defaultTitleSearch}/>
               </InputGroup>
             </th>
             <th>
@@ -254,6 +266,16 @@ function FinanceManagement() {
             <th>
               Expense Type{" "}
               <FaSort className="tableSort" onClick={() => expenseTypeSort()} />
+            </th>
+            <th className="tableTitle">
+              Date{" "}
+              <Form.Control
+                style={{ width: "60%", display: "flex" }}
+                type="date"
+                className="tableSort ms-4"
+                onChange={dateSort}
+                value={defaultDate}
+              />
             </th>
             <th></th>
             <th></th>
@@ -267,6 +289,7 @@ function FinanceManagement() {
                 <td>{dataObj.title}</td>
                 <td>{dataObj.amount}</td>
                 <td>{dataObj.expense_type}</td>
+                <td>{dataObj.date}</td>
                 <td
                   className="tableEdit"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
@@ -302,6 +325,7 @@ function FinanceManagement() {
             title={modalData.title}
             amount={modalData.amount}
             expensetype={modalData.expense_type}
+            date={modalData.date}
           />
           <DeleteModal
             show={deleteModalShow}
@@ -311,6 +335,7 @@ function FinanceManagement() {
             title={modalData.title}
             amount={modalData.amount}
             expensetype={modalData.expense_type}
+            date={modalData.date}
           />
         </tbody>
       </Table>

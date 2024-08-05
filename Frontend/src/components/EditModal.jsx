@@ -32,6 +32,7 @@ function EditModal(props) {
             amount={props.amount}
             expensetype={props.expensetype}
             id={props.id}
+            date={props.date}
             showsubmit={false}
             postexpense={false}
             onHide={props.onHide}

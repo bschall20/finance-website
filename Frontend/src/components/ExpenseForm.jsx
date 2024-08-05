@@ -29,7 +29,7 @@ function ExpenseForm(props) {
   //   return parseFloat(a.id) - parseFloat(b.id);
   // });
 
-  const postData = async (formTitle, formAmount, formType) => {
+  const postData = async (formTitle, formAmount, formType, formDate) => {
     try {
       const response = await fetch("http://localhost:8000/expense", {
         method: "POST",
@@ -38,6 +38,7 @@ function ExpenseForm(props) {
           title: formTitle,
           amount: parseFloat(formAmount),
           expense_type: formType,
+          date: formDate
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -46,7 +47,7 @@ function ExpenseForm(props) {
     }
   };
 
-  const editData = async (formTitle, formAmount, formType) => {
+  const editData = async (formTitle, formAmount, formType, formDate) => {
     // e.preventDefault();
     try {
       const response = await fetch(`http://localhost:8000/expense`, {
@@ -57,18 +58,21 @@ function ExpenseForm(props) {
           title: formTitle,
           amount: parseFloat(formAmount),
           expense_type: formType,
+          date: formDate
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);
       if (response.status === 200) {
-        console.log("ID = ")
-        console.log(props.id)
-        console.log("Title = ")
-        console.log(formTitle)
-        console.log("Amount = ")
-        console.log(formAmount)
-        console.log("Expense Type = ")
-        console.log(formType)
+        console.log("ID = ");
+        console.log(props.id);
+        console.log("Title = ");
+        console.log(formTitle);
+        console.log("Amount = ");
+        console.log(formAmount);
+        console.log("Expense Type = ");
+        console.log(formType);
+        console.log("Form date = ");
+        console.log(formDate)
         console.log("reponse status is 200");
         //Insert show modal to false so modal goes away?
         // getData();
@@ -86,6 +90,7 @@ function ExpenseForm(props) {
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
     let formType = e.target[2].value;
+    let formDate = e.target[3].value;
 
     // if (formType === "TypeOfExpense") {
     //   console.log("No entry - used default Type of Expense.");
@@ -94,43 +99,22 @@ function ExpenseForm(props) {
     //   postData(formTitle, formAmount, formType);
     // }
 
-    if (formType === "TypeOfExpense") {
-      console.log("No entry - used default Type of Expense.");
+    if (formType === "SelectTypeOfExpense") {
+      console.log("No entry - used default Select Type of Expense.");
       return null;
     }
 
     if (props.postexpense === true) {
       console.log("Post data called");
-      return postData(formTitle, formAmount, formType);
+      return postData(formTitle, formAmount, formType, formDate);
+    } else {
+      return editData(formTitle, formAmount, formType, formDate);
     }
-    else {return editData(formTitle, formAmount, formType)}
-    // else if (props.postexpense === false) {
-    //   console.log("Edit data called");
-    //   return editData(formTitle, formAmount, formType);
-    // }
+
     //e.preventDefault(); // REMOVE ONCE DATA SUBMITS AND READS FROM A DB? REFRESHES PAGE WHICH IS FINE ONCE DATA SAVES.
   }
 
-  //   const showSubmit = () => {
-  //     if (props.showsubmit === true) {
-  //         <Button type="submit" variant="success">
-  //           Submit Expense
-  //         </Button>
-  //     }
 
-  //     return console.log("hey")
-  //   }
-
-  // function FormType() {
-  //   if (props.postexpense === true) {
-  //     console.log("Post data called");
-  //     return postData;
-  //   }
-  // //   else {
-  // //     console.log("Edit data called");
-  // //     return editData;
-  // //   }
-  // }
 
   return (
     <Form
@@ -168,21 +152,36 @@ function ExpenseForm(props) {
         </Col>
       </Row>
 
-      <Form.Select
-        aria-label="Default select example"
-        className="mb-3"
-        name="expense_type"
-        defaultValue={props.expensetype}
-      >
-        <option value="TypeOfExpense">Type of Expense</option>
-        <option value="Mortgage/Rent">Mortgage/Rent</option>
-        <option value="Utilities">Utilities</option>
-        <option value="Insurance">Insurance</option>
-        <option value="Loans">Loans</option>
-        <option value="Transportation">Transportation</option>
-        <option value="Food">Food</option>
-        <option value="Other">Other</option>
-      </Form.Select>
+      <Row>
+        <Col>
+          <Form.Label>Expense Type</Form.Label>
+          <Form.Select
+            aria-label="Default select example"
+            className="mb-3"
+            name="expense_type"
+            defaultValue={props.expensetype}
+          >
+            <option value="SelectTypeOfExpense">Select Type of Expense</option>
+            <option value="Mortgage/Rent">Mortgage/Rent</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Insurance">Insurance</option>
+            <option value="Loans">Loans</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Food">Food</option>
+            <option value="Other">Other</option>
+          </Form.Select>
+        </Col>
+
+        <Col>
+        <Form.Label>Date</Form.Label>
+        <Form.Control
+              type="date"
+              required
+              name="date"
+              defaultValue={props.date}
+            />
+        </Col>
+      </Row>
 
       <Form.Group as={Row} className="mb-3">
         <Col sm={{ span: 12 }}>
@@ -199,10 +198,15 @@ function ExpenseForm(props) {
             Submit Expense
           </Button>
 
-          <div style={props.showsubmit ? { display: "none" } : { display: "flex", justifyContent: "end" }}>
-
+          <div
+            style={
+              props.showsubmit
+                ? { display: "none" }
+                : { display: "flex", justifyContent: "end" }
+            }
+          >
             <Button
-            //   type="null"
+              //   type="null"
               variant="secondary"
               className="me-3"
               onClick={props.onHide}

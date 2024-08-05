@@ -24,12 +24,12 @@ app.get('/expense', async (req, res) => {
 
 // Post new expense to database
 app.post('/expense', (req, res) => {
-    const {title, amount, expense_type } = req.body;
-    console.log(`info from req. body: ${title}, ${amount}, ${expense_type}`)
+    const {title, amount, expense_type, date } = req.body;
+    console.log(`info from req. body: ${title}, ${amount}, ${expense_type}, ${date}`)
     //const id = uuidv4();
     try {
-        pool.query('INSERT INTO user_expense(title, amount, expense_type) VALUES($1, $2, $3)',
-            [title, amount, expense_type]
+        pool.query('INSERT INTO user_expense(title, amount, expense_type) VALUES($1, $2, $3, $3)',
+            [title, amount, expense_type, date]
         )
     } catch (err) {
         console.log(err);
@@ -40,10 +40,10 @@ app.post('/expense', (req, res) => {
 // Edit a users expense in database
 app.put('/expense', async (req, res) => {
     // const { id } = req.params;
-    const {id, title, amount, expense_type} = req.body;
+    const {id, title, amount, expense_type, date} = req.body;
     try {
-        const editExpense = await pool.query('UPDATE user_expense SET title = $2, amount = $3, expense_type = $4 WHERE id = $1',
-            [id, title, amount, expense_type])
+        const editExpense = await pool.query('UPDATE user_expense SET title = $2, amount = $3, expense_type = $4, date = $5 WHERE id = $1',
+            [id, title, amount, expense_type, date])
         res.json(editExpense)
     } catch (err) {
         console.log(err)
