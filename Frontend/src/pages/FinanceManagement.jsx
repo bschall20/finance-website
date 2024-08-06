@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import EditModal from "../components/EditModal";
 import DeleteModal from "../components/DeleteModal";
 import PieChart from "../components/PieChart";
+import HeatMap from "../components/HeatMap";
 //import sql from "../db.js"
 import ExpenseForm from "../components/ExpenseForm";
 import { FaSort } from "react-icons/fa";
@@ -41,24 +42,26 @@ function FinanceManagement() {
       console.log(expenseJSON);
       setExpense(
         expenseJSON.sort(function (a, b) {
-          // Sort by date later (newest at top)
-          return parseFloat(a.id) - parseFloat(b.id);
+          // return parseFloat(a.id) - parseFloat(b.id);    => sorted by ID # at first
+          // Default sort by DATE:
+          var aa = a.date.split("/").reverse().join(),
+            bb = b.date.split("/").reverse().join();
+          return bb < aa ? -1 : bb > aa ? 1 : 0;
         })
       );
       setExpenseCopy(
         expenseJSON.sort(function (a, b) {
-          // Sort by date later (newest at top)
-          // Will have to grab mm/dd/yyyy numbers to order. so 0-1, 3-4, and 6-9 numbers and sort
-                // ex: 08/01/2024 = 08012024 => turn to integer and order by number
-                // make sure it comes out as either mm/dd/yyyy (as calendar says) or if it comes out as yyyy/mm/dd like table says
-          return parseFloat(a.id) - parseFloat(b.id);
+          // return parseFloat(a.id) - parseFloat(b.id);    => sorted by ID # at first
+          // Default sort by DATE:
+          var aa = a.date.split("/").reverse().join(),
+            bb = b.date.split("/").reverse().join();
+          return bb < aa ? -1 : bb > aa ? 1 : 0;
         })
       );
     } catch (err) {
       console.log(err);
     }
   };
-
 
   // Table string comparator to all lower case
   const compareStrings = (a, b) => {
@@ -68,20 +71,20 @@ function FinanceManagement() {
   };
 
   // Sort table by ID
-  const [IDOrder, setIDOrder] = useState(0);
-  const idSort = () => {
-    if (IDOrder === 0) {
-      expense.sort(function (a, b) {
-        return parseFloat(a.id) - parseFloat(b.id);
-      });
-      setIDOrder(1);
-    } else {
-      expense.sort(function (a, b) {
-        return parseFloat(b.id) - parseFloat(a.id);
-      });
-      setIDOrder(0);
-    }
-  };
+  // const [IDOrder, setIDOrder] = useState(0);
+  // const idSort = () => {
+  //   if (IDOrder === 0) {
+  //     expense.sort(function (a, b) {
+  //       return parseFloat(a.id) - parseFloat(b.id);
+  //     });
+  //     setIDOrder(1);
+  //   } else {
+  //     expense.sort(function (a, b) {
+  //       return parseFloat(b.id) - parseFloat(a.id);
+  //     });
+  //     setIDOrder(0);
+  //   }
+  // };
 
   // Sort table by TITLE
   const [titleOrder, setTitleOrder] = useState(0);
@@ -100,8 +103,8 @@ function FinanceManagement() {
   };
   // Sort table by TITLE SEARCH
   const titleSearchSort = (e) => {
-    setDefaultDate("")
-    setDefaultTitleSearch(e.target.value)
+    setDefaultDate("");
+    setDefaultTitleSearch(e.target.value);
     let lowerSearch = e.target.value.toLowerCase();
     try {
       let result = expenseCopy.filter((a) => {
@@ -161,34 +164,21 @@ function FinanceManagement() {
         let expenseDate = a.date;
         if (dateSearch === expenseDate) {
           return a;
-        } else {return 0;}
+        } else {
+          return 0;
+        }
       });
 
-      if (dateSearch === ""){
-        setExpense(expenseCopy)
-      } else {setExpense(result)}
+      if (dateSearch === "") {
+        setExpense(expenseCopy);
+      } else {
+        setExpense(result);
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
-  // const deleteData = async (dataID) => {
-  //   //  MAKE THIS CALL A MODAL TO VERIFY DELETE. DON'T JUST DELETE ON CLICK.
-  //   try {
-  //     const response = await fetch(`http://localhost:8000/expense`, {
-  //       method: "DELETE",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         id: dataID,
-  //       }),
-  //     });
-  //     if (response.status === 200) {
-  //       getData();
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   useEffect(() => {
     getData();
@@ -196,10 +186,8 @@ function FinanceManagement() {
 
   // MAP THROUGH DATA TO GRAB IT AND SET TOTAL AMOUNTS FOR PIE CHART.
   expense.map((dataObj) => {
-    // let formTitle = dataObj.title;
     let formAmount = dataObj.amount;
     let formType = dataObj.expense_type;
-    //key = {index}
 
     if (formType === "Mortgage/Rent") {
       return (mortgage_rent += formAmount);
@@ -220,10 +208,6 @@ function FinanceManagement() {
     }
   });
 
-  // const HandleChange = (e)=>{
-  //   e.preventDefault();
-  //   console.log(e.target.value);
-  // }
   return (
     <div id="financeManagement">
       <ExpenseForm postexpense={true} showsubmit={true} />
@@ -246,17 +230,20 @@ function FinanceManagement() {
         <thead>
           <tr>
             <th>
-              # <FaSort onClick={() => idSort()} className="tableSort" />
+              # 
+              {/* <FaSort onClick={() => idSort()} className="tableSort" /> */}
             </th>
             <th className="tableTitle">
               Title{" "}
               <FaSort className="tableSort mb-1" onClick={() => titleSort()} />
               <InputGroup
                 style={{ width: "60%", display: "flex" }}
-                // onChange={titleSearchSort}
-                // value={defaultTitleSearch}
               >
-                <Form.Control aria-label="Title" onChange={titleSearchSort} value={defaultTitleSearch}/>
+                <Form.Control
+                  aria-label="Title"
+                  onChange={titleSearchSort}
+                  value={defaultTitleSearch}
+                />
               </InputGroup>
             </th>
             <th>
@@ -305,7 +292,6 @@ function FinanceManagement() {
                 <td
                   className="tableDelete"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
-                  // onClick={() => deleteData(dataObj.id)}
                   onClick={() => {
                     setDeleteModalShow(true);
                     setModalData(dataObj);
@@ -339,6 +325,7 @@ function FinanceManagement() {
           />
         </tbody>
       </Table>
+      <HeatMap />
     </div>
   );
 }
