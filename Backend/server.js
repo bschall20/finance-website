@@ -28,7 +28,7 @@ app.post('/expense', (req, res) => {
     console.log(`info from req. body: ${title}, ${amount}, ${expense_type}, ${date}`)
     //const id = uuidv4();
     try {
-        pool.query('INSERT INTO user_expense(title, amount, expense_type) VALUES($1, $2, $3, $3)',
+        pool.query('INSERT INTO user_expense(title, amount, expense_type, date) VALUES($1, $2, $3, $4)',
             [title, amount, expense_type, date]
         )
     } catch (err) {

@@ -325,7 +325,10 @@ function FinanceManagement() {
           />
         </tbody>
       </Table>
-      <HeatMap />
+      <HeatMap 
+      expense={expense}
+      dailyAllowance={100}    // Change this to users daily allowance based on income/365
+      />
     </div>
   );
 }
