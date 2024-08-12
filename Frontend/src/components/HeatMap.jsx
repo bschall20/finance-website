@@ -92,6 +92,7 @@ function HeatMap(props) {
 
   return (
     <div>
+      <h2>Daily Expenses</h2>
       {/* <h1>react-calendar-heatmap demos</h1>
       <p>Random values with onClick and react-tooltip</p> */}
       <CalendarHeatmap

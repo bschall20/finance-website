@@ -3,6 +3,7 @@ import EditModal from "../components/EditModal";
 import DeleteModal from "../components/DeleteModal";
 import PieChart from "../components/PieChart";
 import HeatMap from "../components/HeatMap";
+import SetGoal from "../components/SetGoal";
 //import sql from "../db.js"
 import ExpenseForm from "../components/ExpenseForm";
 import { FaSort } from "react-icons/fa";
@@ -33,6 +34,7 @@ function FinanceManagement() {
   let transportation = 0;
   let food = 0;
   let other = 0;
+  let dailyAllowance = 100;
 
   const getData = async () => {
     try {
@@ -226,7 +228,8 @@ function FinanceManagement() {
         />
       </div>
 
-      <Table striped bordered hover style={{ margin: "3.5rem auto" }}>
+      <h2>Expenses</h2>
+      <Table striped bordered hover style={{ margin: "0rem auto 3.5rem" }}>
         <thead>
           <tr>
             <th>
@@ -327,8 +330,10 @@ function FinanceManagement() {
       </Table>
       <HeatMap 
       expense={expense}
-      dailyAllowance={100}    // Change this to users daily allowance based on income/365
+      dailyAllowance={dailyAllowance}    // Change this to users daily allowance based on income/365
       />
+      <SetGoal dailyAllowance={dailyAllowance}/>
+
     </div>
   );
 }

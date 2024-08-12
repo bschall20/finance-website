@@ -32,6 +32,7 @@ function PieChart(props) {
 
   return (
     <div id="chart">
+      <h2>Expense Sectors</h2>
       <Chart
         options={state.options}
         series={state.series}
