@@ -7,9 +7,9 @@ import Modal from "react-bootstrap/Modal";
 
 import Button from "react-bootstrap/Button";
 
-function DeleteModal(props) {
+function DeleteExpenseModal(props) {
 
-  const deleteData = async () => {
+  const deleteExpenseData = async () => {
     try {
       const response = await fetch(`http://localhost:8000/expense`, {
         method: "DELETE",
@@ -55,7 +55,7 @@ function DeleteModal(props) {
           <Button onClick={props.onHide} variant="secondary">
             Close
           </Button>
-          <Button onClick={deleteData} variant="danger">
+          <Button onClick={deleteExpenseData} variant="danger">
             DELETE
           </Button>
         </Modal.Footer>
@@ -64,4 +64,4 @@ function DeleteModal(props) {
   );
 }
 
-export default DeleteModal;
+export default DeleteExpenseModal;

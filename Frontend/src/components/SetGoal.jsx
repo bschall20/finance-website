@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/esm/Button";
-import AddGoalModal from "./AddGoalModal";
+import GoalModal from "./GoalModal";
 
 function SetGoal(props) {
   // Show amount saved since date using differential on heatmap (ie spent $48 on friday, saved $52 towards goal. behind or ahead of schedule)
@@ -15,7 +15,8 @@ function SetGoal(props) {
     <div>
       <h2>Set Goal</h2>
       <p>set goal component</p>
-      {/* <button
+      {/* MAKE THE BUTTON CIRCULAR!!!!!!
+        <button
         // variant="primary"
         style={{
           borderRadius: "100%",
@@ -33,18 +34,19 @@ function SetGoal(props) {
       <Button variant="primary" size="lg" style={{}} onClick={addGoal}>
         +
       </Button>
-      {/* <EditModal
-      show={editModalShow}
-      onHide={() => setEditModalShow(false)}
-      id={0}
-      num={0}
-      title={0}
-      amount={0}
-      expensetype={0}
-      date={0}
-    /> */}
-    <AddGoalModal show={addGoalModalShow}
-      onHide={() => setAddGoalModalShow(false)}/>
+
+      <GoalModal
+        show={addGoalModalShow}
+        showsubmit={1}
+        postgoal={1}
+        id={props.id}
+        num={props.num}
+        title={props.title}
+        amount={props.amount}
+        startdate={props.startdate}
+        goaldate={props.goaldate}
+        onHide={() => setAddGoalModalShow(false)}
+      />
     </div>
   );
 }

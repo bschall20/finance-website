@@ -9,7 +9,7 @@ import ExpenseForm from "./ExpenseForm";
 // import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-function EditModal(props) {
+function EditExpenseModal(props) {
 
   return (
     <>
@@ -54,4 +54,4 @@ function EditModal(props) {
   );
 }
 
-export default EditModal;
+export default EditExpenseModal;

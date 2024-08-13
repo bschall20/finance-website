@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from "react";
-import EditModal from "../components/EditModal";
-import DeleteModal from "../components/DeleteModal";
+
+import ExpenseForm from "../components/ExpenseForm";
+import EditExpenseModal from "../components/EditExpenseModal";
+import DeleteExpenseModal from "../components/DeleteExpenseModal";
 import PieChart from "../components/PieChart";
 import HeatMap from "../components/HeatMap";
 import SetGoal from "../components/SetGoal";
-//import sql from "../db.js"
-import ExpenseForm from "../components/ExpenseForm";
+import GoalModal from "../components/GoalModal"
+import DeleteGoalModal from "../components/DeleteGoalModal";
+
 import { FaSort } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-
-// import Button from "react-bootstrap/Button";
-// import Col from "react-bootstrap/Col";
-// import Form from "react-bootstrap/Form";
-// import Row from "react-bootstrap/Row";
-// import InputGroup from "react-bootstrap/InputGroup";
-
 import Table from "react-bootstrap/Table";
 
 function FinanceManagement() {
-  const [editModalShow, setEditModalShow] = useState(false);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
+  const [editExpenseModalShow, setEditExpenseModalShow] = useState(false);
+  const [deleteExpenseModalShow, setDeleteExpenseModalShow] = useState(false);
+  const [goalModalShow, setGoalModalShow] = useState(false);
   const [expense, setExpense] = useState([]);
   const [expenseCopy, setExpenseCopy] = useState([]);
+  const [goal, setGoal] = useState([]);
+  const [deleteGoalModalShow, setDeleteGoalModalShow] = useState(false);
+  // const [deleteExpense, setDeleteExpense] = useState(0);
+  // const [goalCopy, setGoalCopy] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalNum, setModalNum] = useState(0);
   const [defaultTitleSearch, setDefaultTitleSearch] = useState("");
@@ -36,7 +37,7 @@ function FinanceManagement() {
   let other = 0;
   let dailyAllowance = 100;
 
-  const getData = async () => {
+  const getExpenseData = async () => {
     try {
       const response = await fetch(`http://localhost:8000/expense`);
       const expenseJSON = await response.json();
@@ -60,6 +61,35 @@ function FinanceManagement() {
           return bb < aa ? -1 : bb > aa ? 1 : 0;
         })
       );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getGoalData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/goal`);
+      const goalJSON = await response.json();
+      console.log("goal JSON:");
+      console.log(goalJSON);
+      setGoal(
+        goalJSON.sort(function (a, b) {
+          // return parseFloat(a.id) - parseFloat(b.id);    => sorted by ID # at first
+          // Default sort by DATE:
+          var aa = a.goal_date.split("/").reverse().join(),
+            bb = b.goal_date.split("/").reverse().join();
+          return aa < bb ? -1 : aa > bb ? 1 : 0;
+        })
+      );
+      // setGoalCopy(
+      //   goalJSON.sort(function (a, b) {
+      //     // return parseFloat(a.id) - parseFloat(b.id);    => sorted by ID # at first
+      //     // Default sort by DATE:
+      //     var aa = a.date.split("/").reverse().join(),
+      //       bb = b.date.split("/").reverse().join();
+      //     return bb < aa ? -1 : bb > aa ? 1 : 0;
+      //   })
+      // );
     } catch (err) {
       console.log(err);
     }
@@ -181,9 +211,19 @@ function FinanceManagement() {
     }
   };
 
+  // Days Between Goal Dates
+  function daysLeft(start_date, goal_date) {
+    var startDate = Date.parse(start_date);
+    var goalDate = Date.parse(goal_date);
+    var diff = new Date(goalDate - startDate);
+    var days = diff/1000/60/60/24;
+    return days;
+  }
+
 
   useEffect(() => {
-    getData();
+    getExpenseData();
+    getGoalData();
   }, []);
 
   // MAP THROUGH DATA TO GRAB IT AND SET TOTAL AMOUNTS FOR PIE CHART.
@@ -233,15 +273,12 @@ function FinanceManagement() {
         <thead>
           <tr>
             <th>
-              # 
-              {/* <FaSort onClick={() => idSort()} className="tableSort" /> */}
+              #{/* <FaSort onClick={() => idSort()} className="tableSort" /> */}
             </th>
             <th className="tableTitle">
               Title{" "}
               <FaSort className="tableSort mb-1" onClick={() => titleSort()} />
-              <InputGroup
-                style={{ width: "60%", display: "flex" }}
-              >
+              <InputGroup style={{ width: "60%", display: "flex" }}>
                 <Form.Control
                   aria-label="Title"
                   onChange={titleSearchSort}
@@ -284,7 +321,7 @@ function FinanceManagement() {
                   className="tableEdit"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
                   onClick={() => {
-                    setEditModalShow(true);
+                    setEditExpenseModalShow(true);
                     setModalData(dataObj);
                     setModalNum(index + 1);
                   }}
@@ -296,7 +333,7 @@ function FinanceManagement() {
                   className="tableDelete"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
                   onClick={() => {
-                    setDeleteModalShow(true);
+                    setDeleteExpenseModalShow(true);
                     setModalData(dataObj);
                     setModalNum(index + 1);
                   }}
@@ -306,9 +343,9 @@ function FinanceManagement() {
               </tr>
             );
           })}
-          <EditModal
-            show={editModalShow}
-            onHide={() => setEditModalShow(false)}
+          <EditExpenseModal
+            show={editExpenseModalShow}
+            onHide={() => setEditExpenseModalShow(false)}
             id={modalData.id}
             num={modalNum}
             title={modalData.title}
@@ -316,9 +353,9 @@ function FinanceManagement() {
             expensetype={modalData.expense_type}
             date={modalData.date}
           />
-          <DeleteModal
-            show={deleteModalShow}
-            onHide={() => setDeleteModalShow(false)}
+          <DeleteExpenseModal
+            show={deleteExpenseModalShow}
+            onHide={() => setDeleteExpenseModalShow(false)}
             id={modalData.id}
             num={modalNum}
             title={modalData.title}
@@ -328,12 +365,98 @@ function FinanceManagement() {
           />
         </tbody>
       </Table>
-      <HeatMap 
-      expense={expense}
-      dailyAllowance={dailyAllowance}    // Change this to users daily allowance based on income/365
+      <HeatMap
+        expense={expense}
+        dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
       />
-      <SetGoal dailyAllowance={dailyAllowance}/>
 
+
+{/* ////////////////////////////////////////////////////////////////////////// */}
+{/* Goals table */}
+<SetGoal dailyAllowance={dailyAllowance}/>
+<Table striped bordered hover style={{ margin: "0rem auto 3.5rem" }}>
+        <thead>
+          <tr>
+            <th>
+              #
+            </th>
+            <th>
+              Title{" "}
+            </th>
+            <th>
+              Amount to Save{" "}
+            </th>
+            <th>
+              Start Date{" "}
+            </th>
+            <th>
+              End Date{" "}
+            </th>
+            <th>Days Left</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {goal.map((dataObj, index) => {
+            return (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{dataObj.title}</td>
+                <td>{dataObj.amount}</td>
+                <td>{dataObj.start_date}</td>
+                <td>{dataObj.goal_date}</td>
+                <td>{daysLeft(dataObj.start_date, dataObj.goal_date)}</td>
+                <td
+                  className="tableEdit"
+                  style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                  onClick={() => {
+                    setGoalModalShow(true);
+                    setModalData(dataObj);
+                    setModalNum(index + 1);
+                  }}
+                >
+                  edit
+                </td>
+
+                <td
+                  className="tableDelete"
+                  style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                  onClick={() => {
+                    setDeleteGoalModalShow(true);
+                    setModalData(dataObj);
+                    setModalNum(index + 1);
+                  }}
+                >
+                  X
+                </td>
+              </tr>
+            );
+          })}
+          <GoalModal
+            show={goalModalShow}
+            onHide={() => setGoalModalShow(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            startdate={modalData.start_date}
+            goaldate={modalData.goal_date}
+            editgoal={1}
+          />
+          <DeleteGoalModal
+            show={deleteGoalModalShow}
+            onHide={() => setDeleteGoalModalShow(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            startdate={modalData.start_date}
+            goaldate={modalData.goal_date}
+            daysleft={daysLeft(modalData.start_date, modalData.goal_date).toString()}
+          />
+        </tbody>
+      </Table>
     </div>
   );
 }

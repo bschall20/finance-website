@@ -1,34 +1,14 @@
 // import React, { useState, useEffect } from "react";
-import React, { useEffect } from "react";
+// import React, { useEffect } from "react";
+import React from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import InputGroup from "react-bootstrap/InputGroup";
-// import Modal from "react-bootstrap/Modal";
-// import EditModal from "./EditModal";
+
 
 function ExpenseForm(props) {
-  // const [expense, setExpense] = useState([]);
-  // const [postExpense, setPostExpense] = useState(props.postExpense);
-
-  // const getData = async () => {
-  //   try {
-  //     const response = await fetch(`http://localhost:8000/expense`);
-  //     // const expenseJSON = await response.json();
-  //     //   console.log("expense JSON:");
-  //     //   console.log(expenseJSON);
-  //     // setExpense(expenseJSON);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  // Sort data by ID # because it got out of order somehow? Look into.
-  // expense.sort(function (a, b) {
-  //   return parseFloat(a.id) - parseFloat(b.id);
-  // });
-
   const postData = async (formTitle, formAmount, formType, formDate) => {
     try {
       const response = await fetch("http://localhost:8000/expense", {
@@ -38,7 +18,7 @@ function ExpenseForm(props) {
           title: formTitle,
           amount: parseFloat(formAmount),
           expense_type: formType,
-          date: formDate
+          date: formDate,
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -48,7 +28,6 @@ function ExpenseForm(props) {
   };
 
   const editData = async (formTitle, formAmount, formType, formDate) => {
-    // e.preventDefault();
     try {
       const response = await fetch(`http://localhost:8000/expense`, {
         method: "PUT",
@@ -58,7 +37,7 @@ function ExpenseForm(props) {
           title: formTitle,
           amount: parseFloat(formAmount),
           expense_type: formType,
-          date: formDate
+          date: formDate,
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);
@@ -72,19 +51,17 @@ function ExpenseForm(props) {
         console.log("Expense Type = ");
         console.log(formType);
         console.log("Form date = ");
-        console.log(formDate)
+        console.log(formDate);
         console.log("reponse status is 200");
-        //Insert show modal to false so modal goes away?
-        // getData();
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  useEffect(() => {
-    // getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   function HandleSubmit(e) {
     let formTitle = e.target[0].value;
@@ -92,36 +69,20 @@ function ExpenseForm(props) {
     let formType = e.target[2].value;
     let formDate = e.target[3].value;
 
-    // if (formType === "TypeOfExpense") {
-    //   console.log("No entry - used default Type of Expense.");
-    //   return null;
-    // } else {
-    //   postData(formTitle, formAmount, formType);
-    // }
-
     if (formType === "SelectTypeOfExpense") {
       console.log("No entry - used default Select Type of Expense.");
       return null;
     }
-
     if (props.postexpense === true) {
       console.log("Post data called");
       return postData(formTitle, formAmount, formType, formDate);
     } else {
       return editData(formTitle, formAmount, formType, formDate);
     }
-
-    //e.preventDefault(); // REMOVE ONCE DATA SUBMITS AND READS FROM A DB? REFRESHES PAGE WHICH IS FINE ONCE DATA SAVES.
   }
 
-
-
   return (
-    <Form
-      // style={{ width: "50%" }}
-      // className="mx-auto mt-5"
-      onSubmit={HandleSubmit}
-    >
+    <Form onSubmit={HandleSubmit}>
       <Row className="mb-3">
         <Col>
           <Form.Group as={Col}>
@@ -173,22 +134,18 @@ function ExpenseForm(props) {
         </Col>
 
         <Col>
-        <Form.Label>Date</Form.Label>
-        <Form.Control
-              type="date"
-              required
-              name="date"
-              defaultValue={props.date}
-            />
+          <Form.Label>Date</Form.Label>
+          <Form.Control
+            type="date"
+            required
+            name="date"
+            defaultValue={props.date}
+          />
         </Col>
       </Row>
 
       <Form.Group as={Row} className="mb-3">
         <Col sm={{ span: 12 }}>
-          {/* <Button type="submit" variant="success" onClick={FormType}>
-            Submit Expense
-          </Button> */}
-
           <Button
             type="submit"
             variant="success"
@@ -217,7 +174,6 @@ function ExpenseForm(props) {
               Submit Change
             </Button>
           </div>
-          {/* {showSubmit} */}
         </Col>
       </Form.Group>
     </Form>

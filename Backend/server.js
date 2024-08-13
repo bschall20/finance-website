@@ -91,15 +91,15 @@ app.get("/goal", async (req, res) => {
 
 // Post new expense to database
 app.post("/goal", (req, res) => {
-  const { title, amount, expense_type, date } = req.body;
+  const { title, amount, start_date, goal_date } = req.body;
   console.log(
-    `info from req. body: ${title}, ${amount}, ${expense_type}, ${date}`
+    `info from req. body: ${title}, ${amount}, ${start_date}, ${goal_date}`
   );
   //const id = uuidv4();
   try {
     pool.query(
-      "INSERT INTO user_goal(title, amount, date) VALUES($1, $2, $3)",
-      [title, amount, date]
+      "INSERT INTO user_goal(title, amount, start_date, goal_date) VALUES($1, $2, $3, $4)",
+      [title, amount, start_date, goal_date]
     );
   } catch (err) {
     console.log(err);
@@ -109,11 +109,11 @@ app.post("/goal", (req, res) => {
 // Edit a users expense in database
 app.put("/goal", async (req, res) => {
   // const { id } = req.params;
-  const { id, title, amount, date } = req.body;
+  const { id, title, amount, start_date, goal_date } = req.body;
   try {
     const editExpense = await pool.query(
-      "UPDATE user_goal SET title = $2, amount = $3, date = $4 WHERE id = $1",
-      [id, title, amount, date]
+      "UPDATE user_goal SET title = $2, amount = $3, start_date = $4, goal_date = $5 WHERE id = $1",
+      [id, title, amount, start_date, goal_date]
     );
     res.json(editExpense);
   } catch (err) {
