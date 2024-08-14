@@ -8,7 +8,12 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 function GoalModal(props) {
-  const postData = async (formTitle, formAmount, formStartDate, formGoalDate) => {
+  const postGoalData = async (
+    formTitle,
+    formAmount,
+    formStartDate,
+    formGoalDate
+  ) => {
     try {
       const response = await fetch("http://localhost:8000/goal", {
         method: "POST",
@@ -17,7 +22,7 @@ function GoalModal(props) {
           title: formTitle,
           amount: parseFloat(formAmount),
           start_date: formStartDate,
-          goal_date: formGoalDate
+          goal_date: formGoalDate,
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -26,7 +31,12 @@ function GoalModal(props) {
     }
   };
 
-  const editData = async (formTitle, formAmount, formStartDate, formGoalDate) => {
+  const editGoalData = async (
+    formTitle,
+    formAmount,
+    // formStartDate,
+    formGoalDate
+  ) => {
     // e.preventDefault();
     try {
       const response = await fetch(`http://localhost:8000/goal`, {
@@ -36,8 +46,8 @@ function GoalModal(props) {
           id: props.id,
           title: formTitle,
           amount: parseFloat(formAmount),
-          start_date: formStartDate,
-          goal_date: formGoalDate
+          // start_date: formStartDate,
+          goal_date: formGoalDate,
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);
@@ -46,23 +56,36 @@ function GoalModal(props) {
     }
   };
 
+  const todayDate = () => {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    return yyyy + "-" + mm + "-" + dd;
+  };
 
   function HandleSubmit(e) {
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
-    let formStartDate = e.target[2].value;
+    // let formStartDate = e.target[2].value;
+    let formStartDate = todayDate();
     let formGoalDate = e.target[3].value;
-
 
     if (props.postgoal === 1) {
       console.log("Post goal data called");
-      return postData(formTitle, formAmount, formStartDate, formGoalDate);
+      return postGoalData(formTitle, formAmount, formStartDate, formGoalDate);
     } else {
-      return editData(formTitle, formAmount, formStartDate, formGoalDate);
+      return editGoalData(formTitle, formAmount, formGoalDate);
+      // return editGoalData(formTitle, formAmount, formStartDate, formGoalDate);
     }
   }
-
-
 
   return (
     <>
@@ -79,13 +102,11 @@ function GoalModal(props) {
         </Modal.Header>
 
         <Modal.Body>
-          <Form
-            onSubmit={HandleSubmit}
-          >
+          <Form onSubmit={HandleSubmit}>
             <Row className="mb-3">
               <Col>
                 <Form.Group as={Col}>
-                  <Form.Label>Title</Form.Label>
+                  <Form.Label>Goal Title</Form.Label>
                   <Form.Control
                     type=""
                     placeholder="Enter Goal Title"
@@ -97,7 +118,7 @@ function GoalModal(props) {
               </Col>
 
               <Col>
-                <Form.Label>Amount to Save</Form.Label>
+                <Form.Label>Goal Amount</Form.Label>
                 <InputGroup className="mb-3">
                   <InputGroup.Text>$</InputGroup.Text>
                   <Form.Control
@@ -112,17 +133,20 @@ function GoalModal(props) {
             </Row>
 
             <Row>
-            <Col>
+              <Col>
                 <Form.Label>Goal Start Date</Form.Label>
                 <Form.Control
                   type="date"
                   required
                   name="startDate"
-                  defaultValue={props.startdate}
+                  defaultValue={props.showsubmit === 1
+                    ? todayDate() 
+                    : props.startdate }
+                  disabled
                 />
               </Col>
               <Col>
-                <Form.Label>Goal Finish Date</Form.Label>
+                <Form.Label>Goal Date</Form.Label>
                 <Form.Control
                   type="date"
                   required
@@ -148,7 +172,7 @@ function GoalModal(props) {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" variant="success" onClick={postData}>
+                  <Button type="submit" variant="success" onClick={postGoalData}>
                     Submit Goal
                   </Button>
                 </div>
@@ -167,7 +191,7 @@ function GoalModal(props) {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" variant="success" onClick={editData}>
+                  <Button type="submit" variant="success" onClick={editGoalData}>
                     Submit Goal Change
                   </Button>
                 </div>

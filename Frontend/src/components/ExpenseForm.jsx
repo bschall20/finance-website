@@ -7,9 +7,8 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import InputGroup from "react-bootstrap/InputGroup";
 
-
 function ExpenseForm(props) {
-  const postData = async (formTitle, formAmount, formType, formDate) => {
+  const postExpenseData = async (formTitle, formAmount, formType, formDate) => {
     try {
       const response = await fetch("http://localhost:8000/expense", {
         method: "POST",
@@ -27,7 +26,7 @@ function ExpenseForm(props) {
     }
   };
 
-  const editData = async (formTitle, formAmount, formType, formDate) => {
+  const editExpenseData = async (formTitle, formAmount, formType, formDate) => {
     try {
       const response = await fetch(`http://localhost:8000/expense`, {
         method: "PUT",
@@ -73,11 +72,11 @@ function ExpenseForm(props) {
       console.log("No entry - used default Select Type of Expense.");
       return null;
     }
-    if (props.postexpense === true) {
+    if (props.postexpense === 1) {
       console.log("Post data called");
-      return postData(formTitle, formAmount, formType, formDate);
+      return postExpenseData(formTitle, formAmount, formType, formDate);
     } else {
-      return editData(formTitle, formAmount, formType, formDate);
+      return editExpenseData(formTitle, formAmount, formType, formDate);
     }
   }
 
@@ -146,18 +145,31 @@ function ExpenseForm(props) {
 
       <Form.Group as={Row} className="mb-3">
         <Col sm={{ span: 12 }}>
-          <Button
-            type="submit"
-            variant="success"
-            style={props.showsubmit ? null : { display: "none" }}
-            onClick={postData}
-          >
-            Submit Expense
-          </Button>
-
+          {/* SUBMIT EXPENSE */}
           <div
             style={
-              props.showsubmit
+              props.showsubmit === 1
+                ? { display: "flex", justifyContent: "end" }
+                : { display: "none" }
+            }
+          >
+            <Button
+              //   type="null"
+              variant="secondary"
+              className="me-3"
+              onClick={props.onHide}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="success" onClick={postExpenseData}>
+              Submit Expense
+            </Button>
+          </div>
+
+          {/* EDIT EXPENSE */}
+          <div
+            style={
+              props.showsubmit === 1
                 ? { display: "none" }
                 : { display: "flex", justifyContent: "end" }
             }
@@ -170,7 +182,7 @@ function ExpenseForm(props) {
             >
               Cancel
             </Button>
-            <Button type="submit" variant="success" onClick={editData}>
+            <Button type="submit" variant="success" onClick={editExpenseData}>
               Submit Change
             </Button>
           </div>

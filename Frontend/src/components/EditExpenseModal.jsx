@@ -1,12 +1,5 @@
 import React from "react";
 import ExpenseForm from "./ExpenseForm";
-
-// import Col from "react-bootstrap/Col";
-// import Form from "react-bootstrap/Form";
-// import Row from "react-bootstrap/Row";
-// import InputGroup from "react-bootstrap/InputGroup";
-
-// import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 function EditExpenseModal(props) {
@@ -26,7 +19,6 @@ function EditExpenseModal(props) {
         </Modal.Header>
 
         <Modal.Body>
-
           <ExpenseForm
             title={props.title}
             amount={props.amount}
@@ -37,18 +29,7 @@ function EditExpenseModal(props) {
             postexpense={false}
             onHide={props.onHide}
           />
-
-
         </Modal.Body>
-
-        {/* <Modal.Footer style={{display: "flex"}}>
-          <Button variant="danger" onClick={props.onHide}>
-            Close
-          </Button>
-          <Button type="submit" variant="success" onClick={editData}>
-            Submit Change
-          </Button>
-        </Modal.Footer> */}
       </Modal>
     </>
   );

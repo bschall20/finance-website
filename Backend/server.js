@@ -78,24 +78,22 @@ app.delete("/expense", async (req, res) => {
 /**************************************/
 /**************************************/
 
-// Get all user expenses data
+// Get all user goals data
 app.get("/goal", async (req, res) => {
   try {
     const expense = await pool.query("SELECT * FROM user_goal");
     res.json(expense.rows);
   } catch (err) {
     console.log(err);
-    // console.error(error);
   }
 });
 
-// Post new expense to database
+// Post new goal to database
 app.post("/goal", (req, res) => {
   const { title, amount, start_date, goal_date } = req.body;
   console.log(
     `info from req. body: ${title}, ${amount}, ${start_date}, ${goal_date}`
   );
-  //const id = uuidv4();
   try {
     pool.query(
       "INSERT INTO user_goal(title, amount, start_date, goal_date) VALUES($1, $2, $3, $4)",
@@ -106,14 +104,27 @@ app.post("/goal", (req, res) => {
   }
 });
 
-// Edit a users expense in database
+
+// Edit a users goal in database
+// app.put("/goal", async (req, res) => {
+//   const { id, title, amount, start_date, goal_date } = req.body;
+//   try {
+//     const editExpense = await pool.query(
+//       "UPDATE user_goal SET title = $2, amount = $3, start_date = $4, goal_date = $5 WHERE id = $1",
+//       [id, title, amount, start_date, goal_date]
+//     );
+//     res.json(editExpense);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+// Edited from above to not change start date when edited
 app.put("/goal", async (req, res) => {
-  // const { id } = req.params;
-  const { id, title, amount, start_date, goal_date } = req.body;
+  const { id, title, amount, goal_date } = req.body;
   try {
     const editExpense = await pool.query(
-      "UPDATE user_goal SET title = $2, amount = $3, start_date = $4, goal_date = $5 WHERE id = $1",
-      [id, title, amount, start_date, goal_date]
+      "UPDATE user_goal SET title = $2, amount = $3, goal_date = $4 WHERE id = $1",
+      [id, title, amount, goal_date]
     );
     res.json(editExpense);
   } catch (err) {
@@ -121,7 +132,7 @@ app.put("/goal", async (req, res) => {
   }
 });
 
-// DELETE a users expense in database
+// DELETE a users goal in database
 app.delete("/goal", async (req, res) => {
   const { id } = req.body;
   try {

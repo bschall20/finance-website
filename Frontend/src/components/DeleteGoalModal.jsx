@@ -42,7 +42,7 @@ function DeleteGoalModal(props) {
             {props.num}.) <span className="deleteInfo">{props.title}</span>
           </p>
           <p className="deleteTitle">
-            {props.deleteGoal === 1 ? "Amount to Save" : "Amount"}{" "}
+            {props.deleteGoal === 1 ? "Goal Amount" : "Goal Amount:"}{" "}
             <span className="deleteInfo">{props.amount}</span>
           </p>
           <p className="deleteTitle">

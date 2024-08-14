@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
-
-import ExpenseForm from "../components/ExpenseForm";
+// import ExpenseForm from "../components/ExpenseForm";
+import SubmitExpenseModal from "../components/SubmitExpenseModal";
 import EditExpenseModal from "../components/EditExpenseModal";
 import DeleteExpenseModal from "../components/DeleteExpenseModal";
 import PieChart from "../components/PieChart";
 import HeatMap from "../components/HeatMap";
-import SetGoal from "../components/SetGoal";
-import GoalModal from "../components/GoalModal"
+// import SetGoal from "../components/SetGoal";       ====> can delete if all works with goal table. was redundant component
+import GoalModal from "../components/GoalModal";
 import DeleteGoalModal from "../components/DeleteGoalModal";
 
 import { FaSort } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/esm/Button";
 
 function FinanceManagement() {
+  const [submitExpenseModalShow, setSubmitExpenseModalShow] = useState(false);
   const [editExpenseModalShow, setEditExpenseModalShow] = useState(false);
   const [deleteExpenseModalShow, setDeleteExpenseModalShow] = useState(false);
   const [goalModalShow, setGoalModalShow] = useState(false);
@@ -41,11 +43,10 @@ function FinanceManagement() {
     try {
       const response = await fetch(`http://localhost:8000/expense`);
       const expenseJSON = await response.json();
-      console.log("expense JSON:");
-      console.log(expenseJSON);
+      // console.log("expense JSON:");
+      // console.log(expenseJSON);
       setExpense(
         expenseJSON.sort(function (a, b) {
-          // return parseFloat(a.id) - parseFloat(b.id);    => sorted by ID # at first
           // Default sort by DATE:
           var aa = a.date.split("/").reverse().join(),
             bb = b.date.split("/").reverse().join();
@@ -54,7 +55,6 @@ function FinanceManagement() {
       );
       setExpenseCopy(
         expenseJSON.sort(function (a, b) {
-          // return parseFloat(a.id) - parseFloat(b.id);    => sorted by ID # at first
           // Default sort by DATE:
           var aa = a.date.split("/").reverse().join(),
             bb = b.date.split("/").reverse().join();
@@ -70,20 +70,19 @@ function FinanceManagement() {
     try {
       const response = await fetch(`http://localhost:8000/goal`);
       const goalJSON = await response.json();
-      console.log("goal JSON:");
-      console.log(goalJSON);
+      // console.log("goal JSON:");
+      // console.log(goalJSON);
       setGoal(
         goalJSON.sort(function (a, b) {
-          // return parseFloat(a.id) - parseFloat(b.id);    => sorted by ID # at first
           // Default sort by DATE:
           var aa = a.goal_date.split("/").reverse().join(),
             bb = b.goal_date.split("/").reverse().join();
           return aa < bb ? -1 : aa > bb ? 1 : 0;
         })
       );
+      // Only needed if I decide to allow goal table sorting later (no need to)
       // setGoalCopy(
       //   goalJSON.sort(function (a, b) {
-      //     // return parseFloat(a.id) - parseFloat(b.id);    => sorted by ID # at first
       //     // Default sort by DATE:
       //     var aa = a.date.split("/").reverse().join(),
       //       bb = b.date.split("/").reverse().join();
@@ -190,7 +189,7 @@ function FinanceManagement() {
     setDefaultDate(e.target.value);
     setDefaultTitleSearch("");
     let dateSearch = e.target.value;
-    console.log(e.target.value);
+    // console.log(e.target.value);
     try {
       let result = expenseCopy.filter((a) => {
         let expenseDate = a.date;
@@ -212,13 +211,43 @@ function FinanceManagement() {
   };
 
   // Days Between Goal Dates
-  function daysLeft(start_date, goal_date) {
-    var startDate = Date.parse(start_date);
+  // function daysLeft(start_date, goal_date) {
+  function daysLeft(goal_date, bool) {
+    // var startDate = Date.parse(start_date);
+    var date = new Date();
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+    var year = date.getFullYear();
+    if (month < 10) {
+      month = '0' + month
+    }
+    if (day < 10) {
+      day = '0' + day
+    }
+    var today = `${year}/${month}/${day}`
+    var todayDate = Date.parse(today)
     var goalDate = Date.parse(goal_date);
-    var diff = new Date(goalDate - startDate);
-    var days = diff/1000/60/60/24;
-    return days;
+    var diff = new Date(goalDate - todayDate);
+    var days = Math.ceil(diff / 1000 / 60 / 60 / 24);
+    var daysString = days.toString();
+
+    if (bool === true){
+      return days;
+    } else if (Array.from(daysString)[0] === "-"){
+      return (`${days} (late)`)
+    } else {return `${days}`}
   }
+
+
+  // Used for showing submit expense + add goal modals
+  const showSubmitExpense = () => {
+    setSubmitExpenseModalShow(true)
+  }
+  const [addGoalModalShow, setAddGoalModalShow] = useState(false);
+  const addGoal = () => {
+    setAddGoalModalShow(true);
+  };
+
 
 
   useEffect(() => {
@@ -250,10 +279,34 @@ function FinanceManagement() {
     }
   });
 
+
+
+
+
+
+
   return (
     <div id="financeManagement">
-      <ExpenseForm postexpense={true} showsubmit={true} />
+      
+      <h2>Add Expense</h2>
+      <Button variant="primary" size="lg" style={{}} onClick={showSubmitExpense}>
+        +
+      </Button>
+      <SubmitExpenseModal
+            show={submitExpenseModalShow}
+            onHide={() => setSubmitExpenseModalShow(false)}
+      />
+      {/* <ExpenseForm postexpense={true} showsubmit={true} /> */}
 
+
+
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+                                  {/* Expenses piechart */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
       <div className="chart">
         <PieChart
           series={[
@@ -268,6 +321,20 @@ function FinanceManagement() {
         />
       </div>
 
+
+
+
+
+
+
+
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+                                  {/* Expenses table */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
       <h2>Expenses</h2>
       <Table striped bordered hover style={{ margin: "0rem auto 3.5rem" }}>
         <thead>
@@ -365,33 +432,61 @@ function FinanceManagement() {
           />
         </tbody>
       </Table>
+
+
+
+
+
+
+
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+                                {/* Daily spending heatmap */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
       <HeatMap
         expense={expense}
         dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
       />
 
 
-{/* ////////////////////////////////////////////////////////////////////////// */}
-{/* Goals table */}
-<SetGoal dailyAllowance={dailyAllowance}/>
-<Table striped bordered hover style={{ margin: "0rem auto 3.5rem" }}>
+
+
+
+
+
+
+
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+                                  {/* Goals table */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* <SetGoal dailyAllowance={dailyAllowance} /> */}
+      <h2>Add Goal</h2>
+      <Button variant="primary" size="lg" style={{}} onClick={addGoal}>
+        +
+      </Button>
+      <GoalModal
+        show={addGoalModalShow}
+        showsubmit={1}
+        postgoal={1}
+        onHide={() => setAddGoalModalShow(false)}
+      />
+
+      <Table striped bordered hover style={{ margin: "0rem auto 3.5rem" }}>
         <thead>
           <tr>
-            <th>
-              #
-            </th>
-            <th>
-              Title{" "}
-            </th>
-            <th>
-              Amount to Save{" "}
-            </th>
-            <th>
-              Start Date{" "}
-            </th>
-            <th>
-              End Date{" "}
-            </th>
+            <th>#</th>
+            <th>Goal Title</th>
+            <th>Goal Amount </th>
+            {/* <th>Start Date </th> */}
+            <th>Goal Date </th>
+            <th>Amount to Save per Day</th>
             <th>Days Left</th>
             <th></th>
             <th></th>
@@ -399,14 +494,54 @@ function FinanceManagement() {
         </thead>
         <tbody>
           {goal.map((dataObj, index) => {
+
+
+            // Need to go through this later to remove redundancy.
+            let tableIndex;
+            let tableTitle;
+            let tableAmount;
+            // let tableStart;
+            let tableDate;
+            let tableSave;
+            let tableLeft;
+            if (daysLeft(dataObj.goal_date, false)[0] === "-"){
+              tableIndex = <td style={{backgroundColor: "#D60027"}}>{index + 1}</td>
+              tableTitle = <td style={{backgroundColor: "#D60027"}}>{dataObj.title}</td>
+              tableAmount = <td style={{backgroundColor: "#D60027"}}>{dataObj.amount}</td>
+              // tableStart = <td style={{backgroundColor: "#D60027"}}>{dataObj.start_date}</td>
+              tableDate = <td style={{backgroundColor: "#D60027"}}>{dataObj.goal_date}</td>
+              tableSave = <td style={{backgroundColor: "#D60027"}}>to save</td>
+              tableLeft = <td style={{backgroundColor: "#D60027"}}>{daysLeft(dataObj.goal_date, false)}</td>
+            } else {
+              tableIndex = <td>{index + 1}</td>
+              tableTitle = <td>{dataObj.title}</td>
+              tableAmount = <td>{dataObj.amount}</td>
+              // tableStart = <td>{dataObj.start_date}</td>
+              tableDate = <td>{dataObj.goal_date}</td>
+              tableSave = <td>to save</td>
+              tableLeft = <td>{daysLeft(dataObj.goal_date, false)}</td>
+            }
+
+
+
             return (
               <tr key={index}>
-                <td>{index + 1}</td>
+
+              {tableIndex}
+              {tableTitle}
+              {tableAmount}
+              {/* {tableStart} */}
+              {tableDate}
+              {tableSave}
+              {tableLeft}
+                {/* <td>{index + 1}</td>
                 <td>{dataObj.title}</td>
                 <td>{dataObj.amount}</td>
                 <td>{dataObj.start_date}</td>
                 <td>{dataObj.goal_date}</td>
-                <td>{daysLeft(dataObj.start_date, dataObj.goal_date)}</td>
+                {daysLeft(dataObj.goal_date, false)} */}
+
+
                 <td
                   className="tableEdit"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
@@ -435,6 +570,7 @@ function FinanceManagement() {
           })}
           <GoalModal
             show={goalModalShow}
+            showsubmit={0}
             onHide={() => setGoalModalShow(false)}
             id={modalData.id}
             num={modalNum}
@@ -453,7 +589,8 @@ function FinanceManagement() {
             amount={modalData.amount}
             startdate={modalData.start_date}
             goaldate={modalData.goal_date}
-            daysleft={daysLeft(modalData.start_date, modalData.goal_date).toString()}
+            // daysleft={daysLeft(modalData.start_date, modalData.goal_date).toString()}
+            daysleft={daysLeft(modalData.goal_date, true).toString()}
           />
         </tbody>
       </Table>

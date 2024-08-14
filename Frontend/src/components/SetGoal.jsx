@@ -13,8 +13,7 @@ function SetGoal(props) {
 
   return (
     <div>
-      <h2>Set Goal</h2>
-      <p>set goal component</p>
+      <h2>Add Goal</h2>
       {/* MAKE THE BUTTON CIRCULAR!!!!!!
         <button
         // variant="primary"
@@ -43,7 +42,7 @@ function SetGoal(props) {
         num={props.num}
         title={props.title}
         amount={props.amount}
-        startdate={props.startdate}
+        // startdate={props.startdate}
         goaldate={props.goaldate}
         onHide={() => setAddGoalModalShow(false)}
       />
