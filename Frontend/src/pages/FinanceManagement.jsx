@@ -4,6 +4,7 @@ import SubmitExpenseModal from "../components/SubmitExpenseModal";
 import EditExpenseModal from "../components/EditExpenseModal";
 import DeleteExpenseModal from "../components/DeleteExpenseModal";
 import PieChart from "../components/PieChart";
+import LineChart from "../components/LineChart";
 import HeatMap from "../components/HeatMap";
 // import SetGoal from "../components/SetGoal";       ====> can delete if all works with goal table. was redundant component
 import GoalModal from "../components/GoalModal";
@@ -211,44 +212,55 @@ function FinanceManagement() {
   };
 
   // Days Between Goal Dates
-  // function daysLeft(start_date, goal_date) {
-  function daysLeft(goal_date, bool) {
-    // var startDate = Date.parse(start_date);
+  function daysLeft(goal_date, bool, start_date, amount) {
+
     var date = new Date();
-    var month = date.getMonth()+1;
+    var month = date.getMonth() + 1;
     var day = date.getDate();
     var year = date.getFullYear();
     if (month < 10) {
-      month = '0' + month
+      month = "0" + month;
     }
     if (day < 10) {
-      day = '0' + day
+      day = "0" + day;
     }
-    var today = `${year}/${month}/${day}`
-    var todayDate = Date.parse(today)
+    var today = `${year}/${month}/${day}`;
+    var todayDate = Date.parse(today);
     var goalDate = Date.parse(goal_date);
     var diff = new Date(goalDate - todayDate);
     var days = Math.ceil(diff / 1000 / 60 / 60 / 24);
     var daysString = days.toString();
 
-    if (bool === true){
-      return days;
-    } else if (Array.from(daysString)[0] === "-"){
-      return (`${days} (late)`)
-    } else {return `${days}`}
-  }
 
+    // Variables for returning goal amount to save/day
+    var startDate = Date.parse(start_date);
+    var amountDiff = new Date(goalDate - startDate);
+    var amountDays = Math.ceil(amountDiff / 1000 / 60 / 60 / 24);
+    // var amountDaysString = amountDays.toString();
+    var amountLeft = Math.round((amount/amountDays) * 100)/100;
+
+    // Return days left on goal for delete goal modal 
+    if (bool === true) {
+      return `${days}`;
+    } 
+    // Return negative days for being late
+    else if (Array.from(daysString)[0] === "-") {
+      return `${days} (late)`;
+    }
+    // Using function to return amount to save per day from start date
+    else if (bool === 2){
+      return (amountLeft)
+    } 
+  }
 
   // Used for showing submit expense + add goal modals
   const showSubmitExpense = () => {
-    setSubmitExpenseModalShow(true)
-  }
+    setSubmitExpenseModalShow(true);
+  };
   const [addGoalModalShow, setAddGoalModalShow] = useState(false);
   const addGoal = () => {
     setAddGoalModalShow(true);
   };
-
-
 
   useEffect(() => {
     getExpenseData();
@@ -279,31 +291,27 @@ function FinanceManagement() {
     }
   });
 
-
-
-
-
-
-
   return (
     <div id="financeManagement">
-      
       <h2>Add Expense</h2>
-      <Button variant="primary" size="lg" style={{}} onClick={showSubmitExpense}>
+      <Button
+        variant="primary"
+        size="lg"
+        style={{}}
+        onClick={showSubmitExpense}
+      >
         +
       </Button>
       <SubmitExpenseModal
-            show={submitExpenseModalShow}
-            onHide={() => setSubmitExpenseModalShow(false)}
+        show={submitExpenseModalShow}
+        onHide={() => setSubmitExpenseModalShow(false)}
       />
       {/* <ExpenseForm postexpense={true} showsubmit={true} /> */}
 
-
-
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
-                                  {/* Expenses piechart */}
+      {/* Expenses piechart */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
@@ -319,19 +327,16 @@ function FinanceManagement() {
             other,
           ]}
         />
+
+        <LineChart
+          expense={expense}
+        />
       </div>
 
-
-
-
-
-
-
-
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
-                                  {/* Expenses table */}
+      {/* Expenses table */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
@@ -433,16 +438,10 @@ function FinanceManagement() {
         </tbody>
       </Table>
 
-
-
-
-
-
-
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
-                                {/* Daily spending heatmap */}
+      {/* Daily spending heatmap */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
@@ -451,18 +450,10 @@ function FinanceManagement() {
         dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
       />
 
-
-
-
-
-
-
-
-
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
-                                  {/* Goals table */}
+      {/* Goals table */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
@@ -484,9 +475,9 @@ function FinanceManagement() {
             <th>#</th>
             <th>Goal Title</th>
             <th>Goal Amount </th>
-            {/* <th>Start Date </th> */}
-            <th>Goal Date </th>
-            <th>Amount to Save per Day</th>
+            <th>Goal Start</th>
+            <th>Goal End</th>
+            <th>Save per Day (from Start)</th>
             <th>Days Left</th>
             <th></th>
             <th></th>
@@ -494,53 +485,66 @@ function FinanceManagement() {
         </thead>
         <tbody>
           {goal.map((dataObj, index) => {
-
-
             // Need to go through this later to remove redundancy.
             let tableIndex;
             let tableTitle;
             let tableAmount;
-            // let tableStart;
+            let tableStart;
             let tableDate;
             let tableSave;
             let tableLeft;
-            if (daysLeft(dataObj.goal_date, false)[0] === "-"){
-              tableIndex = <td style={{backgroundColor: "#D60027"}}>{index + 1}</td>
-              tableTitle = <td style={{backgroundColor: "#D60027"}}>{dataObj.title}</td>
-              tableAmount = <td style={{backgroundColor: "#D60027"}}>{dataObj.amount}</td>
-              // tableStart = <td style={{backgroundColor: "#D60027"}}>{dataObj.start_date}</td>
-              tableDate = <td style={{backgroundColor: "#D60027"}}>{dataObj.goal_date}</td>
-              tableSave = <td style={{backgroundColor: "#D60027"}}>to save</td>
-              tableLeft = <td style={{backgroundColor: "#D60027"}}>{daysLeft(dataObj.goal_date, false)}</td>
-            } else {
-              tableIndex = <td>{index + 1}</td>
-              tableTitle = <td>{dataObj.title}</td>
-              tableAmount = <td>{dataObj.amount}</td>
-              // tableStart = <td>{dataObj.start_date}</td>
-              tableDate = <td>{dataObj.goal_date}</td>
-              tableSave = <td>to save</td>
-              tableLeft = <td>{daysLeft(dataObj.goal_date, false)}</td>
+            // Return Overdue Goal
+            if (daysLeft(dataObj.goal_date, true)[0] === "-") {
+              tableIndex = (
+                <td style={{ backgroundColor: "#D60027" }}>{index + 1}</td>
+              );
+              tableTitle = (
+                <td style={{ backgroundColor: "#D60027" }}>{dataObj.title}</td>
+              );
+              tableAmount = (
+                <td style={{ backgroundColor: "#D60027" }}>{dataObj.amount}</td>
+              );
+              tableStart = (<td style={{backgroundColor: "#D60027"}}>{dataObj.start_date}</td>)
+              tableDate = (
+                <td style={{ backgroundColor: "#D60027" }}>
+                  {dataObj.goal_date}
+                </td>
+              );
+              tableSave = (
+                <td style={{ backgroundColor: "#D60027" }}>${daysLeft(dataObj.goal_date, 2, dataObj.start_date, dataObj.amount)}</td>
+              );
+              tableLeft = (
+                <td style={{ backgroundColor: "#D60027" }}>
+                  {daysLeft(dataObj.goal_date, true)}
+                </td>
+              );
+            } 
+            // Return Goal with Days Left
+            else {
+              tableIndex = <td>{index + 1}</td>;
+              tableTitle = <td>{dataObj.title}</td>;
+              tableAmount = <td>{dataObj.amount}</td>;
+              tableStart = <td>{dataObj.start_date}</td>
+              tableDate = <td>{dataObj.goal_date}</td>;
+              tableSave = <td>${daysLeft(dataObj.goal_date, 2, dataObj.start_date, dataObj.amount)}</td>;
+              tableLeft = <td>{daysLeft(dataObj.goal_date, true)}</td>;
             }
-
-
 
             return (
               <tr key={index}>
-
-              {tableIndex}
-              {tableTitle}
-              {tableAmount}
-              {/* {tableStart} */}
-              {tableDate}
-              {tableSave}
-              {tableLeft}
+                {tableIndex}
+                {tableTitle}
+                {tableAmount}
+                {tableStart}
+                {tableDate}
+                {tableSave}
+                {tableLeft}
                 {/* <td>{index + 1}</td>
                 <td>{dataObj.title}</td>
                 <td>{dataObj.amount}</td>
                 <td>{dataObj.start_date}</td>
                 <td>{dataObj.goal_date}</td>
                 {daysLeft(dataObj.goal_date, false)} */}
-
 
                 <td
                   className="tableEdit"

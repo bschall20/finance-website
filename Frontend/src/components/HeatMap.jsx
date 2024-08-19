@@ -43,7 +43,7 @@ function HeatMap(props) {
     return dateAmtArr
   }
   // dateAmountTotal();
-  console.log(dateAmountTotal());
+  // console.log(dateAmountTotal());
   // console.log("after function call")
   // console.log(dateAmtArr)
 
