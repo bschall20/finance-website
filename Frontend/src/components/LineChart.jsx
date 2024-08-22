@@ -139,18 +139,13 @@ function LineChart(props) {
       },
       xaxis: {
         categories: [
-          "01 Jan",
-          "02 Jan",
-          "03 Jan",
-          "04 Jan",
-          "05 Jan",
-          "06 Jan",
-          "07 Jan",
-          "08 Jan",
-          "09 Jan",
-          "10 Jan",
-          "11 Jan",
-          "12 Jan",
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
         ],
       },
       tooltip: {
@@ -158,24 +153,25 @@ function LineChart(props) {
           {
             title: {
               formatter: function (val) {
-                return val + " (mins)";
-              },
-            },
-          },
-          {
-            title: {
-              formatter: function (val) {
-                return val + " per session";
-              },
-            },
-          },
-          {
-            title: {
-              formatter: function (val) {
+                // return val + " (total)";
                 return val;
               },
             },
           },
+          // {
+          //   title: {
+          //     formatter: function (val) {
+          //       return val + " per session";
+          //     },
+          //   },
+          // },
+          // {
+          //   title: {
+          //     formatter: function (val) {
+          //       return val;
+          //     },
+          //   },
+          // },
         ],
       },
       grid: {
@@ -225,7 +221,7 @@ const dropdownSubmit = (eventKey) => {
       <h2>Expense Line Chart</h2>
       {console.log(dropdownTime)}
       <Dropdown onSelect={dropdownSubmit}>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
+        <Dropdown.Toggle variant="primary" id="dropdown-basic">
         {dropdownTime || 'Select an option'}
         </Dropdown.Toggle>
 

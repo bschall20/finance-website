@@ -5,6 +5,7 @@ import EditExpenseModal from "../components/EditExpenseModal";
 import DeleteExpenseModal from "../components/DeleteExpenseModal";
 import PieChart from "../components/PieChart";
 import LineChart from "../components/LineChart";
+import BarChart from "../components/BarChart";
 import HeatMap from "../components/HeatMap";
 // import SetGoal from "../components/SetGoal";       ====> can delete if all works with goal table. was redundant component
 import GoalModal from "../components/GoalModal";
@@ -213,7 +214,6 @@ function FinanceManagement() {
 
   // Days Between Goal Dates
   function daysLeft(goal_date, bool, start_date, amount) {
-
     var date = new Date();
     var month = date.getMonth() + 1;
     var day = date.getDate();
@@ -231,26 +231,31 @@ function FinanceManagement() {
     var days = Math.ceil(diff / 1000 / 60 / 60 / 24);
     var daysString = days.toString();
 
-
     // Variables for returning goal amount to save/day
     var startDate = Date.parse(start_date);
     var amountDiff = new Date(goalDate - startDate);
     var amountDays = Math.ceil(amountDiff / 1000 / 60 / 60 / 24);
-    // var amountDaysString = amountDays.toString();
-    var amountLeft = Math.round((amount/amountDays) * 100)/100;
+    var amountLeft = Math.round((amount / amountDays) * 100) / 100;
 
-    // Return days left on goal for delete goal modal 
+    if (todayDate === goalDate) {
+    }
+    // Avoid returning infinity if days left is 0
+    if (amountDays === 0) {
+      amountLeft = amount;
+    }
+
+    // Return days left on goal for delete goal modal
     if (bool === true) {
       return `${days}`;
-    } 
+    }
+    // Using function to return amount to save per day from start date
+    else if (bool === 2) {
+      return amountLeft;
+    }
     // Return negative days for being late
     else if (Array.from(daysString)[0] === "-") {
       return `${days} (late)`;
     }
-    // Using function to return amount to save per day from start date
-    else if (bool === 2){
-      return (amountLeft)
-    } 
   }
 
   // Used for showing submit expense + add goal modals
@@ -311,7 +316,7 @@ function FinanceManagement() {
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* Expenses piechart */}
+      {/* Expenses pie chart */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
@@ -327,10 +332,22 @@ function FinanceManagement() {
             other,
           ]}
         />
+      </div>
 
-        <LineChart
-          expense={expense}
-        />
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* Expenses line graph */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+      {/* ////////////////////////////////////////////////////////////////////////// */}
+
+      <div>
+        <LineChart expense={expense} />
+      </div>
+
+      <div>
+      <BarChart expense={expense}/>
       </div>
 
       {/* ////////////////////////////////////////////////////////////////////////// */}
@@ -504,29 +521,51 @@ function FinanceManagement() {
               tableAmount = (
                 <td style={{ backgroundColor: "#D60027" }}>{dataObj.amount}</td>
               );
-              tableStart = (<td style={{backgroundColor: "#D60027"}}>{dataObj.start_date}</td>)
+              tableStart = (
+                <td style={{ backgroundColor: "#D60027" }}>
+                  {dataObj.start_date}
+                </td>
+              );
               tableDate = (
                 <td style={{ backgroundColor: "#D60027" }}>
                   {dataObj.goal_date}
                 </td>
               );
               tableSave = (
-                <td style={{ backgroundColor: "#D60027" }}>${daysLeft(dataObj.goal_date, 2, dataObj.start_date, dataObj.amount)}</td>
+                <td style={{ backgroundColor: "#D60027" }}>
+                  $
+                  {daysLeft(
+                    dataObj.goal_date,
+                    2,
+                    dataObj.start_date,
+                    dataObj.amount
+                  )}
+                </td>
               );
               tableLeft = (
                 <td style={{ backgroundColor: "#D60027" }}>
                   {daysLeft(dataObj.goal_date, true)}
                 </td>
               );
-            } 
+            }
             // Return Goal with Days Left
             else {
               tableIndex = <td>{index + 1}</td>;
               tableTitle = <td>{dataObj.title}</td>;
               tableAmount = <td>{dataObj.amount}</td>;
-              tableStart = <td>{dataObj.start_date}</td>
+              tableStart = <td>{dataObj.start_date}</td>;
               tableDate = <td>{dataObj.goal_date}</td>;
-              tableSave = <td>${daysLeft(dataObj.goal_date, 2, dataObj.start_date, dataObj.amount)}</td>;
+              tableSave = (
+                <td>
+                  $
+                  {daysLeft(
+                    dataObj.goal_date,
+                    2,
+                    dataObj.start_date,
+                    dataObj.amount
+                  )}
+                </td>
+              );
               tableLeft = <td>{daysLeft(dataObj.goal_date, true)}</td>;
             }
 
