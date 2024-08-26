@@ -213,6 +213,22 @@ background-blend-mode: multiply; */
       width: 65%;
     }
 
+    .infoButton {
+      font-size: 1.25rem;
+      margin-left: .5rem;
+      color: black;
+      -webkit-transition: color 0.3s;
+      -moz-transition:    color 0.3s;
+      -ms-transition:     color 0.3s;
+      -o-transition:      color 0.3s;
+      transition:         color 0.3s;
+    }
+
+    .infoButton:hover {
+      cursor: pointer;
+      color: #008FFB;
+    }
+
     .tableTitle {
       display: flex;
       flex-direction: row;
