@@ -1,3 +1,4 @@
+// import React, { useState, useEffect } from "react";
 import React, { useState } from "react";
 import Chart from "react-apexcharts";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -28,8 +29,14 @@ function BarChart(props) {
     "Saturday",
   ]);
   const [dropdownTime, setDropdownTime] = useState("Day");
-
   const [series, setSeries] = useState([]);
+  // const [series2, setSeries2] = useState([]);
+
+  // Get Day name for day sorting
+  function getDayName(dateStr, locale) {
+    var date = new Date(dateStr);
+    return date.toLocaleDateString(locale, { weekday: "long" });
+  }
 
   let expense = props.expense;
   let MortgageRentArr = [];
@@ -39,9 +46,107 @@ function BarChart(props) {
   let TransportationArr = [];
   let FoodArr = [];
   let OtherArr = [];
+
+  // const defaultState = () => {
+  //   // Set arrays to hold 12 values. One per day.
+  //   MortgageRentArr = [0, 0, 0, 0, 0, 0, 0];
+  //   UtilitiesArr = [0, 0, 0, 0, 0, 0, 0];
+  //   InsuranceArr = [0, 0, 0, 0, 0, 0, 0];
+  //   LoansArr = [0, 0, 0, 0, 0, 0, 0];
+  //   TransportationArr = [0, 0, 0, 0, 0, 0, 0];
+  //   FoodArr = [0, 0, 0, 0, 0, 0, 0];
+  //   OtherArr = [0, 0, 0, 0, 0, 0, 0];
+  //   expense.map((dataObj) => {
+  //     // Order day from yyyy-mm-dd to mm-dd-yyyy
+  //     let dayReorder = `${dataObj.date.slice(5, 7)}-${dataObj.date.slice(8, 10)}-${dataObj.date.slice(0, 4)}`;
+  //     // Get day name
+  //     let dayName = getDayName(dayReorder, "en-US");
+  //     let day;
+  //     // Get array index to be placed into.
+  //     if (dayName === "Sunday") {
+  //       day = 0;
+  //     } else if (dayName === "Monday") {
+  //       day = 1;
+  //     } else if (dayName === "Tuesday") {
+  //       day = 2;
+  //     } else if (dayName === "Wednesday") {
+  //       day = 3;
+  //     } else if (dayName === "Thursday") {
+  //       day = 4;
+  //     } else if (dayName === "Friday") {
+  //       day = 5;
+  //     } else if (dayName === "Saturday") {
+  //       day = 6;
+  //     }
+  //     // Insert value into bar chart array based on expense type.
+  //     if (dataObj.expense_type === "Mortgage/Rent") {
+  //       return (MortgageRentArr[day] += dataObj.amount);
+  //     } else if (dataObj.expense_type === "Utilities") {
+  //       return (UtilitiesArr[day] += dataObj.amount);
+  //     } else if (dataObj.expense_type === "Insurance") {
+  //       return (InsuranceArr[day] += dataObj.amount);
+  //     } else if (dataObj.expense_type === "Loans") {
+  //       return (LoansArr[day] += dataObj.amount);
+  //     } else if (dataObj.expense_type === "Transportation") {
+  //       return (TransportationArr[day] += dataObj.amount);
+  //     } else if (dataObj.expense_type === "Food") {
+  //       return (FoodArr[day] += dataObj.amount);
+  //     }
+  //     //  else if (dataObj.expense_type === "Other"){
+  //     //    return (OtherArr[day] += dataObj.amount);
+  //     //  }
+  //     else {
+  //       return (OtherArr[day] += dataObj.amount);
+  //     }
+  //     //  return 0;
+  //   });
+
+  //   setSeries([
+  //     {
+  //       name: "Mortgage/Rent",
+  //       data: MortgageRentArr,
+  //     },
+  //     {
+  //       name: "Utilities",
+  //       data: UtilitiesArr,
+  //     },
+  //     {
+  //       name: "Insurance",
+  //       data: InsuranceArr,
+  //     },
+  //     {
+  //       name: "Loans",
+  //       data: LoansArr,
+  //     },
+  //     {
+  //       name: "Transportation",
+  //       data: TransportationArr,
+  //     },
+  //     {
+  //       name: "Food",
+  //       data: FoodArr,
+  //     },
+  //     {
+  //       name: "Other",
+  //       data: OtherArr,
+  //     },
+  //   ]);
+  // };
+
+
+
+
+  // console.log("default state: ")
+  // console.log(defaultState())
+  // console.log("series: ")
+  // console.log(series)
+
   const dropdownSubmit = (eventKey) => {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // SET FOR QUARTERLY MONTHS (WEEK)
     if (eventKey === "Week") {
       setCategories(["01 - 07", "08 - 15", "16 - 23", "24 - 31"]);
+      // Set arrays to hold 4 values. One per quarter of month.
       MortgageRentArr = [0, 0, 0, 0];
       UtilitiesArr = [0, 0, 0, 0];
       InsuranceArr = [0, 0, 0, 0];
@@ -50,227 +155,48 @@ function BarChart(props) {
       FoodArr = [0, 0, 0, 0];
       OtherArr = [0, 0, 0, 0];
       expense.map((dataObj) => {
-        // Check day numbers for Mortgage/Rent to push into bar chart.
+        let week;
+        // Get array index to be placed into.
         if (
-          parseInt(dataObj.date.slice(-2) >= 1 && dataObj.date.slice(-2)) <=
-            7 &&
-          dataObj.expense_type === "Mortgage/Rent"
+          parseInt(dataObj.date.slice(-2) >= 1 && dataObj.date.slice(-2)) <= 7
         ) {
-          return (MortgageRentArr[0] += dataObj.amount);
+          week = 0;
         } else if (
-          parseInt(dataObj.date.slice(-2) >= 8 && dataObj.date.slice(-2)) <=
-            15 &&
-          dataObj.expense_type === "Mortgage/Rent"
+          parseInt(dataObj.date.slice(-2) >= 8 && dataObj.date.slice(-2)) <= 15
         ) {
-          return (MortgageRentArr[1] += dataObj.amount);
+          week = 1;
         } else if (
-          parseInt(dataObj.date.slice(-2) >= 16 && dataObj.date.slice(-2)) <=
-            23 &&
-          dataObj.expense_type === "Mortgage/Rent"
+          parseInt(dataObj.date.slice(-2) >= 16 && dataObj.date.slice(-2)) <= 23
         ) {
-          return (MortgageRentArr[2] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 24 && dataObj.date.slice(-2)) <=
-            31 &&
-          dataObj.expense_type === "Mortgage/Rent"
-        ) {
-          return (MortgageRentArr[3] += dataObj.amount);
+          week = 2;
+        } else {
+          week = 3;
         }
 
-        // Check day numbers for Utilities to push into bar chart.
-        else if (
-          parseInt(dataObj.date.slice(-2) >= 1 && dataObj.date.slice(-2)) <=
-            7 &&
-          dataObj.expense_type === "Utilities"
-        ) {
-          return (UtilitiesArr[0] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 8 && dataObj.date.slice(-2)) <=
-            15 &&
-          dataObj.expense_type === "Utilities"
-        ) {
-          return (UtilitiesArr[1] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 16 && dataObj.date.slice(-2)) <=
-            23 &&
-          dataObj.expense_type === "Utilities"
-        ) {
-          return (UtilitiesArr[2] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 24 && dataObj.date.slice(-2)) <=
-            31 &&
-          dataObj.expense_type === "Utilities"
-        ) {
-          return (UtilitiesArr[3] += dataObj.amount);
+        // Insert value into bar chart array based on expense type.
+        if (dataObj.expense_type === "Mortgage/Rent") {
+          return (MortgageRentArr[week] += dataObj.amount);
+        } else if (dataObj.expense_type === "Utilities") {
+          return (UtilitiesArr[week] += dataObj.amount);
+        } else if (dataObj.expense_type === "Insurance") {
+          return (InsuranceArr[week] += dataObj.amount);
+        } else if (dataObj.expense_type === "Loans") {
+          return (LoansArr[week] += dataObj.amount);
+        } else if (dataObj.expense_type === "Transportation") {
+          return (TransportationArr[week] += dataObj.amount);
+        } else if (dataObj.expense_type === "Food") {
+          return (FoodArr[week] += dataObj.amount);
+        } else if (dataObj.expense_type === "Other") {
+          return (OtherArr[week] += dataObj.amount);
+        } else {
+          return (OtherArr[week] += dataObj.amount);
         }
-
-        // Check day numbers for Insurance to push into bar chart.
-        else if (
-          parseInt(dataObj.date.slice(-2) >= 1 && dataObj.date.slice(-2)) <=
-            7 &&
-          dataObj.expense_type === "Insurance"
-        ) {
-          return (InsuranceArr[0] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 8 && dataObj.date.slice(-2)) <=
-            15 &&
-          dataObj.expense_type === "Insurance"
-        ) {
-          return (InsuranceArr[1] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 16 && dataObj.date.slice(-2)) <=
-            23 &&
-          dataObj.expense_type === "Insurance"
-        ) {
-          return (InsuranceArr[2] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 24 && dataObj.date.slice(-2)) <=
-            31 &&
-          dataObj.expense_type === "Insurance"
-        ) {
-          return (InsuranceArr[3] += dataObj.amount);
-        }
-
-        // Check day numbers for Loans to push into bar chart.
-        else if (
-          parseInt(dataObj.date.slice(-2) >= 1 && dataObj.date.slice(-2)) <=
-            7 &&
-          dataObj.expense_type === "Loans"
-        ) {
-          return (LoansArr[0] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 8 && dataObj.date.slice(-2)) <=
-            15 &&
-          dataObj.expense_type === "Loans"
-        ) {
-          return (LoansArr[1] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 16 && dataObj.date.slice(-2)) <=
-            23 &&
-          dataObj.expense_type === "Loans"
-        ) {
-          return (LoansArr[2] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 24 && dataObj.date.slice(-2)) <=
-            31 &&
-          dataObj.expense_type === "Loans"
-        ) {
-          return (LoansArr[3] += dataObj.amount);
-        }
-
-        // Check day numbers for Transportation to push into bar chart.
-        else if (
-          parseInt(dataObj.date.slice(-2) >= 1 && dataObj.date.slice(-2)) <=
-            7 &&
-          dataObj.expense_type === "Transportation"
-        ) {
-          return (TransportationArr[0] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 8 && dataObj.date.slice(-2)) <=
-            15 &&
-          dataObj.expense_type === "Transportation"
-        ) {
-          return (TransportationArr[1] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 16 && dataObj.date.slice(-2)) <=
-            23 &&
-          dataObj.expense_type === "Transportation"
-        ) {
-          return (TransportationArr[2] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 24 && dataObj.date.slice(-2)) <=
-            31 &&
-          dataObj.expense_type === "Transportation"
-        ) {
-          return (TransportationArr[3] += dataObj.amount);
-        }
-
-        // Check day numbers for Food to push into bar chart.
-        else if (
-          parseInt(dataObj.date.slice(-2) >= 1 && dataObj.date.slice(-2)) <=
-            7 &&
-          dataObj.expense_type === "Food"
-        ) {
-          return (FoodArr[0] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 8 && dataObj.date.slice(-2)) <=
-            15 &&
-          dataObj.expense_type === "Food"
-        ) {
-          return (FoodArr[1] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 16 && dataObj.date.slice(-2)) <=
-            23 &&
-          dataObj.expense_type === "Food"
-        ) {
-          return (FoodArr[2] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 24 && dataObj.date.slice(-2)) <=
-            31 &&
-          dataObj.expense_type === "Food"
-        ) {
-          return (FoodArr[3] += dataObj.amount);
-        }
-
-        // Check day numbers for Other to push into bar chart.
-        else if (
-          parseInt(dataObj.date.slice(-2) >= 1 && dataObj.date.slice(-2)) <=
-            7 &&
-          dataObj.expense_type === "Other"
-        ) {
-          return (OtherArr[0] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 8 && dataObj.date.slice(-2)) <=
-            15 &&
-          dataObj.expense_type === "Other"
-        ) {
-          return (OtherArr[1] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 16 && dataObj.date.slice(-2)) <=
-            23 &&
-          dataObj.expense_type === "Other"
-        ) {
-          return (OtherArr[2] += dataObj.amount);
-        } else if (
-          parseInt(dataObj.date.slice(-2) >= 24 && dataObj.date.slice(-2)) <=
-            31 &&
-          dataObj.expense_type === "Other"
-        ) {
-          return (OtherArr[3] += dataObj.amount);
-        }
-        return 0;
+        // return 0;
       });
-      setSeries([
-        {
-          name: "Mortgage/Rent",
-          data: MortgageRentArr,
-        },
-        {
-          name: "Utilities",
-          data: UtilitiesArr,
-        },
-        {
-          name: "Insurance",
-          data: InsuranceArr,
-        },
-        {
-          name: "Loans",
-          data: LoansArr,
-        },
-        {
-          name: "Transportation",
-          data: TransportationArr,
-        },
-        {
-          name: "Food",
-          data: FoodArr,
-        },
-        {
-          name: "Other",
-          data: OtherArr,
-        },
-      ]);
-    } else if (eventKey === "Month") {
+    } 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // SET FOR MONTHS
+    else if (eventKey === "Month") {
       setCategories([
         "Jan",
         "Feb",
@@ -285,7 +211,74 @@ function BarChart(props) {
         "Nov",
         "Dec",
       ]);
-    } else {
+      // Set arrays to hold 12 values. One per month.
+      MortgageRentArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      UtilitiesArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      InsuranceArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      LoansArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      TransportationArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      FoodArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      OtherArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      expense.map((dataObj) => {
+        let month;
+        // Get array index to be placed into.
+        if (parseInt(dataObj.date.slice(5, 7)) === 1) {
+          month = 0;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 2) {
+          month = 1;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 3) {
+          month = 2;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 4) {
+          month = 3;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 5) {
+          month = 4;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 6) {
+          month = 5;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 7) {
+          month = 6;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 8) {
+          month = 7;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 9) {
+          month = 8;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 10) {
+          month = 9;
+        } else if (parseInt(dataObj.date.slice(5, 7)) === 11) {
+          month = 10;
+        }
+        // else if (parseInt(dataObj.date.slice(5, 7)) === 12 ){
+        //   month = 11;
+        // }
+        else {
+          month = 11;
+        }
+
+        // Insert value into bar chart array based on expense type.
+        if (dataObj.expense_type === "Mortgage/Rent") {
+          return (MortgageRentArr[month] += dataObj.amount);
+        } else if (dataObj.expense_type === "Utilities") {
+          return (UtilitiesArr[month] += dataObj.amount);
+        } else if (dataObj.expense_type === "Insurance") {
+          return (InsuranceArr[month] += dataObj.amount);
+        } else if (dataObj.expense_type === "Loans") {
+          return (LoansArr[month] += dataObj.amount);
+        } else if (dataObj.expense_type === "Transportation") {
+          return (TransportationArr[month] += dataObj.amount);
+        } else if (dataObj.expense_type === "Food") {
+          return (FoodArr[month] += dataObj.amount);
+        }
+        //  else if (dataObj.expense_type === "Other"){
+        //    return (OtherArr[month] += dataObj.amount);
+        //  }
+        else {
+          return (OtherArr[month] += dataObj.amount);
+        }
+        //  return 0;
+      });
+    } 
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // SET FOR DAYS
+    else {
       setCategories([
         "Sunday",
         "Monday",
@@ -295,103 +288,139 @@ function BarChart(props) {
         "Friday",
         "Saturday",
       ]);
+      console.log(`${eventKey} called`)
+      // defaultState();
+       // Set arrays to hold 12 values. One per month.
+       MortgageRentArr = [0, 0, 0, 0, 0, 0, 0];
+       UtilitiesArr = [0, 0, 0, 0, 0, 0, 0];
+       InsuranceArr = [0, 0, 0, 0, 0, 0, 0];
+       LoansArr = [0, 0, 0, 0, 0, 0, 0];
+       TransportationArr = [0, 0, 0, 0, 0, 0, 0];
+       FoodArr = [0, 0, 0, 0, 0, 0, 0];
+       OtherArr = [0, 0, 0, 0, 0, 0, 0];
+       expense.map((dataObj) => {
+         // Order day from yyyy-mm-dd to mm-dd-yyyy
+         let dayReorder = `${dataObj.date.slice(5, 7)}-${dataObj.date.slice(8, 10)}-${dataObj.date.slice(0, 4)}`
+         // Get day name
+         let dayName = getDayName(dayReorder, "en-US");
+         let day;
+         // Get array index to be placed into.
+         if (dayName === "Sunday"){
+          day = 0;
+         }
+         else if (dayName === "Monday"){
+          day = 1;
+         }
+         else if (dayName === "Tuesday"){
+          day = 2;
+         }
+         else if (dayName === "Wednesday"){
+          day = 3;
+         }
+         else if (dayName === "Thursday"){
+          day = 4;
+         }
+         else if (dayName === "Friday"){
+          day = 5;
+         }
+         else if (dayName === "Saturday"){
+          day = 6;
+         }
+        // Insert value into bar chart array based on expense type.
+         if (dataObj.expense_type === "Mortgage/Rent"){
+           return (MortgageRentArr[day] += dataObj.amount);
+         }
+         else if (dataObj.expense_type === "Utilities"){
+           return (UtilitiesArr[day] += dataObj.amount);
+         }
+         else if (dataObj.expense_type === "Insurance"){
+           return (InsuranceArr[day] += dataObj.amount);
+         }
+         else if (dataObj.expense_type === "Loans"){
+           return (LoansArr[day] += dataObj.amount);
+         }
+         else if (dataObj.expense_type === "Transportation"){
+           return (TransportationArr[day] += dataObj.amount);
+         }
+         else if (dataObj.expense_type === "Food"){
+           return (FoodArr[day] += dataObj.amount);
+         }
+        //  else if (dataObj.expense_type === "Other"){
+        //    return (OtherArr[day] += dataObj.amount);
+        //  }
+        else { return (OtherArr[day] += dataObj.amount) }
+        //  return 0;
+       });
     }
     setDropdownTime(eventKey);
+    setSeries([
+      {
+        name: "Mortgage/Rent",
+        data: MortgageRentArr,
+      },
+      {
+        name: "Utilities",
+        data: UtilitiesArr,
+      },
+      {
+        name: "Insurance",
+        data: InsuranceArr,
+      },
+      {
+        name: "Loans",
+        data: LoansArr,
+      },
+      {
+        name: "Transportation",
+        data: TransportationArr,
+      },
+      {
+        name: "Food",
+        data: FoodArr,
+      },
+      {
+        name: "Other",
+        data: OtherArr,
+      },
+    ]);
   };
-
-  // expense.map((dataObj) => {
-  //   if (dataObj.expense_type === "Mortgage/Rent") {
-  //     return MortgageRentArr.push(dataObj.amount);
-  //   } else if (dataObj.expense_type === "Utilities") {
-  //     return UtilitiesArr.push(dataObj.amount);
-  //   } else if (dataObj.expense_type === "Insurance") {
-  //     return InsuranceArr.push(dataObj.amount);
-  //   } else if (dataObj.expense_type === "Loans") {
-  //     return LoansArr.push(dataObj.amount);
-  //   } else if (dataObj.expense_type === "Transportation") {
-  //     return TransportationArr.push(dataObj.amount);
-  //   } else if (dataObj.expense_type === "Food") {
-  //     return FoodArr.push(dataObj.amount);
-  //   } else if (dataObj.expense_type === "Other") {
-  //     return OtherArr.push(dataObj.amount);
-  //   }
-  //   return 0;
-  // });
-
-  // function formatDate(date) {
-  //   var dd = date.getDate();
-  //   var mm = date.getMonth() + 1;
-  //   var yyyy = date.getFullYear();
-  //   if (dd < 10) {
-  //     dd = "0" + dd;
-  //   }
-  //   if (mm < 10) {
-  //     mm = "0" + mm;
-  //   }
-  //   return yyyy + "-" + mm + "-" + dd;
+  console.log(series)
+  // const [count, setCount] = useState(0);
+  // if (count === 0){
+  //   dropdownSubmit("Day");
+  //   setCount(1);
   // }
 
-  // function Last7Days() {
-  //   var result = [];
-  //   for (var i = 0; i < 7; i++) {
-  //     var d = new Date();
-  //     d.setDate(d.getDate() - i);
-  //     result.push(formatDate(d));
-  //   }
-  //   return result.join(",");
+  // // let one = 1;
+  // const [count, setCount] = useState(0)
+  // if (count === 0){
+  //   dropdownSubmit();
+  //   // count += 1;
+  //   setCount(1);
+  //   // console.log(count)
   // }
+
+  // // useEffect(() => {
+  // //   setCount();
+  // // }, []);
+
+  // const [count, setCount] = useState(0)
+  // useEffect(() => {
+  //   if (count === 0){
+  //     dropdownSubmit("Day");
+  //     setCount(1)
+  //   }
+  // }, [count]);
+
+  // useEffect(() => {
+  //     dropdownSubmit();
+  // }, []);
+
+  // // console.log(count)
+  
+  // console.log(series)
 
   let state = {
-    // series: [
-    //     // {
-    //     //   name: "Marine Sprite",
-    //     //   data: [44, 55, 41, 37, 22, 43, 21],
-    //     // },
-    //     // {
-    //     //   name: "Striking Calf",
-    //     //   data: [53, 32, 33, 52, 13, 43, 32],
-    //     // },
-    //     // {
-    //     //   name: "Tank Picture",
-    //     //   data: [12, 17, 11, 9, 15, 11, 20],
-    //     // },
-    //     // {
-    //     //   name: "Bucket Slope",
-    //     //   data: [9, 7, 5, 8, 6, 9, 4],
-    //     // },
-    //     // {
-    //     //   name: "Reborn Kid",
-    //     //   data: [25, 12, 19, 32, 25, 24, 10],
-    //     // },
-    //     {
-    //         name: "Mortgage/Rent",
-    //         data: MortgageRentArr,
-    //       },
-    //       {
-    //         name: "Utilities",
-    //         data: UtilitiesArr,
-    //       },
-    //       {
-    //         name: "Insurance",
-    //         data: InsuranceArr,
-    //       },
-    //       {
-    //         name: "Loans",
-    //         data: LoansArr,
-    //       },
-    //       {
-    //         name: "Transportation",
-    //         data: TransportationArr,
-    //       },
-    //       {
-    //         name: "Food",
-    //         data: FoodArr,
-    //       },
-    //       {
-    //         name: "Other",
-    //         data: OtherArr,
-    //       },
-    //   ],
     series: series,
     options: {
       chart: {
@@ -469,7 +498,8 @@ function BarChart(props) {
       {/* {console.log(dropdownTime)} */}
       <Dropdown onSelect={dropdownSubmit}>
         <Dropdown.Toggle variant="primary" id="dropdown-basic">
-          {dropdownTime || "Select an option"}
+          {/* {dropdownTime || "Select an option"} */}
+          {dropdownTime}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>

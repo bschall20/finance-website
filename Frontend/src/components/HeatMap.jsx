@@ -1,19 +1,10 @@
-// import React, { useState, useEffect } from "react";
-// import React, { useState } from "react";
 import React from "react";
-
-// import ReactDOM from 'react-dom';
 import CalendarHeatmap from "react-calendar-heatmap";
 import ReactTooltip from "react-tooltip";
 
 function HeatMap(props) {
-  // return <div>
-  //     <p>Heat Map goes here.</p>
-  // </div>
 
-  // let dateAmtArr = [];
-  // const [dateAmtArr, setDateAmtArr] = useState([])
-  // const [dateAmt, setDateAmt] = useState([])
+  // Get total amount spent on a date in Expense
   const dateAmountTotal = () => {
     let dateAmtArr = [];
     props.expense.map((expenseObj) => {
@@ -23,61 +14,41 @@ function HeatMap(props) {
       });
       return 0;
     });
-    // console.log('dateAmtArr')
-    // console.log(dateAmtArr)
-
+    // Reduce duplicates with same date
     dateAmtArr = dateAmtArr.reduce((acc, next) => {
       // acc stands for accumulator
       const lastItemIndex = acc.length - 1;
       const accHasContent = acc.length >= 1;
-
       if (accHasContent && acc[lastItemIndex].date === next.date) {
         acc[lastItemIndex].amountSpent += next.amountSpent;
       } else {
-        // first time seeing this entry. add it!
+        // first time seeing this entry, add it
         acc[lastItemIndex + 1] = next;
       }
       return acc;
     }, []);
-
     return dateAmtArr
   }
-  // dateAmountTotal();
-  // console.log(dateAmountTotal());
-  // console.log("after function call")
-  // console.log(dateAmtArr)
 
-  const today = new Date();
+  // Used for mapping days from current day on heatmap (starts with today and maps backwards)
   function shiftDate(date, numDays) {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + numDays);
     return newDate;
   }
 
+  // Return array of X values (ie. 365 values for 365 days, or 1 year)
   function getRange(count) {
     return Array.from({ length: count }, (_, i) => i);
   }
 
-  // function getRandomInt(min, max) {
-  //   return Math.floor(Math.random() * (max - min + 1)) + min;
-  // }
 
-  // const randomValues = getRange(365).map((index) => {
-  //   return {
-  //     date: shiftDate(today, -index),
-  //     count: getRandomInt(1, 3), // call in expense data here and add all values of same day for day total
-  //     // if expense.date === shiftDate(today, -index).toISOString().slice(0, 10), return expense.amount
-  //     // else return 0?
-  //   };
-  // });
-
-
+  // Get today's date and map values to their respective date. Adds total amount to date
+  const today = new Date();
   const dataValues = getRange(365).map((index) => {
-
     let date = shiftDate(today, -index);
-    let count;
+    let count; // Keeps track of amount spent on index (day)
     let dateIndex = dateAmountTotal().findIndex(value => value.date === date.toISOString().slice(0, 10));
-
     if (dateIndex !== -1){
       count = dateAmountTotal()[dateIndex].amountSpent
     } else {count = 0}
@@ -93,8 +64,6 @@ function HeatMap(props) {
   return (
     <div>
       <h2>Daily Expenses</h2>
-      {/* <h1>react-calendar-heatmap demos</h1>
-      <p>Random values with onClick and react-tooltip</p> */}
       <CalendarHeatmap
         startDate={shiftDate(today, -365)}
         endDate={today}
