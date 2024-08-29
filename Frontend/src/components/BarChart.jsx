@@ -1,5 +1,6 @@
+import React, { useState, useEffect, useCallback } from "react";
 // import React, { useState, useEffect } from "react";
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import Chart from "react-apexcharts";
 import Dropdown from "react-bootstrap/Dropdown";
 
@@ -30,7 +31,6 @@ function BarChart(props) {
   ]);
   const [dropdownTime, setDropdownTime] = useState("Day");
   const [series, setSeries] = useState([]);
-  // const [series2, setSeries2] = useState([]);
 
   // Get Day name for day sorting
   function getDayName(dateStr, locale) {
@@ -38,110 +38,16 @@ function BarChart(props) {
     return date.toLocaleDateString(locale, { weekday: "long" });
   }
 
-  let expense = props.expense;
-  let MortgageRentArr = [];
-  let UtilitiesArr = [];
-  let InsuranceArr = [];
-  let LoansArr = [];
-  let TransportationArr = [];
-  let FoodArr = [];
-  let OtherArr = [];
 
-  // const defaultState = () => {
-  //   // Set arrays to hold 12 values. One per day.
-  //   MortgageRentArr = [0, 0, 0, 0, 0, 0, 0];
-  //   UtilitiesArr = [0, 0, 0, 0, 0, 0, 0];
-  //   InsuranceArr = [0, 0, 0, 0, 0, 0, 0];
-  //   LoansArr = [0, 0, 0, 0, 0, 0, 0];
-  //   TransportationArr = [0, 0, 0, 0, 0, 0, 0];
-  //   FoodArr = [0, 0, 0, 0, 0, 0, 0];
-  //   OtherArr = [0, 0, 0, 0, 0, 0, 0];
-  //   expense.map((dataObj) => {
-  //     // Order day from yyyy-mm-dd to mm-dd-yyyy
-  //     let dayReorder = `${dataObj.date.slice(5, 7)}-${dataObj.date.slice(8, 10)}-${dataObj.date.slice(0, 4)}`;
-  //     // Get day name
-  //     let dayName = getDayName(dayReorder, "en-US");
-  //     let day;
-  //     // Get array index to be placed into.
-  //     if (dayName === "Sunday") {
-  //       day = 0;
-  //     } else if (dayName === "Monday") {
-  //       day = 1;
-  //     } else if (dayName === "Tuesday") {
-  //       day = 2;
-  //     } else if (dayName === "Wednesday") {
-  //       day = 3;
-  //     } else if (dayName === "Thursday") {
-  //       day = 4;
-  //     } else if (dayName === "Friday") {
-  //       day = 5;
-  //     } else if (dayName === "Saturday") {
-  //       day = 6;
-  //     }
-  //     // Insert value into bar chart array based on expense type.
-  //     if (dataObj.expense_type === "Mortgage/Rent") {
-  //       return (MortgageRentArr[day] += dataObj.amount);
-  //     } else if (dataObj.expense_type === "Utilities") {
-  //       return (UtilitiesArr[day] += dataObj.amount);
-  //     } else if (dataObj.expense_type === "Insurance") {
-  //       return (InsuranceArr[day] += dataObj.amount);
-  //     } else if (dataObj.expense_type === "Loans") {
-  //       return (LoansArr[day] += dataObj.amount);
-  //     } else if (dataObj.expense_type === "Transportation") {
-  //       return (TransportationArr[day] += dataObj.amount);
-  //     } else if (dataObj.expense_type === "Food") {
-  //       return (FoodArr[day] += dataObj.amount);
-  //     }
-  //     //  else if (dataObj.expense_type === "Other"){
-  //     //    return (OtherArr[day] += dataObj.amount);
-  //     //  }
-  //     else {
-  //       return (OtherArr[day] += dataObj.amount);
-  //     }
-  //     //  return 0;
-  //   });
-
-  //   setSeries([
-  //     {
-  //       name: "Mortgage/Rent",
-  //       data: MortgageRentArr,
-  //     },
-  //     {
-  //       name: "Utilities",
-  //       data: UtilitiesArr,
-  //     },
-  //     {
-  //       name: "Insurance",
-  //       data: InsuranceArr,
-  //     },
-  //     {
-  //       name: "Loans",
-  //       data: LoansArr,
-  //     },
-  //     {
-  //       name: "Transportation",
-  //       data: TransportationArr,
-  //     },
-  //     {
-  //       name: "Food",
-  //       data: FoodArr,
-  //     },
-  //     {
-  //       name: "Other",
-  //       data: OtherArr,
-  //     },
-  //   ]);
-  // };
-
-
-
-
-  // console.log("default state: ")
-  // console.log(defaultState())
-  // console.log("series: ")
-  // console.log(series)
-
-  const dropdownSubmit = (eventKey) => {
+  // Placed in callback to aid in dependency error from useEffect
+  const dropdownSubmit = useCallback((eventKey) => {
+    let MortgageRentArr = [];
+    let UtilitiesArr = [];
+    let InsuranceArr = [];
+    let LoansArr = [];
+    let TransportationArr = [];
+    let FoodArr = [];
+    let OtherArr = [];
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // SET FOR QUARTERLY MONTHS (WEEK)
     if (eventKey === "Week") {
@@ -154,7 +60,7 @@ function BarChart(props) {
       TransportationArr = [0, 0, 0, 0];
       FoodArr = [0, 0, 0, 0];
       OtherArr = [0, 0, 0, 0];
-      expense.map((dataObj) => {
+      props.expense.map((dataObj) => {
         let week;
         // Get array index to be placed into.
         if (
@@ -191,9 +97,8 @@ function BarChart(props) {
         } else {
           return (OtherArr[week] += dataObj.amount);
         }
-        // return 0;
       });
-    } 
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // SET FOR MONTHS
     else if (eventKey === "Month") {
@@ -219,7 +124,7 @@ function BarChart(props) {
       TransportationArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       FoodArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       OtherArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      expense.map((dataObj) => {
+      props.expense.map((dataObj) => {
         let month;
         // Get array index to be placed into.
         if (parseInt(dataObj.date.slice(5, 7)) === 1) {
@@ -244,11 +149,7 @@ function BarChart(props) {
           month = 9;
         } else if (parseInt(dataObj.date.slice(5, 7)) === 11) {
           month = 10;
-        }
-        // else if (parseInt(dataObj.date.slice(5, 7)) === 12 ){
-        //   month = 11;
-        // }
-        else {
+        } else {
           month = 11;
         }
 
@@ -265,17 +166,13 @@ function BarChart(props) {
           return (TransportationArr[month] += dataObj.amount);
         } else if (dataObj.expense_type === "Food") {
           return (FoodArr[month] += dataObj.amount);
-        }
-        //  else if (dataObj.expense_type === "Other"){
-        //    return (OtherArr[month] += dataObj.amount);
-        //  }
-        else {
+        } else {
           return (OtherArr[month] += dataObj.amount);
         }
         //  return 0;
       });
-    } 
-    
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // SET FOR DAYS
     else {
@@ -288,69 +185,57 @@ function BarChart(props) {
         "Friday",
         "Saturday",
       ]);
-      console.log(`${eventKey} called`)
-      // defaultState();
-       // Set arrays to hold 12 values. One per month.
-       MortgageRentArr = [0, 0, 0, 0, 0, 0, 0];
-       UtilitiesArr = [0, 0, 0, 0, 0, 0, 0];
-       InsuranceArr = [0, 0, 0, 0, 0, 0, 0];
-       LoansArr = [0, 0, 0, 0, 0, 0, 0];
-       TransportationArr = [0, 0, 0, 0, 0, 0, 0];
-       FoodArr = [0, 0, 0, 0, 0, 0, 0];
-       OtherArr = [0, 0, 0, 0, 0, 0, 0];
-       expense.map((dataObj) => {
-         // Order day from yyyy-mm-dd to mm-dd-yyyy
-         let dayReorder = `${dataObj.date.slice(5, 7)}-${dataObj.date.slice(8, 10)}-${dataObj.date.slice(0, 4)}`
-         // Get day name
-         let dayName = getDayName(dayReorder, "en-US");
-         let day;
-         // Get array index to be placed into.
-         if (dayName === "Sunday"){
+      // Set arrays to hold 12 values. One per month.
+      MortgageRentArr = [0, 0, 0, 0, 0, 0, 0];
+      UtilitiesArr = [0, 0, 0, 0, 0, 0, 0];
+      InsuranceArr = [0, 0, 0, 0, 0, 0, 0];
+      LoansArr = [0, 0, 0, 0, 0, 0, 0];
+      TransportationArr = [0, 0, 0, 0, 0, 0, 0];
+      FoodArr = [0, 0, 0, 0, 0, 0, 0];
+      OtherArr = [0, 0, 0, 0, 0, 0, 0];
+      props.expense.map((dataObj) => {
+        // Order day from yyyy-mm-dd to mm-dd-yyyy
+        let dayReorder = `${dataObj.date.slice(5, 7)}-${dataObj.date.slice(
+          8,
+          10
+        )}-${dataObj.date.slice(0, 4)}`;
+        // Get day name
+        let dayName = getDayName(dayReorder, "en-US");
+        let day;
+        // Get array index to be placed into.
+        if (dayName === "Sunday") {
           day = 0;
-         }
-         else if (dayName === "Monday"){
+        } else if (dayName === "Monday") {
           day = 1;
-         }
-         else if (dayName === "Tuesday"){
+        } else if (dayName === "Tuesday") {
           day = 2;
-         }
-         else if (dayName === "Wednesday"){
+        } else if (dayName === "Wednesday") {
           day = 3;
-         }
-         else if (dayName === "Thursday"){
+        } else if (dayName === "Thursday") {
           day = 4;
-         }
-         else if (dayName === "Friday"){
+        } else if (dayName === "Friday") {
           day = 5;
-         }
-         else if (dayName === "Saturday"){
+        } else if (dayName === "Saturday") {
           day = 6;
-         }
+        }
+
         // Insert value into bar chart array based on expense type.
-         if (dataObj.expense_type === "Mortgage/Rent"){
-           return (MortgageRentArr[day] += dataObj.amount);
-         }
-         else if (dataObj.expense_type === "Utilities"){
-           return (UtilitiesArr[day] += dataObj.amount);
-         }
-         else if (dataObj.expense_type === "Insurance"){
-           return (InsuranceArr[day] += dataObj.amount);
-         }
-         else if (dataObj.expense_type === "Loans"){
-           return (LoansArr[day] += dataObj.amount);
-         }
-         else if (dataObj.expense_type === "Transportation"){
-           return (TransportationArr[day] += dataObj.amount);
-         }
-         else if (dataObj.expense_type === "Food"){
-           return (FoodArr[day] += dataObj.amount);
-         }
-        //  else if (dataObj.expense_type === "Other"){
-        //    return (OtherArr[day] += dataObj.amount);
-        //  }
-        else { return (OtherArr[day] += dataObj.amount) }
-        //  return 0;
-       });
+        if (dataObj.expense_type === "Mortgage/Rent") {
+          return (MortgageRentArr[day] += dataObj.amount);
+        } else if (dataObj.expense_type === "Utilities") {
+          return (UtilitiesArr[day] += dataObj.amount);
+        } else if (dataObj.expense_type === "Insurance") {
+          return (InsuranceArr[day] += dataObj.amount);
+        } else if (dataObj.expense_type === "Loans") {
+          return (LoansArr[day] += dataObj.amount);
+        } else if (dataObj.expense_type === "Transportation") {
+          return (TransportationArr[day] += dataObj.amount);
+        } else if (dataObj.expense_type === "Food") {
+          return (FoodArr[day] += dataObj.amount);
+        } else {
+          return (OtherArr[day] += dataObj.amount);
+        }
+      });
     }
     setDropdownTime(eventKey);
     setSeries([
@@ -383,42 +268,8 @@ function BarChart(props) {
         data: OtherArr,
       },
     ]);
-  };
-  console.log(series)
-  // const [count, setCount] = useState(0);
-  // if (count === 0){
-  //   dropdownSubmit("Day");
-  //   setCount(1);
-  // }
-
-  // // let one = 1;
-  // const [count, setCount] = useState(0)
-  // if (count === 0){
-  //   dropdownSubmit();
-  //   // count += 1;
-  //   setCount(1);
-  //   // console.log(count)
-  // }
-
-  // // useEffect(() => {
-  // //   setCount();
-  // // }, []);
-
-  // const [count, setCount] = useState(0)
-  // useEffect(() => {
-  //   if (count === 0){
-  //     dropdownSubmit("Day");
-  //     setCount(1)
-  //   }
-  // }, [count]);
-
-  // useEffect(() => {
-  //     dropdownSubmit();
-  // }, []);
-
-  // // console.log(count)
-  
-  // console.log(series)
+  }, [props.expense]);
+ 
 
   let state = {
     series: series,
@@ -493,15 +344,17 @@ function BarChart(props) {
     },
   };
 
+  // Load props.expense or graph won't load first render here
+  useEffect(() => {
+    dropdownSubmit("Day")
+  }, [dropdownSubmit, props.expense])
+
   return (
     <div id="chart">
-      {/* {console.log(dropdownTime)} */}
       <Dropdown onSelect={dropdownSubmit}>
-        <Dropdown.Toggle variant="primary" id="dropdown-basic">
-          {/* {dropdownTime || "Select an option"} */}
-          {dropdownTime}
+        <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{backgroundColor: "#1C2758"}}>
+          {dropdownTime || "Select an option"}
         </Dropdown.Toggle>
-
         <Dropdown.Menu>
           <Dropdown.Item eventKey="Day">Day</Dropdown.Item>
           <Dropdown.Item eventKey="Week">Week</Dropdown.Item>
