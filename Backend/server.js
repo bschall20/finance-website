@@ -18,7 +18,7 @@ app.use(express.json());
 // Get all user expenses data
 app.get("/expense", async (req, res) => {
   try {
-    const expense = await pool.query("SELECT * FROM user_expense");
+    const expense = await pool.query("SELECT * FROM expense");
     res.json(expense.rows);
   } catch (err) {
     console.log(err);
@@ -35,7 +35,7 @@ app.post("/expense", (req, res) => {
   //const id = uuidv4();
   try {
     pool.query(
-      "INSERT INTO user_expense(title, amount, expense_type, date) VALUES($1, $2, $3, $4)",
+      "INSERT INTO expense(title, amount, expense_type, date) VALUES($1, $2, $3, $4)",
       [title, amount, expense_type, date]
     );
   } catch (err) {
@@ -49,7 +49,7 @@ app.put("/expense", async (req, res) => {
   const { id, title, amount, expense_type, date } = req.body;
   try {
     const editExpense = await pool.query(
-      "UPDATE user_expense SET title = $2, amount = $3, expense_type = $4, date = $5 WHERE id = $1",
+      "UPDATE expense SET title = $2, amount = $3, expense_type = $4, date = $5 WHERE id = $1",
       [id, title, amount, expense_type, date]
     );
     res.json(editExpense);
@@ -63,7 +63,7 @@ app.delete("/expense", async (req, res) => {
   const { id } = req.body;
   try {
     const deleteExpense = await pool.query(
-      "DELETE FROM user_expense WHERE id = $1",
+      "DELETE FROM expense WHERE id = $1",
       [id]
     );
     res.json(deleteExpense);
@@ -81,8 +81,8 @@ app.delete("/expense", async (req, res) => {
 // Get all user goals data
 app.get("/goal", async (req, res) => {
   try {
-    const expense = await pool.query("SELECT * FROM user_goal");
-    res.json(expense.rows);
+    const goal = await pool.query("SELECT * FROM goal");
+    res.json(goal.rows);
   } catch (err) {
     console.log(err);
   }
@@ -96,7 +96,7 @@ app.post("/goal", (req, res) => {
   );
   try {
     pool.query(
-      "INSERT INTO user_goal(title, amount, start_date, goal_date) VALUES($1, $2, $3, $4)",
+      "INSERT INTO goal(title, amount, start_date, goal_date) VALUES($1, $2, $3, $4)",
       [title, amount, start_date, goal_date]
     );
   } catch (err) {
@@ -122,11 +122,11 @@ app.post("/goal", (req, res) => {
 app.put("/goal", async (req, res) => {
   const { id, title, amount, goal_date } = req.body;
   try {
-    const editExpense = await pool.query(
-      "UPDATE user_goal SET title = $2, amount = $3, goal_date = $4 WHERE id = $1",
+    const editGoal = await pool.query(
+      "UPDATE goal SET title = $2, amount = $3, goal_date = $4 WHERE id = $1",
       [id, title, amount, goal_date]
     );
-    res.json(editExpense);
+    res.json(editGoal);
   } catch (err) {
     console.log(err);
   }
@@ -136,11 +136,73 @@ app.put("/goal", async (req, res) => {
 app.delete("/goal", async (req, res) => {
   const { id } = req.body;
   try {
-    const deleteExpense = await pool.query(
-      "DELETE FROM user_goal WHERE id = $1",
+    const deleteGoal = await pool.query(
+      "DELETE FROM goal WHERE id = $1",
       [id]
     );
-    res.json(deleteExpense);
+    res.json(deleteGoal);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
+/**************************************/
+/**************************************/
+/****************LOANS*****************/
+/**************************************/
+/**************************************/
+
+// Get all user loans data
+app.get("/loan", async (req, res) => {
+  try {
+    const loan = await pool.query("SELECT * FROM loan");
+    res.json(loan.rows);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// Post new loan to database
+app.post("/loan", (req, res) => {
+  const { title, amount, interest, start_date, term, balance_left } = req.body;
+  console.log(
+    `info from req. body: ${title}, ${amount}, ${interest}, ${start_date}, ${term}, ${balance_left}`
+  );
+  try {
+    pool.query(
+      "INSERT INTO loan(title, amount, interest, start_date, term, balance_left) VALUES($1, $2, $3, $4, $5, $6)",
+      [title, amount, interest, start_date, term, balance_left]
+    );
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
+// Edit a users loan in database
+app.put("/loan", async (req, res) => {
+  const { id, title, amount, interest, start_date, term, balance_left } = req.body;
+  try {
+    const editLoan = await pool.query(
+      "UPDATE loan SET title = $2, amount = $3, interest = $4, start_date = $5, term = $6, balance_left = $7 WHERE id = $1",
+      [id, title, amount, interest, start_date, term, balance_left]
+    );
+    res.json(editLoan);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// DELETE a users loan in database
+app.delete("/loan", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const deleteLoan = await pool.query(
+      "DELETE FROM loan WHERE id = $1",
+      [id]
+    );
+    res.json(deleteLoan);
   } catch (err) {
     console.log(err);
   }

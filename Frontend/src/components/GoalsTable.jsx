@@ -11,9 +11,35 @@ function GoalsTable(props) {
   const [goalModalShow, setGoalModalShow] = useState(false);
 
 
+  const getGoalData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/goal`);
+      const goalJSON = await response.json();
+      setGoal(
+        goalJSON.sort(function (a, b) {
+          // Default sort by DATE:
+          var aa = a.goal_date.split("/").reverse().join(),
+            bb = b.goal_date.split("/").reverse().join();
+          return aa < bb ? -1 : aa > bb ? 1 : 0;
+        })
+      );
+      // Only needed if I decide to allow goal table sorting later (no need to)
+      // setGoalCopy(
+      //   goalJSON.sort(function (a, b) {
+      //     // Default sort by DATE:
+      //     var aa = a.date.split("/").reverse().join(),
+      //       bb = b.date.split("/").reverse().join();
+      //     return bb < aa ? -1 : bb > aa ? 1 : 0;
+      //   })
+      // );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    setGoal(props.goal);
-  }, [props.goal]);
+    getGoalData();
+  }, []);
 
 
 
