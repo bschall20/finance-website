@@ -110,7 +110,7 @@ function GoalsTable(props) {
    </tr>
  </thead>
  <tbody>
-   {goal.map((dataObj, index) => {
+   {goal.map((dataObj, index) => {  
      // Need to go through this later to remove redundancy.
      let tableIndex;
      let tableTitle;

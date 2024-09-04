@@ -11,8 +11,10 @@ function LoanModal(props) {
   const postLoanData = async (
     formTitle,
     formAmount,
+    formInterest,
     formStartDate,
-    formLoanDate
+    formTerm,
+    formBalanceLeft
   ) => {
     try {
       const response = await fetch("http://localhost:8000/loan", {
@@ -21,8 +23,10 @@ function LoanModal(props) {
         body: JSON.stringify({
           title: formTitle,
           amount: parseFloat(formAmount),
+          interest: parseFloat(formInterest),
           start_date: formStartDate,
-          loan_date: formLoanDate,
+          term: parseFloat(formTerm),
+          balance_left: parseFloat(formBalanceLeft)
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -34,8 +38,10 @@ function LoanModal(props) {
   const editLoanData = async (
     formTitle,
     formAmount,
-    // formStartDate,
-    formLoanDate
+    formInterest,
+    formStartDate,
+    formTerm,
+    formBalanceLeft
   ) => {
     // e.preventDefault();
     try {
@@ -46,8 +52,10 @@ function LoanModal(props) {
           id: props.id,
           title: formTitle,
           amount: parseFloat(formAmount),
-          // start_date: formStartDate,
-          loan_date: formLoanDate,
+          interest: parseFloat(formInterest),
+          start_date: formStartDate,
+          term: parseFloat(formTerm),
+          balance_left: parseFloat(formBalanceLeft)
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);
@@ -56,27 +64,6 @@ function LoanModal(props) {
     }
   };
 
-//   const todayDate = () => {
-//     var today = new Date();
-//     var dd = today.getDate();
-//     var mm = today.getMonth() + 1;
-//     var yyyy = today.getFullYear();
-
-//     if (dd < 10) {
-//       dd = "0" + dd;
-//     }
-//     if (mm < 10) {
-//       mm = "0" + mm;
-//     }
-//     return yyyy + "-" + mm + "-" + dd;
-//   };
-
-
-    // const [amountLeft, setAmountLeft] = useState(0)
-    // function HandleChange(e){
-    //     console.log(e.target.value)
-    //     setAmountLeft(e.target.value);
-    // }
 
   function HandleSubmit(e) {
     let formTitle = e.target[0].value;
@@ -84,13 +71,14 @@ function LoanModal(props) {
     let formInterest = parseInt(e.target[2].value);
     let formStartDate = e.target[3].value;      // end date calculated in table
     let formTerm = e.target[4].value;
+    let formBalanceLeft = parseInt(e.target[5].value);
 
-    if (props.postgoal === 1) {
+    if (props.postloan === 1) {
       console.log("Post loan data called");
-      return postLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm);
+      return postLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm, formBalanceLeft);
     } else {
-      return editLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm);
-      // return editLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm, formBalanceLeft);
+      // return editLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm);
+      return editLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm, formBalanceLeft);
     }
   }
 
@@ -110,6 +98,7 @@ function LoanModal(props) {
 
         <Modal.Body>
           <Form onSubmit={HandleSubmit}>
+            {/* Loan TITLE Row */}
             <Row className="mb-3">
               <Col>
                 <Form.Group as={Col}>
@@ -119,11 +108,12 @@ function LoanModal(props) {
                     placeholder="Enter Loan Title"
                     required
                     name="title"
-                    defaultValue={props.title}
+                    // defaultValue={props.title}
                   />
                 </Form.Group>
               </Col>
             </Row>
+            {/* Loan AMOUNT + INTEREST Row */}
             <Row>
             <Col>
                 <Form.Label>Loan Amount</Form.Label>
@@ -133,7 +123,7 @@ function LoanModal(props) {
                     aria-label="Amount (to the nearest dollar)"
                     required
                     name="amount"
-                    defaultValue={props.amount}
+                    // defaultValue={props.amount}
                   />
                   <InputGroup.Text>.00</InputGroup.Text>
                 </InputGroup>
@@ -145,13 +135,13 @@ function LoanModal(props) {
                     aria-label="Loan Interest"
                     required
                     name="interest"
-                    defaultValue={props.interest}
+                    // defaultValue={props.interest}
                   />
                   <InputGroup.Text>%</InputGroup.Text>
                 </InputGroup>
               </Col>
             </Row>
-
+            {/* Loan DATE + TERM Row */}
             <Row>
             <Col>
                 <Form.Label>Loan Start Date</Form.Label>
@@ -169,13 +159,26 @@ function LoanModal(props) {
                     aria-label="Term of Loan in Months"
                     required
                     name="term"
-                    defaultValue={props.amount}
+                    // defaultValue={props.amount}
                   />
                 </InputGroup>
               </Col>
-
+            </Row>
+            <Row>
+            <Col>
+                <Form.Label>Balance Left</Form.Label>
+                <InputGroup className="mb-3">
+                  <Form.Control
+                    aria-label="Loan Balance Left"
+                    required
+                    name="term"
+                    // defaultValue={props.amount}
+                  />
+                </InputGroup>
+              </Col>
             </Row>
 
+            {/* SUBMIT or CHANGE button */}
             <Form.Group as={Row} className="mb-3 mt-3">
               <Col sm={{ span: 12 }}>
                 <div

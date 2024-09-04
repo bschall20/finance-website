@@ -9,7 +9,7 @@ import GoalModal from "../components/GoalModal";
 import Button from "react-bootstrap/esm/Button";
 import GoalsTable from "../components/GoalsTable";
 import LoanModal from "../components/LoanModal";
-import LoanTracker from "../components/LoanTracker";
+import LoanTable from "../components/LoanTable";
 import { CiCircleQuestion } from "react-icons/ci";
 import InfoModal from "../components/InfoModal";
 
@@ -91,7 +91,7 @@ function FinanceManagement() {
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
-      <div className="pieChart">
+      <div>
         <h2>
           Expense Sectors
           <CiCircleQuestion
@@ -183,7 +183,7 @@ function FinanceManagement() {
         postloan={1}
         onHide={() => setAddLoanModalShow(false)}
       />
-      <LoanTracker />
+      <LoanTable />
 
       {/* ////////////////////////////////////////////////////////////////////////// */}
       {/* ////////////////////////////////////////////////////////////////////////// */}
