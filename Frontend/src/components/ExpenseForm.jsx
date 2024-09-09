@@ -70,6 +70,7 @@ function ExpenseForm(props) {
 
     if (formType === "SelectTypeOfExpense") {
       console.log("No entry - used default Select Type of Expense.");
+      alert("Entry not submitted. Please resubmit and choose a valid Expense Type.")
       return null;
     }
     if (props.postexpense === 1) {
@@ -121,7 +122,7 @@ function ExpenseForm(props) {
             name="expense_type"
             defaultValue={props.expensetype}
           >
-            <option value="SelectTypeOfExpense">Select Type of Expense</option>
+            <option value="SelectTypeOfExpense" hidden>Select Type of Expense</option>
             <option value="Mortgage/Rent">Mortgage/Rent</option>
             <option value="Utilities">Utilities</option>
             <option value="Insurance">Insurance</option>

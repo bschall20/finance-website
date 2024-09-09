@@ -14,7 +14,8 @@ function LoanModal(props) {
     formInterest,
     formStartDate,
     formTerm,
-    formBalanceLeft
+    formBalanceLeft,
+    formInterestType
   ) => {
     try {
       const response = await fetch("http://localhost:8000/loan", {
@@ -26,7 +27,8 @@ function LoanModal(props) {
           interest: parseFloat(formInterest),
           start_date: formStartDate,
           term: parseFloat(formTerm),
-          balance_left: parseFloat(formBalanceLeft)
+          balance_left: parseFloat(formBalanceLeft),
+          interest_type: formInterestType,
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -41,7 +43,8 @@ function LoanModal(props) {
     formInterest,
     formStartDate,
     formTerm,
-    formBalanceLeft
+    formBalanceLeft,
+    formInterestType
   ) => {
     // e.preventDefault();
     try {
@@ -55,7 +58,8 @@ function LoanModal(props) {
           interest: parseFloat(formInterest),
           start_date: formStartDate,
           term: parseFloat(formTerm),
-          balance_left: parseFloat(formBalanceLeft)
+          balance_left: parseFloat(formBalanceLeft),
+          interest_type: formInterestType,
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);
@@ -64,21 +68,42 @@ function LoanModal(props) {
     }
   };
 
-
   function HandleSubmit(e) {
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
-    let formInterest = parseInt(e.target[2].value);
-    let formStartDate = e.target[3].value;      // end date calculated in table
+    let formBalanceLeft = parseInt(e.target[2].value);
+    let formStartDate = e.target[3].value; // end date calculated in table
     let formTerm = e.target[4].value;
-    let formBalanceLeft = parseInt(e.target[5].value);
+    let formInterest = parseInt(e.target[5].value);
+    let formInterestType = e.target[6].value;
 
+    if (formInterestType === "SelectTypeOfLoan") {
+      console.log("No entry - used default Select Type of Loan.");
+      alert("Entry not submitted. Please resubmit and choose a valid Interest Type.");
+      return null;
+    }
     if (props.postloan === 1) {
       console.log("Post loan data called");
-      return postLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm, formBalanceLeft);
+      return postLoanData(
+        formTitle,
+        formAmount,
+        formInterest,
+        formStartDate,
+        formTerm,
+        formBalanceLeft,
+        formInterestType
+      );
     } else {
       // return editLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm);
-      return editLoanData(formTitle, formAmount, formInterest, formStartDate, formTerm, formBalanceLeft);
+      return editLoanData(
+        formTitle,
+        formAmount,
+        formInterest,
+        formStartDate,
+        formTerm,
+        formBalanceLeft,
+        formInterestType
+      );
     }
   }
 
@@ -92,7 +117,7 @@ function LoanModal(props) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            {props.editloan === 1 ? "Edit Loan" : "Add Loan"}
+            {props.edit_loan === 1 ? "Edit Loan" : "Add Loan"}
           </Modal.Title>
         </Modal.Header>
 
@@ -108,14 +133,14 @@ function LoanModal(props) {
                     placeholder="Enter Loan Title"
                     required
                     name="title"
-                    // defaultValue={props.title}
+                    defaultValue={props.title}
                   />
                 </Form.Group>
               </Col>
             </Row>
-            {/* Loan AMOUNT + INTEREST Row */}
+            {/* Loan AMOUNT + AMOUNT LEFT Row */}
             <Row>
-            <Col>
+              <Col>
                 <Form.Label>Loan Amount</Form.Label>
                 <InputGroup className="mb-3">
                   <InputGroup.Text>$</InputGroup.Text>
@@ -123,33 +148,34 @@ function LoanModal(props) {
                     aria-label="Amount (to the nearest dollar)"
                     required
                     name="amount"
-                    // defaultValue={props.amount}
+                    defaultValue={props.amount}
                   />
                   <InputGroup.Text>.00</InputGroup.Text>
                 </InputGroup>
               </Col>
               <Col>
-                <Form.Label>Interest</Form.Label>
+                <Form.Label>Balance Left</Form.Label>
                 <InputGroup className="mb-3">
+                  <InputGroup.Text>$</InputGroup.Text>
                   <Form.Control
-                    aria-label="Loan Interest"
+                    aria-label="Loan Balance Left"
                     required
-                    name="interest"
-                    // defaultValue={props.interest}
+                    name="balanceLeft"
+                    defaultValue={props.balance_left}
                   />
-                  <InputGroup.Text>%</InputGroup.Text>
+                  {/* <InputGroup.Text>.00</InputGroup.Text> */}
                 </InputGroup>
               </Col>
             </Row>
             {/* Loan DATE + TERM Row */}
             <Row>
-            <Col>
+              <Col>
                 <Form.Label>Loan Start Date</Form.Label>
                 <Form.Control
                   type="date"
                   required
-                  name="endDate"
-                  // defaultValue={props.loandate}
+                  name="startDate"
+                  defaultValue={props.start_date}
                 />
               </Col>
               <Col>
@@ -159,22 +185,46 @@ function LoanModal(props) {
                     aria-label="Term of Loan in Months"
                     required
                     name="term"
-                    // defaultValue={props.amount}
+                    defaultValue={props.term}
                   />
                 </InputGroup>
               </Col>
             </Row>
+            {/* Loan INTEREST + INTEREST TYPE Row */}
             <Row>
-            <Col>
-                <Form.Label>Balance Left</Form.Label>
+              <Col>
+                <Form.Label>Interest</Form.Label>
                 <InputGroup className="mb-3">
                   <Form.Control
-                    aria-label="Loan Balance Left"
+                    aria-label="Loan Interest"
                     required
-                    name="term"
-                    // defaultValue={props.amount}
+                    name="interest"
+                    defaultValue={props.interest}
                   />
+                  <InputGroup.Text>%</InputGroup.Text>
                 </InputGroup>
+              </Col>
+              <Col>
+                <Form.Label>Interest Type</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="mb-3"
+                  name="interestType"
+                  required
+                  defaultValue={props.interest_type}
+                >
+                  <option value="SelectTypeOfLoan" hidden>
+                    Select Type of Interest
+                  </option>
+                  <option value="Fixed">Fixed</option>
+                  <option value="Variable">Variable</option>
+                  <option value="APR">Annual Percentage Rate (APR)</option>
+                  <option value="Prime">Prime</option>
+                  <option value="Discounted">Discounted</option>
+                  <option value="Simple">Simple</option>
+                  <option value="Compound">Compound</option>
+                  <option value="Public">Public</option>
+                </Form.Select>
               </Col>
             </Row>
 
@@ -195,7 +245,11 @@ function LoanModal(props) {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" variant="success" onClick={postLoanData}>
+                  <Button
+                    type="submit"
+                    variant="success"
+                    onClick={postLoanData}
+                  >
                     Submit Loan
                   </Button>
                 </div>
@@ -214,7 +268,11 @@ function LoanModal(props) {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" variant="success" onClick={editLoanData}>
+                  <Button
+                    type="submit"
+                    variant="success"
+                    onClick={editLoanData}
+                  >
                     Submit Loan Change
                   </Button>
                 </div>

@@ -165,14 +165,14 @@ app.get("/loan", async (req, res) => {
 
 // Post new loan to database
 app.post("/loan", (req, res) => {
-  const { title, amount, interest, start_date, term, balance_left } = req.body;
+  const { title, amount, interest, start_date, term, balance_left, interest_type } = req.body;
   console.log(
-    `info from req. body: ${title}, ${amount}, ${interest}, ${start_date}, ${term}, ${balance_left}`
+    `info from req. body: ${title}, ${amount}, ${interest}, ${start_date}, ${term}, ${balance_left}, ${interest_type}`
   );
   try {
     pool.query(
-      "INSERT INTO loan(title, amount, interest, start_date, term, balance_left) VALUES($1, $2, $3, $4, $5, $6)",
-      [title, amount, interest, start_date, term, balance_left]
+      "INSERT INTO loan(title, amount, interest, start_date, term, balance_left, interest_type) VALUES($1, $2, $3, $4, $5, $6, $7)",
+      [title, amount, interest, start_date, term, balance_left, interest_type]
     );
   } catch (err) {
     console.log(err);
@@ -182,11 +182,11 @@ app.post("/loan", (req, res) => {
 
 // Edit a users loan in database
 app.put("/loan", async (req, res) => {
-  const { id, title, amount, interest, start_date, term, balance_left } = req.body;
+  const { id, title, amount, interest, start_date, term, balance_left, interest_type } = req.body;
   try {
     const editLoan = await pool.query(
-      "UPDATE loan SET title = $2, amount = $3, interest = $4, start_date = $5, term = $6, balance_left = $7 WHERE id = $1",
-      [id, title, amount, interest, start_date, term, balance_left]
+      "UPDATE loan SET title = $2, amount = $3, interest = $4, start_date = $5, term = $6, balance_left = $7, interest_type = $8 WHERE id = $1",
+      [id, title, amount, interest, start_date, term, balance_left, interest_type]
     );
     res.json(editLoan);
   } catch (err) {
