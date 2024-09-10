@@ -235,13 +235,17 @@ background-blend-mode: multiply; */
       align-items: end;
     }
 
-    .tableEdit, .tableDelete{
+    .tableView, .tableEdit, .tableDelete{
       text-align: center;
+      text-decoration: underline;
     }
-    .tableEdit:hover, .tableDelete:hover {
+    .tableEdit:hover, .tableDelete:hover, .tableView:hover {
       background-color: #157347;
       color: white;
       cursor: pointer;
+    }
+    .tableView:hover {
+      background-color: #0092d6;
     }
     .tableDelete:hover {
       background-color: #D60027;
@@ -334,6 +338,14 @@ background-blend-mode: multiply; */
       padding: .5rem;
     } */
     
+
+    .loanTable {
+      color: blue;
+      text-decoration: underline;
+    }
+    .loanTable:hover{
+      cursor: pointer;
+    }
 
 
   /**************************************/

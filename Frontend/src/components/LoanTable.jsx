@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import DeleteLoanModal from "./DeleteLoanModal.jsx";
 import LoanModal from "./LoanModal.jsx";
+import LoanProjectionModal from "./LoanProjectionTable.jsx";
 
 function LoanTracker(props) {
   // Display on view:
@@ -22,6 +23,7 @@ function LoanTracker(props) {
   const [loan, setLoan] = useState([]);
   const [deleteLoanModalShow, setDeleteLoanModalShow] = useState(false);
   const [loanModalShow, setLoanModalShow] = useState(false);
+  const [loanProjectionModal, setLoanProjectionModal] = useState(false)
 
   const getLoanData = async () => {
     try {
@@ -82,6 +84,7 @@ function LoanTracker(props) {
           </th>
           <th></th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -106,6 +109,17 @@ function LoanTracker(props) {
                     100
                 ) / 100}
                 )
+              </td>
+              <td
+                className="tableView"
+                style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                onClick={() => {
+                  setLoanProjectionModal(true);
+                  setModalData(dataObj);
+                  setModalNum(index + 1);
+                }}
+              >
+                view
               </td>
               <td
                 className="tableEdit"
@@ -133,6 +147,19 @@ function LoanTracker(props) {
             </tr>
           );
         })}
+        <LoanProjectionModal
+          show={loanProjectionModal}
+          onHide={() => setLoanProjectionModal(false)}
+          id={modalData.id}
+          num={modalNum}
+          title={modalData.title}
+          amount={modalData.amount}
+          interest={modalData.interest}
+          start_date={modalData.start_date}
+          term={modalData.term}
+          balance_left={modalData.balance_left}
+          interest_type={modalData.interest_type}
+        />
         <LoanModal
           show={loanModalShow}
           showsubmit={0}
@@ -145,6 +172,7 @@ function LoanTracker(props) {
           start_date={modalData.start_date}
           term={modalData.term}
           balance_left={modalData.balance_left}
+          interest_type={modalData.interest_type}
           edit_loan={1}
         />
         <DeleteLoanModal
@@ -158,6 +186,7 @@ function LoanTracker(props) {
           start_date={modalData.start_date}
           term={modalData.term}
           balance_left={modalData.balance_left}
+          interest_type={modalData.interest_type}
         />
       </tbody>
     </Table>

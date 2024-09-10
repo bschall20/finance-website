@@ -60,6 +60,7 @@ function ExpensesTable(props) {
       setTitleOrder(0);
     }
   };
+  
   // Sort table by TITLE SEARCH
   const titleSearchSort = (e) => {
     setDefaultDate("");

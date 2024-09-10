@@ -57,6 +57,9 @@ function DeleteLoanModal(props) {
           <p className="deleteTitle">
             Balance Left: <span className="deleteInfo">{props.balance_left}</span>
           </p>
+          <p className="deleteTitle">
+            Interest Type: <span className="deleteInfo">{props.interest_type}</span>
+          </p>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.onHide} variant="secondary">
