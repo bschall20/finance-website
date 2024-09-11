@@ -5,6 +5,12 @@ import DeleteLoanModal from "./DeleteLoanModal.jsx";
 import LoanModal from "./LoanModal.jsx";
 import LoanProjectionModal from "./LoanProjectionTable.jsx";
 
+import { GrView } from "react-icons/gr";
+import { MdEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+
+
+
 function LoanTracker(props) {
   // Display on view:
   // Name > Starting Amount > Interest > Start Date > Term (Months) > Balance Left > Payment (+interest) > Projected End Date?
@@ -58,9 +64,9 @@ function LoanTracker(props) {
   //   return (amount/term)
   // }
 
-  const termLeft = () => {
-    return 60;
-  };
+  // const termLeft = () => {
+  //   return 60;
+  // };
 
   useEffect(() => {
     getLoanData();
@@ -72,19 +78,19 @@ function LoanTracker(props) {
 
   return (
     <Table striped bordered hover>
-      <thead>
+      <thead style={{borderTop: "solid 1px white"}}>
         <tr>
-          <th>#</th>
-          <th>Loan</th>
-          <th>Starting Balance</th>
-          <th>Term (months)</th>
-          <th>Principal</th>
-          <th>
+          <th style={{borderTop: "solid 1px #DEE2E6"}}>#</th>
+          <th style={{borderTop: "solid 1px #DEE2E6"}}>Loan</th>
+          <th style={{borderTop: "solid 1px #DEE2E6"}}>Starting Balance</th>
+          <th style={{borderTop: "solid 1px #DEE2E6"}}>Term (months)</th>
+          <th style={{borderTop: "solid 1px #DEE2E6"}}>Principal</th>
+          {/* <th>
             Payment <span style={{ fontSize: ".75rem" }}>(+interest)</span>
-          </th>
-          <th></th>
-          <th></th>
-          <th></th>
+          </th> */}
+          <th style={{border: "none"}}></th>
+          <th style={{border: "none"}}></th>
+          <th style={{border: "none"}}></th>
         </tr>
       </thead>
       <tbody>
@@ -98,7 +104,7 @@ function LoanTracker(props) {
               </td>
               <td>{dataObj.term}</td>
               <td>{dataObj.balance_left}</td>
-              <td>
+              {/* <td>
                 {Math.round(
                   (dataObj.balance_left / termLeft() + Number.EPSILON) * 100
                 ) / 100}{" "}
@@ -109,40 +115,40 @@ function LoanTracker(props) {
                     100
                 ) / 100}
                 )
-              </td>
+              </td> */}
               <td
                 className="tableView"
-                style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                style={{ paddingLeft: "0px", paddingRight: "0px", border: "none" }}
                 onClick={() => {
                   setLoanProjectionModal(true);
                   setModalData(dataObj);
                   setModalNum(index + 1);
                 }}
               >
-                view
+                < GrView />
               </td>
               <td
                 className="tableEdit"
-                style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                style={{ paddingLeft: "0px", paddingRight: "0px", border: "none" }}
                 onClick={() => {
                   setLoanModalShow(true);
                   setModalData(dataObj);
                   setModalNum(index + 1);
                 }}
               >
-                edit
+                < MdEdit />
               </td>
 
               <td
                 className="tableDelete"
-                style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                style={{ paddingLeft: "0px", paddingRight: "0px", border: "none", borderRight: "solid 1px #DEE2E6" }}
                 onClick={() => {
                   setDeleteLoanModalShow(true);
                   setModalData(dataObj);
                   setModalNum(index + 1);
                 }}
               >
-                X
+                < MdDelete />
               </td>
             </tr>
           );
