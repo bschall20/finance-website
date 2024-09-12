@@ -216,14 +216,14 @@ function LoanModal(props) {
                   <option value="SelectTypeOfLoan" hidden>
                     Select Type of Interest
                   </option>
-                  <option value="Fixed">Fixed</option>
-                  <option value="Variable">Variable</option>
                   <option value="APR">Annual Percentage Rate (APR)</option>
-                  <option value="Prime">Prime</option>
-                  <option value="Discounted">Discounted</option>
-                  <option value="Simple">Simple</option>
                   <option value="Compound">Compound</option>
+                  <option value="Discounted">Discounted</option>
+                  <option value="Fixed">Fixed</option>
+                  <option value="Prime">Prime</option>
                   <option value="Public">Public</option>
+                  <option value="Simple">Simple</option>
+                  <option value="Variable">Variable</option>
                 </Form.Select>
               </Col>
             </Row>

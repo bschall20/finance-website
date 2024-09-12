@@ -6,6 +6,15 @@ import Accordion from "react-bootstrap/Accordion";
 import Table from "react-bootstrap/Table";
 
 function LoanProjectionModal(props) {
+  var principalTotal = 0;
+  var interestTotal = 0;
+  var totalSpent = 0;
+  var balanceLeft;
+  var principalFormatted;
+  var interestFormatted;
+  var totalFormatted;
+  var finalPayment;
+
   // Find projected due date (term months from start date)
   const projectedDueDate = () => {
     var d = new Date(props.start_date);
@@ -39,18 +48,6 @@ function LoanProjectionModal(props) {
     return monthDiff;
   };
 
-  // const [loanTable, setLoanTable] = useState([]);
-  // const loanSetUp = () => {
-  //   for (let i = 0; i < props.term; i++){
-  //     loanTable.push({
-  //       "id": i,
-  //       "date": "2024-08-08",
-  //       "principal": 100,
-  //       "interest": 10,
-  //       "total": 110,
-  //     })
-  //   }
-  // }
   const [date, setDate] = useState([]);
   const dateRange = useCallback(() => {
     // UTC so timezone isn't needed + set start date 1 month ahead of noted start (first payment due)
@@ -79,18 +76,86 @@ function LoanProjectionModal(props) {
     setDate(dates);
   }, [props.start_date, props.term]);
 
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+  //                    Create Loan Table Array
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
 
-
-  
   const getPrincipal = () => {
-    return Math.round((props.amount / props.term) * 100) / 100;
+    // To Fixed ensures 2 decimal places (ie. 0.8 = 0.80). This converts to string. If using elsewhere, parseFloat the return.
+    return (Math.round((props.amount / props.term) * 100) / 100).toFixed(2);
   };
-  // Make this function multiple times but for each interest type
+
   const getInterest = () => {
-    return Math.round(getPrincipal() * (props.interest / 100) * 100) / 100;
+    // To Fixed ensures 2 decimal places (ie. 0.8 = 0.80). This converts to string. If using elsewhere, parseFloat the return.
+    if (props.interest_type === "APR") {
+    } else if (props.interest_type === "Compound") {
+    } else if (props.interest_type === "Discounted") {
+    } else if (props.interest_type === "Fixed") {
+      return (
+        Math.round(getPrincipal() * (props.interest / 100) * 100) / 100
+      ).toFixed(2);
+    } else if (props.interest_type === "Prime") {
+    } else if (props.interest_type === "Public") {
+    } else if (props.interest_type === "Simple") {
+    } else if (props.interest_type === "Variable") {
+    }
   };
-  const getTotal = () => {
-    return Math.round((getPrincipal() + getInterest()) * 100) / 100;
+
+  const getTotalDue = () => {
+    return (
+      Math.round(
+        (parseFloat(getPrincipal()) + parseFloat(getInterest())) * 100
+      ) / 100
+    ).toFixed(2);
+  };
+
+  // Get number (ie 80000.0) and convert to readable number (80,000.00)
+  const formatNumber = (number) => {
+    return (
+      number
+        .toFixed(2)
+        .split(".")[0]
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+      "." +
+      number.toFixed(2).split(".")[1]
+    );
+  };
+
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+  //                    Get Last Items of Table
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+
+  const getLastPrincipal = (totalDue, finalPay, index) => {
+    if (index === props.term) {
+      return finalPay;
+    } else {
+      return totalDue;
+    }
+  };
+
+  const getLastTotalDue = (principal, interest, balanceLeft, index) => {
+    if (index === props.term) {
+      return formatNumber(balanceLeft + interest);
+    } else {
+      return formatNumber(principal + interest);
+    }
+  };
+
+  // Get remaining balance and ensure balance left is never negative
+  const getBalanceLeft = (balanceLeft, index) => {
+    if (index === props.term) {
+      return 0;
+    } else {
+      return formatNumber(parseFloat(balanceLeft));
+    }
   };
 
   let loanTable = [];
@@ -100,7 +165,7 @@ function LoanProjectionModal(props) {
       date: date[i],
       principal: getPrincipal(),
       interest: getInterest(),
-      total: getTotal(),
+      totalDue: getTotalDue(),
     });
   }
 
@@ -129,6 +194,9 @@ function LoanProjectionModal(props) {
           <p>
             <span>Projected due date:</span> {projectedDueDate()}
           </p>
+          <p>
+            <span>Interest type:</span> {props.interest_type}
+          </p>
 
           <Accordion>
             <Accordion.Item eventKey="0">
@@ -152,23 +220,72 @@ function LoanProjectionModal(props) {
                     <tr>
                       <th>#</th>
                       <th>Date</th>
-                      <th>Principal</th>
-                      <th>Interest</th>
+                      <th>Pay to Principal</th>
+                      <th>Pay to Interest</th>
                       <th>Total Due</th>
+                      <th>Balance Left</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loanTable.map((dataObj, index) => {
+                      interestTotal += parseFloat(dataObj.interest);
+                    
+                      if (index + 1 !== loanTable.length) {
+                        principalTotal += parseFloat(dataObj.principal);
+                        totalSpent += (parseFloat(dataObj.interest) + parseFloat(dataObj.principal));
+                        balanceLeft =
+                          props.amount -
+                          parseFloat(dataObj.principal) * dataObj.id;
+                      }
+                      // Format number to have commas + 2 decimals + if last index, take total number and format it
+                      else if (index + 1 === loanTable.length) {
+                        principalTotal += balanceLeft;
+                        totalSpent += (balanceLeft + parseFloat(dataObj.interest));
+                        principalFormatted = formatNumber(principalTotal);
+                        interestFormatted = formatNumber(interestTotal);
+                        totalFormatted = formatNumber(totalSpent);
+
+                        // Last balanceLeft as payment to principal left
+                        finalPayment = formatNumber(balanceLeft);
+                      }
+
                       return (
                         <tr key={index}>
                           <td>{dataObj.id}</td>
                           <td>{dataObj.date}</td>
-                          <td>{dataObj.principal}</td>
-                          <td>{dataObj.interest}</td>
-                          <td>{dataObj.total}</td>
+                          {/* Principal */}
+                          <td>
+                            {getLastPrincipal(
+                              formatNumber(parseFloat(dataObj.principal)),
+                              finalPayment,
+                              dataObj.id
+                            )}
+                          </td>
+                          {/* Interest */}
+                          <td>{formatNumber(parseFloat(dataObj.interest))}</td>
+                          {/* Total (Principal payment + Interest payment) */}
+                          <td>
+                            {getLastTotalDue(
+                              parseFloat(dataObj.principal),
+                              parseFloat(dataObj.interest),
+                              balanceLeft,
+                              dataObj.id
+                            )}
+                          </td>
+                          {/* Balance Left on loan */}
+                          <td>{getBalanceLeft(balanceLeft, dataObj.id)}</td>
                         </tr>
                       );
                     })}
+                    {/* Totals for whole table added: */}
+                    <tr style={{ fontWeight: "900" }}>
+                      <td>Total: </td>
+                      <td></td>
+                      <td>{principalFormatted}</td>
+                      <td>{interestFormatted}</td>
+                      <td>{totalFormatted}</td>
+                      <td>0.00</td>
+                    </tr>
                   </tbody>
                 </Table>
               </Accordion.Body>
