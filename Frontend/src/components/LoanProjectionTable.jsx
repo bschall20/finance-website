@@ -6,47 +6,42 @@ import Accordion from "react-bootstrap/Accordion";
 import Table from "react-bootstrap/Table";
 
 function LoanProjectionModal(props) {
-  var principalTotal = 0;
-  var interestTotal = 0;
-  var totalSpent = 0;
-  var balanceLeft;
-  var principalFormatted;
-  var interestFormatted;
-  var totalFormatted;
-  var finalPayment;
+  var totalPrincipal = 0;
+  var totalInterest = 0;
+  var totalPaid = 0;
 
   // Find projected due date (term months from start date)
   const projectedDueDate = () => {
     var d = new Date(props.start_date);
-    d.setMonth(d.getMonth() + props.term);
+    d.setMonth(d.getMonth() + Math.ceil(props.term * (props.balance_left / props.amount)));
     return d.toLocaleDateString();
   };
 
   // Find payments left (todays date to projected date)
-  const paymentsLeft = () => {
-    var d = new Date(props.start_date);
-    d.setMonth(d.getMonth() + props.term);
-    d = d.toLocaleDateString();
-    // Get dates
-    var date1 = new Date(props.start_date);
-    var date2 = new Date(d);
-    // Separate numbers for formatting
-    var y1 = date1.getFullYear();
-    var m1 = date1.getMonth() + 1;
-    var d1 = date1.getDate();
-    var y2 = date2.getFullYear();
-    var m2 = date2.getMonth() + 1;
-    var d2 = date2.getDate();
-    // Recollect numbers for correct format
-    var dt1 = new Date(y1, m1, d1);
-    var dt2 = new Date(y2, m2, d2);
-    // Return month difference (payments left)
-    const monthDiff =
-      dt2.getMonth() -
-      dt1.getMonth() +
-      12 * (dt2.getFullYear() - dt1.getFullYear());
-    return monthDiff;
-  };
+  // const paymentsLeft = () => {
+  //   var d = new Date(props.start_date);
+  //   d.setMonth(d.getMonth() + props.term);
+  //   d = d.toLocaleDateString();
+  //   // Get dates
+  //   var date1 = new Date(props.start_date);
+  //   var date2 = new Date(d);
+  //   // Separate numbers for formatting
+  //   var y1 = date1.getFullYear();
+  //   var m1 = date1.getMonth() + 1;
+  //   var d1 = date1.getDate();
+  //   var y2 = date2.getFullYear();
+  //   var m2 = date2.getMonth() + 1;
+  //   var d2 = date2.getDate();
+  //   // Recollect numbers for correct format
+  //   var dt1 = new Date(y1, m1, d1);
+  //   var dt2 = new Date(y2, m2, d2);
+  //   // Return month difference (payments left)
+  //   const monthDiff =
+  //     dt2.getMonth() -
+  //     dt1.getMonth() +
+  //     12 * (dt2.getFullYear() - dt1.getFullYear());
+  //   return monthDiff;
+  // };
 
   const [date, setDate] = useState([]);
   const dateRange = useCallback(() => {
@@ -84,20 +79,23 @@ function LoanProjectionModal(props) {
   //////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////
 
-  const getPrincipal = () => {
-    // To Fixed ensures 2 decimal places (ie. 0.8 = 0.80). This converts to string. If using elsewhere, parseFloat the return.
-    return (Math.round((props.amount / props.term) * 100) / 100).toFixed(2);
+  // Get loan principal payments by AMOUNT/TERM(total months)
+  const getPrincipal = (i) => {
+    if (i === Math.ceil(props.term * (props.balance_left / props.amount))){
+      // Find previous balance left to be PRINCIPAL payment to display properly to 0.00 final balance left
+      return Math.round((props.balance_left - (Math.round((props.amount / props.term) * 100) / 100) * (i-1)) * 100) / 100
+    }
+    else { return Math.round((props.amount / props.term) * 100) / 100 }
+    
   };
 
+  // Get loan interest payments based on which interest type is selected
   const getInterest = () => {
-    // To Fixed ensures 2 decimal places (ie. 0.8 = 0.80). This converts to string. If using elsewhere, parseFloat the return.
     if (props.interest_type === "APR") {
     } else if (props.interest_type === "Compound") {
     } else if (props.interest_type === "Discounted") {
     } else if (props.interest_type === "Fixed") {
-      return (
-        Math.round(getPrincipal() * (props.interest / 100) * 100) / 100
-      ).toFixed(2);
+      return Math.round(getPrincipal() * (props.interest / 100) * 100) / 100;
     } else if (props.interest_type === "Prime") {
     } else if (props.interest_type === "Public") {
     } else if (props.interest_type === "Simple") {
@@ -105,13 +103,32 @@ function LoanProjectionModal(props) {
     }
   };
 
-  const getTotalDue = () => {
-    return (
-      Math.round(
-        (parseFloat(getPrincipal()) + parseFloat(getInterest())) * 100
-      ) / 100
-    ).toFixed(2);
+  // Get total due per payment by PRINCIPAL + INTEREST
+  const getTotalDue = (i) => {
+    return Math.round((getPrincipal(i) + getInterest()) * 100) / 100;
   };
+
+  // Get balance left based on
+  const getBalanceLeft = (i) => {
+    // Solve balance left. If last row, return 0
+    if (i === Math.ceil(props.term * (props.balance_left / props.amount))){
+      return 0
+    }
+    else { return Math.round((props.balance_left - getPrincipal() * i) * 100) / 100 }
+  };
+
+  let loanTable = [];
+  // Push into loan as long as
+  for (let i = 1; i <= Math.ceil(props.term * (props.balance_left / props.amount)); i++) {
+    loanTable.push({
+      id: i,
+      date: date[i - 1],
+      principal: getPrincipal(i),
+      interest: getInterest(),
+      totalDue: getTotalDue(i),
+      balanceLeft: getBalanceLeft(i),
+    });
+  }
 
   // Get number (ie 80000.0) and convert to readable number (80,000.00)
   const formatNumber = (number) => {
@@ -125,49 +142,6 @@ function LoanProjectionModal(props) {
     );
   };
 
-  //////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////
-  //                    Get Last Items of Table
-  //////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////
-
-  const getLastPrincipal = (totalDue, finalPay, index) => {
-    if (index === props.term) {
-      return finalPay;
-    } else {
-      return totalDue;
-    }
-  };
-
-  const getLastTotalDue = (principal, interest, balanceLeft, index) => {
-    if (index === props.term) {
-      return formatNumber(balanceLeft + interest);
-    } else {
-      return formatNumber(principal + interest);
-    }
-  };
-
-  // Get remaining balance and ensure balance left is never negative
-  const getBalanceLeft = (balanceLeft, index) => {
-    if (index === props.term) {
-      return 0;
-    } else {
-      return formatNumber(parseFloat(balanceLeft));
-    }
-  };
-
-  let loanTable = [];
-  for (let i = 0; i < props.term; i++) {
-    loanTable.push({
-      id: i + 1,
-      date: date[i],
-      principal: getPrincipal(),
-      interest: getInterest(),
-      totalDue: getTotalDue(),
-    });
-  }
 
   useEffect(() => {
     dateRange();
@@ -189,13 +163,14 @@ function LoanProjectionModal(props) {
 
         <Modal.Body>
           <p>
-            <span>Payments left:</span> {paymentsLeft()}
+            {/* Set this to the final term payment from loanTable */}
+            <span>Estimated Payments Left:</span> {Math.ceil(props.term * (props.balance_left / props.amount))}
           </p>
           <p>
-            <span>Projected due date:</span> {projectedDueDate()}
+            <span>Estimated Due Date:</span> {projectedDueDate()}
           </p>
           <p>
-            <span>Interest type:</span> {props.interest_type}
+            <span>Interest Type:</span> {props.interest_type}
           </p>
 
           <Accordion>
@@ -227,53 +202,84 @@ function LoanProjectionModal(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {loanTable.map((dataObj, index) => {
-                      interestTotal += parseFloat(dataObj.interest);
-                    
-                      if (index + 1 !== loanTable.length) {
+                    {/* {loanTable.map((dataObj, index) => {
+                      if (
+                        props.balance_left -
+                          parseFloat(dataObj.principal) * dataObj.id >
+                        -200
+                      ) {
+                        interestTotal += parseFloat(dataObj.interest);
                         principalTotal += parseFloat(dataObj.principal);
-                        totalSpent += (parseFloat(dataObj.interest) + parseFloat(dataObj.principal));
+                        totalSpent +=
+                          parseFloat(dataObj.interest) +
+                          parseFloat(dataObj.principal);
                         balanceLeft =
-                          props.amount -
+                          props.balance_left -
                           parseFloat(dataObj.principal) * dataObj.id;
                       }
                       // Format number to have commas + 2 decimals + if last index, take total number and format it
-                      else if (index + 1 === loanTable.length) {
+                      else {
                         principalTotal += balanceLeft;
-                        totalSpent += (balanceLeft + parseFloat(dataObj.interest));
+                        totalSpent +=
+                          balanceLeft + parseFloat(dataObj.interest);
                         principalFormatted = formatNumber(principalTotal);
                         interestFormatted = formatNumber(interestTotal);
                         totalFormatted = formatNumber(totalSpent);
 
                         // Last balanceLeft as payment to principal left
                         finalPayment = formatNumber(balanceLeft);
+                        count = 1;
+                      }
+                      if (count === 0) {
+                        return (
+                          <tr key={index}>
+                            <td>{dataObj.id}</td>
+                            <td>{dataObj.date}</td>
+                            Principal
+                            <td>
+                              {getLastPrincipal(
+                                formatNumber(parseFloat(dataObj.principal)),
+                                finalPayment,
+                                dataObj.id
+                              )}
+                            </td>
+                            Interest
+                            <td>
+                              {formatNumber(parseFloat(dataObj.interest))}
+                            </td>
+                            Total (Principal payment + Interest payment)
+                            <td>
+                              {getLastTotalDue(
+                                parseFloat(dataObj.principal),
+                                parseFloat(dataObj.interest),
+                                balanceLeft,
+                                dataObj.id
+                              )}
+                            </td>
+                            Balance Left on loan
+                            <td>{getBalanceLeft(balanceLeft, dataObj.id)}</td>
+                          </tr>
+                        );
+                      }
+                    })} */}
+
+                    {loanTable.map((dataObj, index) => {
+                      totalPrincipal += dataObj.principal;
+                      totalInterest += dataObj.interest;
+
+                      // Prevent total paid from being run every time except last run
+                      if (index + 1 === loanTable.length) {
+                        totalPaid += totalPrincipal + totalInterest;
                       }
 
                       return (
                         <tr key={index}>
                           <td>{dataObj.id}</td>
                           <td>{dataObj.date}</td>
-                          {/* Principal */}
-                          <td>
-                            {getLastPrincipal(
-                              formatNumber(parseFloat(dataObj.principal)),
-                              finalPayment,
-                              dataObj.id
-                            )}
-                          </td>
-                          {/* Interest */}
-                          <td>{formatNumber(parseFloat(dataObj.interest))}</td>
-                          {/* Total (Principal payment + Interest payment) */}
-                          <td>
-                            {getLastTotalDue(
-                              parseFloat(dataObj.principal),
-                              parseFloat(dataObj.interest),
-                              balanceLeft,
-                              dataObj.id
-                            )}
-                          </td>
-                          {/* Balance Left on loan */}
-                          <td>{getBalanceLeft(balanceLeft, dataObj.id)}</td>
+                          <td>{formatNumber(dataObj.principal)}</td>
+                          <td>{formatNumber(dataObj.interest)}</td>
+                          <td>{formatNumber(dataObj.totalDue)}</td>
+                          <td>{formatNumber(dataObj.balanceLeft)}</td>
                         </tr>
                       );
                     })}
@@ -281,9 +287,9 @@ function LoanProjectionModal(props) {
                     <tr style={{ fontWeight: "900" }}>
                       <td>Total: </td>
                       <td></td>
-                      <td>{principalFormatted}</td>
-                      <td>{interestFormatted}</td>
-                      <td>{totalFormatted}</td>
+                      <td>{formatNumber(totalPrincipal)}</td>
+                      <td>{formatNumber(totalInterest)}</td>
+                      <td>{formatNumber(totalPaid)}</td>
                       <td>0.00</td>
                     </tr>
                   </tbody>
