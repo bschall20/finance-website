@@ -43,12 +43,12 @@ function LoanTracker(props) {
           // return aa < bb ? -1 : aa > bb ? 1 : 0;
 
           //Default sort by ID:
-          return a - b;
+          return a.id - b.id;
         })
       );
       // Only needed if I decide to allow goal table sorting later (no need to)
-      // setGoalCopy(
-      //   goalJSON.sort(function (a, b) {
+      // setLoanCopy(
+      //   loanJSON.sort(function (a, b) {
       //     // Default sort by DATE:
       //     var aa = a.date.split("/").reverse().join(),
       //       bb = b.date.split("/").reverse().join();

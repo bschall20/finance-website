@@ -170,7 +170,7 @@ function LoanModal(props) {
             {/* Loan DATE + TERM Row */}
             <Row>
               <Col>
-                <Form.Label>Loan Start Date</Form.Label>
+                <Form.Label>First Loan Payment Due</Form.Label>
                 <Form.Control
                   type="date"
                   required
