@@ -9,11 +9,19 @@ function LoanProjectionModal(props) {
   var totalPrincipal = 0;
   var totalInterest = 0;
   var totalPaid = 0;
+  var balanceLeft = 0;
+
+  // Format date from yyyy-mm-dd to mm/dd/yyyy
+  const formatDate = (dt) => {
+    var d = new Date(dt);
+    return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear();
+  }
 
   // Find projected due date (term months from start date)
   const projectedDueDate = () => {
     var d = new Date(props.start_date);
-    d.setMonth(d.getMonth() + Math.ceil(props.term * (props.balance_left / props.amount)));
+    // d.setMonth(d.getMonth() + Math.ceil(props.term * (props.balance_left / props.amount) - 1));
+    d.setMonth(d.getMonth() + props.term - 1);
     return d.toLocaleDateString();
   };
 
@@ -91,9 +99,15 @@ function LoanProjectionModal(props) {
 
   // Get loan principal payments by AMOUNT/TERM(total months)
   const getPrincipal = (i) => {
-    if (i === Math.ceil(props.term * (props.balance_left / props.amount))){
+    // if (i === Math.ceil(props.term * (props.balance_left / props.amount))){
+    //   // Find previous balance left to be PRINCIPAL payment to display properly to 0.00 final balance left
+    //   return Math.round((props.balance_left - (Math.round((props.amount / props.term) * 100) / 100) * (i-1)) * 100) / 100
+    // }
+    // else { return Math.round((props.balance_left / props.term) * 100) / 100 }
+
+    if (i === props.term){
       // Find previous balance left to be PRINCIPAL payment to display properly to 0.00 final balance left
-      return Math.round((props.balance_left - (Math.round((props.amount / props.term) * 100) / 100) * (i-1)) * 100) / 100
+      return getBalanceLeft(i-1)
     }
     else { return Math.round((props.amount / props.term) * 100) / 100 }
   };
@@ -167,19 +181,24 @@ function LoanProjectionModal(props) {
   // Get balance left based on
   const getBalanceLeft = (i) => {
     // Solve balance left. If last row, return 0
-    if (i === Math.ceil(props.term * (props.balance_left / props.amount))){
+    // if (i === Math.ceil(props.term * (props.balance_left / props.amount))){
+    //   return 0
+    // }
+    // else { return Math.round((props.balance_left - getPrincipal() * i) * 100) / 100 }
+    if (i === props.term){
       return 0
-    }
-    else { return Math.round((props.balance_left - getPrincipal() * i) * 100) / 100 }
+    } else {return Math.round((props.amount - getPrincipal() * i) * 100) / 100}
   };
 
   // Set up loan table for use in table format
   let loanTable = [];
+  let paymentsTable = [];
   // Push into loan table as long as i < terms left on payment (takes % of payment left to get same % of terms left based on payments)
-  for (let i = 1; i <= Math.ceil(props.term * (props.balance_left / props.amount)); i++) {
+  // for (let i = 1; i <= Math.ceil(props.term * (props.balance_left / props.amount)); i++) {
+    for (let i = 1; i <= props.term; i++) {
     loanTable.push({
       id: i,
-      date: date[i - 1],
+      date: formatDate(date[i - 1]),
       principal: getPrincipal(i),
       interest: getInterest(i),
       totalDue: getTotalDue(i),
@@ -194,13 +213,23 @@ function LoanProjectionModal(props) {
     //   loanTable.splice(0, monthsDiff()+1)
     // }
 
-    // for (let i = 0; i < loanTable.length; i++){
-    //   var d = new Date (loanTable[i].date)
-    //   if(d < today.toISOString().split('T')[0]){
-    //     loanTable.shift()
-    //   }
-    // }
 
+    // Currently deleting every other array before todays date because it is deleting, lowering length, and next index is going to
+    // previously read index
+    for (let i = loanTable.length; i >= 0; i--){
+      let today = new Date();
+      let d = new Date();
+      if (loanTable[i]){
+        d = new Date (loanTable[i].date)
+      }
+      // const today = new Date();
+      // const d = new Date (loanTable[i].date);
+      if(d < today){
+        // paymentsTable.unshift(loanTable[i]);     => if I want oldest payment first
+        paymentsTable.push(loanTable[i]);
+        loanTable.splice(i, 1);
+      }
+    }
 
   // Get number (ie 80000.0) and convert to readable number string (80,000.00)
   const formatNumber = (number) => {
@@ -239,7 +268,11 @@ function LoanProjectionModal(props) {
             <span>Estimated Payments Left:</span> {loanTable.length}
           </p>
           <p>
-            <span>Estimated Due Date:</span> {projectedDueDate()}
+            <span>Start Date:</span> {formatDate(props.start_date)}
+            {/* <span>Start Date:</span> {new Date(props.start_date).getMonth() + 1 + '/' + new Date(props.start_date).getDate() + '/' + new Date(props.start_date).getFullYear()} */}
+          </p>
+          <p>
+            <span>Estimated Final Payment:</span> {projectedDueDate()}
           </p>
           <p>
             <span>Interest Type:</span> {props.interest_type}
@@ -250,13 +283,55 @@ function LoanProjectionModal(props) {
               <Accordion.Header>Payments Made</Accordion.Header>
               {/* Payments Made: */}
               <Accordion.Body>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              <Table bordered hover>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Pay to Principal</th>
+                      <th>Pay to Interest</th>
+                      <th>Total Due</th>
+                      <th>Balance Left</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paymentsTable.map((dataObj, index) => {
+                      totalPrincipal += dataObj.principal;
+                      totalInterest += dataObj.interest;
+
+                      if (index === 0){
+                        balanceLeft = dataObj.balanceLeft
+                      }
+
+                      // Prevent total paid from being run every time except last run
+                      if (index + 1 === paymentsTable.length) {
+                        totalPaid += totalPrincipal + totalInterest;
+                        // balanceLeft = dataObj.balanceLeft
+                      }
+
+                      return (
+                        <tr key={index}>
+                          {/* <td>{index + 1} is {dataObj.id}</td> */}
+                          <td>{index + 1}</td>
+                          <td>{dataObj.date}</td>
+                          <td>{formatNumber(dataObj.principal)}</td>
+                          <td>{formatNumber(dataObj.interest)}</td>
+                          <td>{formatNumber(dataObj.totalDue)}</td>
+                          <td>{formatNumber(dataObj.balanceLeft)}</td>
+                        </tr>
+                      );
+                    })}
+                    {/* Totals for whole table added: */}
+                    <tr style={{ fontWeight: "900" }}>
+                      <td>Total: </td>
+                      <td></td>
+                      <td>{formatNumber(totalPrincipal)}</td>
+                      <td>{formatNumber(totalInterest)}</td>
+                      <td>{formatNumber(totalPaid)}</td>
+                      <td>{formatNumber(balanceLeft)}</td>
+                    </tr>
+                  </tbody>
+                </Table>
               </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="1">
@@ -346,7 +421,8 @@ function LoanProjectionModal(props) {
 
                       return (
                         <tr key={index}>
-                          <td>{index + 1} is {dataObj.id}</td>
+                          {/* <td>{index + 1} is {dataObj.id}</td> */}
+                          <td>{index + 1}</td>
                           <td>{dataObj.date}</td>
                           <td>{formatNumber(dataObj.principal)}</td>
                           <td>{formatNumber(dataObj.interest)}</td>
