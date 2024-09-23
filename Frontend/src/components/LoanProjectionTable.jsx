@@ -117,6 +117,7 @@ function LoanProjectionModal(props) {
   // const [a, setA] = useState(0);
   let a = 0;
   let count = monthsDiff();
+  // let term = props.term;
   const getInterest = (i) => {
     // let APR = 0;
     if (props.interest_type === "APR") {
@@ -127,31 +128,35 @@ function LoanProjectionModal(props) {
       // console.log(monthsDiff())
     }
     else if (props.interest_type === "Compound") {
-      return 0
+      // return (props.amount * (1+(props.interest/100)^(props.term/12))-props.amount)
+      return (props.amount * (Math.pow((1+(props.interest/100)), (props.term/12)))-props.amount)/props.term
     } else if (props.interest_type === "Discounted") {
       return 0
     } else if (props.interest_type === "Fixed") {
-      return Math.round(getPrincipal() * (props.interest / 100) * 100) / 100;
+      // return Math.round(getPrincipal() * (props.interest / 100) * 100) / 100;
+      // return Math.round((props.interest/100)*getPrincipal(i)/(1-(1+(props.interest/100))^(props.term)))
+      return ((props.interest/100)/12)*getBalanceLeft(i-1)
     } else if (props.interest_type === "Prime") {
       return 0
     } else if (props.interest_type === "Public") {
       return 0
     } else if (props.interest_type === "Simple") {
-      return 0
+      // return ((props.interest/100)*(props.term/12))*props.amount ====> gets total interest due
+      return ((props.interest/100)/12)*props.amount
     } else if (props.interest_type === "Variable") {
       return 0
     }
 
     // APR set interest every year from start date
     if (monthsDiff() === 0 && i === 1){
-      a = props.balance_left * (props.interest/100);
+      a = props.balance_left * (props.interest/100)/props.term;
     } 
     else if (count > 0 && count < 12){
-      a = getBalanceLeft(0) * (props.interest/100);
+      a = getBalanceLeft(0) * (props.interest/100)/props.term;
       count --;
     } 
     else if ((i-1) % 12 === 0){ 
-      a = getBalanceLeft(i-1) * (props.interest/100) 
+      a = getBalanceLeft(i-1) * (props.interest/100)/props.term;
     } // No 'else' or else all segments between interest setting index will be the 'else' value.
 
     return a;

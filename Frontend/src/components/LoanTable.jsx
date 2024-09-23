@@ -84,7 +84,7 @@ function LoanTracker(props) {
           <th style={{borderTop: "solid 1px #DEE2E6"}}>Loan</th>
           <th style={{borderTop: "solid 1px #DEE2E6"}}>Starting Balance</th>
           <th style={{borderTop: "solid 1px #DEE2E6"}}>Term (months)</th>
-          <th style={{borderTop: "solid 1px #DEE2E6"}}>Principal</th>
+          <th style={{borderTop: "solid 1px #DEE2E6"}}>Balance Left</th>
           {/* <th>
             Payment <span style={{ fontSize: ".75rem" }}>(+interest)</span>
           </th> */}
