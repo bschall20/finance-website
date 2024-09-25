@@ -97,29 +97,41 @@ function LoanProjectionModal(props) {
   //////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////
 
+  // AMORTIZATION VARIABLES:
+  var monthlyPayment = props.amount*(((props.interest/100/12)*(Math.pow(1+props.interest/100/12, props.term)))/(Math.pow(1+props.interest/100/12, props.term)-1))
+  var outstandingBalance;
+  var returnPrincipal = monthlyPayment-((props.amount)*(props.interest/100/12));
+
+
   // Get loan principal payments by AMOUNT/TERM(total months)
   const getPrincipal = (i) => {
-    // if (i === Math.ceil(props.term * (props.balance_left / props.amount))){
+  // What is returned as principal payment
+    // if (i === props.term){
     //   // Find previous balance left to be PRINCIPAL payment to display properly to 0.00 final balance left
-    //   return Math.round((props.balance_left - (Math.round((props.amount / props.term) * 100) / 100) * (i-1)) * 100) / 100
+    //   return getBalanceLeft(i-1)
     // }
-    // else { return Math.round((props.balance_left / props.term) * 100) / 100 }
+    // else if (i === 1){
+    // else { return Math.round((props.amount / props.term) * 100) / 100 }
 
-    if (i === props.term){
-      // Find previous balance left to be PRINCIPAL payment to display properly to 0.00 final balance left
-      return getBalanceLeft(i-1)
+    if (props.interest_type === "Simple"){
+      return (props.amount/props.term)
     }
-    else { return Math.round((props.amount / props.term) * 100) / 100 }
+
+    if (i === 1){
+      outstandingBalance = props.amount - (monthlyPayment-(props.amount*(props.interest/100/12)));
+      return (monthlyPayment-(props.amount*(props.interest/100/12)));
+    }
+    else {
+      returnPrincipal = monthlyPayment-((outstandingBalance)*(props.interest/100/12))
+      outstandingBalance = outstandingBalance - (monthlyPayment-(outstandingBalance*(props.interest/100/12)));
+      return (returnPrincipal);
+    }
   };
 
   // Get loan interest payments based on which interest type is selected
-  // Months 
-  // const [a, setA] = useState(0);
   let a = 0;
   let count = monthsDiff();
-  // let term = props.term;
   const getInterest = (i) => {
-    // let APR = 0;
     if (props.interest_type === "APR") {
       // APR = i/12
       // return monthsDiff();
@@ -135,7 +147,9 @@ function LoanProjectionModal(props) {
     } else if (props.interest_type === "Fixed") {
       // return Math.round(getPrincipal() * (props.interest / 100) * 100) / 100;
       // return Math.round((props.interest/100)*getPrincipal(i)/(1-(1+(props.interest/100))^(props.term)))
-      return ((props.interest/100)/12)*getBalanceLeft(i-1)
+      // return ((props.interest/100)/12)*getBalanceLeft(i-1)
+      //return ((props.amount*((props.interest/100)/12))/(1-(Math.pow((1+(props.interest/100)), (-1*props.term)))))
+      return (monthlyPayment - returnPrincipal)
     } else if (props.interest_type === "Prime") {
       return 0
     } else if (props.interest_type === "Public") {
@@ -160,27 +174,16 @@ function LoanProjectionModal(props) {
     } // No 'else' or else all segments between interest setting index will be the 'else' value.
 
     return a;
-
-
-    // return a
-    // else if (i === monthsDiff()){
-    //   // setTest(getBalanceLeft(12) * (props.interest/100))
-    //   a = getBalanceLeft(11) * (props.interest/100);
-    //   return a
-    // } 
-    // else {
-    //   // console.log(i)
-    //   return a
-    // }
-
-    // } else if (APR >= 12/12 && APR <= 24/12) { return (getBalanceLeft(12) * (props.interest/100) ) }
-    // else {return 0}
-
   };
+
+
 
   // Get total due per payment by PRINCIPAL + INTEREST
   const getTotalDue = (i) => {
-    return Math.round((getPrincipal(i) + getInterest(i)) * 100) / 100;
+    // return Math.round((getPrincipal(i) + getInterest(i)) * 100) / 100;
+    if (props.interest_type === "Simple"){
+      return getPrincipal(i) + getInterest(i)
+    } else {return monthlyPayment}
   };
 
   // Get balance left based on
@@ -190,9 +193,14 @@ function LoanProjectionModal(props) {
     //   return 0
     // }
     // else { return Math.round((props.balance_left - getPrincipal() * i) * 100) / 100 }
-    if (i === props.term){
-      return 0
-    } else {return Math.round((props.amount - getPrincipal() * i) * 100) / 100}
+
+    if (props.interest_type === "Simple"){
+      return Math.round((props.amount - getPrincipal() * i) * 100) / 100
+    } else {return Math.round((outstandingBalance) * 100) / 100}
+    // if (i === props.term){
+    //   return 0
+    // // } else {return Math.round((props.amount - getPrincipal() * i) * 100) / 100}
+    // } else {return Math.round((outstandingBalance) * 100) / 100}
   };
 
   // Set up loan table for use in table format
