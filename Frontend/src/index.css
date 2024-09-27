@@ -35,10 +35,6 @@
     background-color: #1C2758 !important;
   }
 
-  .nav-item:last-of-type {
-    /* background-color: #08AA66; */
-    background-color: #198754;
-  }
   .signInNav:hover{
     /* background-color: #00804A !important; */
     background-color: #157347 !important;
@@ -202,6 +198,27 @@ background-blend-mode: multiply; */
       border-bottom-right-radius: 100px;
     }
 
+
+    #clientPage{
+      display: flex;
+      flex-direction: row;
+    }
+
+    #sideNav {
+      background-color: #008FFB;
+      /* display: flex;
+      align-items: center;
+      justify-content: center; */
+      position: relative;
+      width: 12.5vw;
+    }
+
+    .sideNavContent {
+      align-items: start;
+      flex-direction: column;
+      position: fixed;
+      top: 40%;
+    }
 
   /**************************************/
   /**************************************/

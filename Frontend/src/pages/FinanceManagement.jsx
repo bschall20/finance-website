@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import SideNav from "../components/SideNav";
 import SubmitExpenseModal from "../components/SubmitExpenseModal";
 import PieChart from "../components/PieChart";
 // import LineChart from "../components/LineChart";
@@ -47,7 +48,6 @@ function FinanceManagement() {
     }
   };
 
-
   // Used for showing submit expense + add goal + add loan modals
   const showSubmitExpense = () => {
     setSubmitExpenseModalShow(true);
@@ -67,143 +67,147 @@ function FinanceManagement() {
     getExpenseData();
   }, []);
 
-
   return (
-    <div id="financeManagement">
-      <h2>Add Expense</h2>
-      <Button
-        variant="primary"
-        size="lg"
-        style={{}}
-        onClick={showSubmitExpense}
-      >
-        +
-      </Button>
-      <SubmitExpenseModal
-        show={submitExpenseModalShow}
-        onHide={() => setSubmitExpenseModalShow(false)}
-      />
-
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* Expenses pie chart */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      <div>
-        <h2>
-          Expense Sectors
-          <CiCircleQuestion
-            className="infoButton"
-            onClick={() => {
-              setInfoModalShow(true);
-              setInfoTitle("Expenses Pie Chart");
-              setInfoP(
-                "The Expense Sectors Pie Chart shows all expense categories recorded. All percentages take all expenses into account to calculate how much was spent in each sector across the account's lifespan."
-              );
-            }}
-          />
-        </h2>
-        <InfoModal
-          title={infoTitle}
-          description={infoP}
-          show={infoModalShow}
-          onHide={() => setInfoModalShow(false)}
-        />
-        <PieChart expense={expense} />
+    <div id="clientPage">
+      <div id="sideNav" className="">
+        <SideNav />
       </div>
-
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* Expenses bar chart */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-
-      <div>
-        <h2>
-          Expense Bar Chart{" "}
-          <CiCircleQuestion
-            className="infoButton"
-            onClick={() => {
-              setInfoModalShow(true);
-              setInfoTitle("Expenses Bar Chart");
-              setInfoP(
-                "The Expenses Bar Chart Chart shows all expense categories recorded. When the timeframe is selected, it will display the categories per the time selected. For example, 'Days' will show every day of the week and the spending trends per that day of the week. 'Monday' will list all Monday expenses logged through the account's entire lifespan."
-              );
-            }}
-          />
-        </h2>
-        <InfoModal
-          title={infoTitle}
-          description={infoP}
-          show={infoModalShow}
-          onHide={() => setInfoModalShow(false)}
+      <div id="financeManagement" className="">
+        <h2>Add Expense</h2>
+        <Button
+          variant="primary"
+          size="lg"
+          style={{}}
+          onClick={showSubmitExpense}
+        >
+          +
+        </Button>
+        <SubmitExpenseModal
+          show={submitExpenseModalShow}
+          onHide={() => setSubmitExpenseModalShow(false)}
         />
-        <BarChart expense={expense} />
+
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* Expenses pie chart */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        <div>
+          <h2>
+            Expense Sectors
+            <CiCircleQuestion
+              className="infoButton"
+              onClick={() => {
+                setInfoModalShow(true);
+                setInfoTitle("Expenses Pie Chart");
+                setInfoP(
+                  "The Expense Sectors Pie Chart shows all expense categories recorded. All percentages take all expenses into account to calculate how much was spent in each sector across the account's lifespan."
+                );
+              }}
+            />
+          </h2>
+          <InfoModal
+            title={infoTitle}
+            description={infoP}
+            show={infoModalShow}
+            onHide={() => setInfoModalShow(false)}
+          />
+          <PieChart expense={expense} />
+        </div>
+
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* Expenses bar chart */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+
+        <div>
+          <h2>
+            Expense Bar Chart{" "}
+            <CiCircleQuestion
+              className="infoButton"
+              onClick={() => {
+                setInfoModalShow(true);
+                setInfoTitle("Expenses Bar Chart");
+                setInfoP(
+                  "The Expenses Bar Chart Chart shows all expense categories recorded. When the timeframe is selected, it will display the categories per the time selected. For example, 'Days' will show every day of the week and the spending trends per that day of the week. 'Monday' will list all Monday expenses logged through the account's entire lifespan."
+                );
+              }}
+            />
+          </h2>
+          <InfoModal
+            title={infoTitle}
+            description={infoP}
+            show={infoModalShow}
+            onHide={() => setInfoModalShow(false)}
+          />
+          <BarChart expense={expense} />
+        </div>
+
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* Expenses table */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        <h2>Expenses</h2>
+        <ExpensesTable expense={expense} expenseCopy={expenseCopy} />
+
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* Daily spending heatmap */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+
+        <HeatMap
+          expense={expense}
+          dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
+        />
+
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* Daily spending heatmap */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        <h2>Loan Tracker</h2>
+        <Button variant="primary" size="lg" onClick={addLoan}>
+          +
+        </Button>
+        <LoanModal
+          show={addLoanModalShow}
+          postloan={1}
+          onHide={() => setAddLoanModalShow(false)}
+        />
+        <LoanTable />
+
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* Goals table */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        <h2>Add Goal</h2>
+        <Button variant="primary" size="lg" onClick={addGoal}>
+          +
+        </Button>
+        <GoalModal
+          show={addGoalModalShow}
+          postgoal={1}
+          onHide={() => setAddGoalModalShow(false)}
+        />
+
+        <GoalsTable />
       </div>
-
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* Expenses table */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      <h2>Expenses</h2>
-      <ExpensesTable expense={expense} expenseCopy={expenseCopy} />
-
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* Daily spending heatmap */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-
-      <HeatMap
-        expense={expense}
-        dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
-      />
-
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* Daily spending heatmap */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      <h2>Loan Tracker</h2>
-      <Button variant="primary" size="lg" onClick={addLoan}>
-        +
-      </Button>
-      <LoanModal
-        show={addLoanModalShow}
-        postloan={1}
-        onHide={() => setAddLoanModalShow(false)}
-      />
-      <LoanTable />
-
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* Goals table */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      {/* ////////////////////////////////////////////////////////////////////////// */}
-      <h2>Add Goal</h2>
-      <Button variant="primary" size="lg" onClick={addGoal}>
-        +
-      </Button>
-      <GoalModal
-        show={addGoalModalShow}
-        postgoal={1}
-        onHide={() => setAddGoalModalShow(false)}
-      />
-
-      <GoalsTable />
     </div>
   );
 }

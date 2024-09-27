@@ -1,3 +1,19 @@
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+// This file is a big work in progress for the types of loans.
+
+// All commented out lines can be used in some way towards amortization
+// tables of loan types. For now, all loans are showed as 1 amortization
+// pay-back of payments made/payments due for a given schedule.
+
+// Future plans may include tracking of where client is at on the loan in
+// their cycle if they are ahead of schedule (or behind). For now, this
+// will just be the given payments that the loan would have from the start.
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+
 // import React from "react";
 import React, { useState, useEffect, useCallback } from "react";
 import Button from "react-bootstrap/Button";
@@ -14,8 +30,8 @@ function LoanProjectionModal(props) {
   // Format date from yyyy-mm-dd to mm/dd/yyyy
   const formatDate = (dt) => {
     var d = new Date(dt);
-    return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear();
-  }
+    return d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
+  };
 
   // Find projected due date (term months from start date)
   const projectedDueDate = () => {
@@ -25,45 +41,44 @@ function LoanProjectionModal(props) {
     return d.toLocaleDateString();
   };
 
+  // SAVE FOR LATER USE WHEN USING TYPES OF LOANS.
   // Find payments left (todays date to projected date)
   // Use to find months since loan start instead for loan interest calculations
-  const monthsDiff = () => {
-    // var d = new Date(props.start_date);
-    // d.setMonth(d.getMonth() + props.term);
-    // d = d.toLocaleDateString();
-    // Get dates
-    var date1 = new Date(props.start_date);
-    // var date2 = new Date(d);
-    var date2 = new Date();
-    // Separate numbers for formatting
-    var y1 = date1.getFullYear();
-    var m1 = date1.getMonth() + 1;
-    var d1 = date1.getDate();
-    var y2 = date2.getFullYear();
-    var m2 = date2.getMonth() + 1;
-    var d2 = date2.getDate();
-    // Recollect numbers for correct format
-    var dt1 = new Date(y1, m1, d1);
-    var dt2 = new Date(y2, m2, d2);
-    // Return month difference (payments left)
-    // const monthDiff =
-    //   dt2.getMonth() -
-    //   dt1.getMonth() +
-    //   12 * (dt2.getFullYear() - dt1.getFullYear());
-    //   return monthDiff
-      var months;
-      months = (dt2.getFullYear() - dt1.getFullYear()) * 12;
-      months -= dt1.getMonth();
-      months += dt2.getMonth();
-    return months <= 0 ? 0 : months;
-  };
-
-
+  // const monthsDiff = () => {
+  //   // var d = new Date(props.start_date);
+  //   // d.setMonth(d.getMonth() + props.term);
+  //   // d = d.toLocaleDateString();
+  //   // Get dates
+  //   var date1 = new Date(props.start_date);
+  //   // var date2 = new Date(d);
+  //   var date2 = new Date();
+  //   // Separate numbers for formatting
+  //   var y1 = date1.getFullYear();
+  //   var m1 = date1.getMonth() + 1;
+  //   var d1 = date1.getDate();
+  //   var y2 = date2.getFullYear();
+  //   var m2 = date2.getMonth() + 1;
+  //   var d2 = date2.getDate();
+  //   // Recollect numbers for correct format
+  //   var dt1 = new Date(y1, m1, d1);
+  //   var dt2 = new Date(y2, m2, d2);
+  //   // Return month difference (payments left)
+  //   // const monthDiff =
+  //   //   dt2.getMonth() -
+  //   //   dt1.getMonth() +
+  //   //   12 * (dt2.getFullYear() - dt1.getFullYear());
+  //   //   return monthDiff
+  //     var months;
+  //     months = (dt2.getFullYear() - dt1.getFullYear()) * 12;
+  //     months -= dt1.getMonth();
+  //     months += dt2.getMonth();
+  //   return months <= 0 ? 0 : months;
+  // };
 
   const [date, setDate] = useState([]);
   const dateRange = useCallback(() => {
     // UTC so timezone isn't needed + set start date 1 month ahead of noted start (first payment due)
-    var s = new Date(props.start_date);     // delete prop to get from todays date. This is causing older loans to have wrong dates
+    var s = new Date(props.start_date); // delete prop to get from todays date. This is causing older loans to have wrong dates
     var start = new Date(s.setMonth(s.getMonth()));
     var d = new Date(props.start_date);
     d.setMonth(d.getMonth() + props.term + 1);
@@ -98,14 +113,18 @@ function LoanProjectionModal(props) {
   //////////////////////////////////////////////////////////////////////////
 
   // AMORTIZATION VARIABLES:
-  var monthlyPayment = props.amount*(((props.interest/100/12)*(Math.pow(1+props.interest/100/12, props.term)))/(Math.pow(1+props.interest/100/12, props.term)-1))
+  var monthlyPayment =
+    props.amount *
+    (((props.interest / 100 / 12) *
+      Math.pow(1 + props.interest / 100 / 12, props.term)) /
+      (Math.pow(1 + props.interest / 100 / 12, props.term) - 1));
   var outstandingBalance;
-  var returnPrincipal = monthlyPayment-((props.amount)*(props.interest/100/12));
-
+  var returnPrincipal =
+    monthlyPayment - props.amount * (props.interest / 100 / 12);
 
   // Get loan principal payments by AMOUNT/TERM(total months)
   const getPrincipal = (i) => {
-  // What is returned as principal payment
+    // What is returned as principal payment
     // if (i === props.term){
     //   // Find previous balance left to be PRINCIPAL payment to display properly to 0.00 final balance left
     //   return getBalanceLeft(i-1)
@@ -113,80 +132,90 @@ function LoanProjectionModal(props) {
     // else if (i === 1){
     // else { return Math.round((props.amount / props.term) * 100) / 100 }
 
-    if (props.interest_type === "Simple"){
-      return (props.amount/props.term)
-    }
+    // Save for later use for Simple
+    // if (props.interest_type === "Simple"){
+    //   return (props.amount/props.term)
+    // }
 
-    if (i === 1){
-      outstandingBalance = props.amount - (monthlyPayment-(props.amount*(props.interest/100/12)));
-      return (monthlyPayment-(props.amount*(props.interest/100/12)));
-    }
-    else {
-      returnPrincipal = monthlyPayment-((outstandingBalance)*(props.interest/100/12))
-      outstandingBalance = outstandingBalance - (monthlyPayment-(outstandingBalance*(props.interest/100/12)));
-      return (returnPrincipal);
+    if (i === 1) {
+      outstandingBalance =
+        props.amount -
+        (monthlyPayment - props.amount * (props.interest / 100 / 12));
+      return monthlyPayment - props.amount * (props.interest / 100 / 12);
+    } else {
+      returnPrincipal =
+        monthlyPayment - outstandingBalance * (props.interest / 100 / 12);
+      outstandingBalance =
+        outstandingBalance -
+        (monthlyPayment - outstandingBalance * (props.interest / 100 / 12));
+      return returnPrincipal;
     }
   };
 
   // Get loan interest payments based on which interest type is selected
-  let a = 0;
-  let count = monthsDiff();
+  // let a = 0;
+  // let count = monthsDiff();
   const getInterest = (i) => {
-    if (props.interest_type === "APR") {
-      // APR = i/12
-      // return monthsDiff();
-      // APR = monthsDiff();
-      // console.log(APR)
-      // console.log(monthsDiff())
-    }
-    else if (props.interest_type === "Compound") {
-      // return (props.amount * (1+(props.interest/100)^(props.term/12))-props.amount)
-      return (props.amount * (Math.pow((1+(props.interest/100)), (props.term/12)))-props.amount)/props.term
-    } else if (props.interest_type === "Discounted") {
-      return 0
-    } else if (props.interest_type === "Fixed") {
-      // return Math.round(getPrincipal() * (props.interest / 100) * 100) / 100;
-      // return Math.round((props.interest/100)*getPrincipal(i)/(1-(1+(props.interest/100))^(props.term)))
-      // return ((props.interest/100)/12)*getBalanceLeft(i-1)
-      //return ((props.amount*((props.interest/100)/12))/(1-(Math.pow((1+(props.interest/100)), (-1*props.term)))))
-      return (monthlyPayment - returnPrincipal)
-    } else if (props.interest_type === "Prime") {
-      return 0
-    } else if (props.interest_type === "Public") {
-      return 0
-    } else if (props.interest_type === "Simple") {
-      // return ((props.interest/100)*(props.term/12))*props.amount ====> gets total interest due
-      return ((props.interest/100)/12)*props.amount
-    } else if (props.interest_type === "Variable") {
-      return 0
-    }
+    // if (props.interest_type === "APR") {
+    //   // APR = i/12
+    //   // return monthsDiff();
+    //   // APR = monthsDiff();
+    //   // console.log(APR)
+    //   // console.log(monthsDiff())
+    // }
+    // else if (props.interest_type === "Compound") {
+    //   // return (props.amount * (1+(props.interest/100)^(props.term/12))-props.amount)
+    //   return (props.amount * (Math.pow((1+(props.interest/100)), (props.term/12)))-props.amount)/props.term
+    // } else if (props.interest_type === "Discounted") {
+    //   return 0
+    // } else if (props.interest_type === "Fixed") {
+    //   // return Math.round(getPrincipal() * (props.interest / 100) * 100) / 100;
+    //   // return Math.round((props.interest/100)*getPrincipal(i)/(1-(1+(props.interest/100))^(props.term)))
+    //   // return ((props.interest/100)/12)*getBalanceLeft(i-1)
+    //   //return ((props.amount*((props.interest/100)/12))/(1-(Math.pow((1+(props.interest/100)), (-1*props.term)))))
+    //   return (monthlyPayment - returnPrincipal)
+    // } else if (props.interest_type === "Prime") {
+    //   return 0
+    // } else if (props.interest_type === "Public") {
+    //   return 0
+    // } else if (props.interest_type === "Simple") {
+    //   // return ((props.interest/100)*(props.term/12))*props.amount ====> gets total interest due
+    //   return ((props.interest/100)/12)*props.amount
+    // } else if (props.interest_type === "Variable") {
+    //   return 0
+    // }
+    return monthlyPayment - returnPrincipal;
 
-    // APR set interest every year from start date
-    if (monthsDiff() === 0 && i === 1){
-      a = props.balance_left * (props.interest/100)/props.term;
-    } 
-    else if (count > 0 && count < 12){
-      a = getBalanceLeft(0) * (props.interest/100)/props.term;
-      count --;
-    } 
-    else if ((i-1) % 12 === 0){ 
-      a = getBalanceLeft(i-1) * (props.interest/100)/props.term;
-    } // No 'else' or else all segments between interest setting index will be the 'else' value.
+    // APR for later use
+    //// APR set interest every year from start date
+    // if (monthsDiff() === 0 && i === 1){
+    //   a = props.balance_left * (props.interest/100)/props.term;
+    // }
+    // else if (count > 0 && count < 12){
+    //   a = getBalanceLeft(0) * (props.interest/100)/props.term;
+    //   count --;
+    // }
+    // else if ((i-1) % 12 === 0){
+    //   a = getBalanceLeft(i-1) * (props.interest/100)/props.term;
+    // }
+    //// No 'else' or else all segments between interest setting index will be the 'else' value.
 
-    return a;
+    // return a;
   };
-
-
 
   // Get total due per payment by PRINCIPAL + INTEREST
   const getTotalDue = (i) => {
     // return Math.round((getPrincipal(i) + getInterest(i)) * 100) / 100;
-    if (props.interest_type === "Simple"){
-      return getPrincipal(i) + getInterest(i)
-    } else {return monthlyPayment}
+
+    // Save for later when introducing all types of loans
+    // if (props.interest_type === "Simple"){
+    //   return getPrincipal(i) + getInterest(i)
+    // } else {return monthlyPayment}
+
+    return monthlyPayment;
   };
 
-  // Get balance left based on
+  // Get balance left on loan after payment is made
   const getBalanceLeft = (i) => {
     // Solve balance left. If last row, return 0
     // if (i === Math.ceil(props.term * (props.balance_left / props.amount))){
@@ -194,13 +223,14 @@ function LoanProjectionModal(props) {
     // }
     // else { return Math.round((props.balance_left - getPrincipal() * i) * 100) / 100 }
 
-    if (props.interest_type === "Simple"){
-      return Math.round((props.amount - getPrincipal() * i) * 100) / 100
-    } else {return Math.round((outstandingBalance) * 100) / 100}
-    // if (i === props.term){
-    //   return 0
-    // // } else {return Math.round((props.amount - getPrincipal() * i) * 100) / 100}
+    // Saving for interest types later. Simple here:
+    // if (props.interest_type === "Simple"){
+    //   return Math.round((props.amount - getPrincipal() * i) * 100) / 100
     // } else {return Math.round((outstandingBalance) * 100) / 100}
+    if (i === props.term){
+      return 0
+    // } else {return Math.round((props.amount - getPrincipal() * i) * 100) / 100}
+    } else {return Math.round((outstandingBalance) * 100) / 100}
   };
 
   // Set up loan table for use in table format
@@ -208,7 +238,7 @@ function LoanProjectionModal(props) {
   let paymentsTable = [];
   // Push into loan table as long as i < terms left on payment (takes % of payment left to get same % of terms left based on payments)
   // for (let i = 1; i <= Math.ceil(props.term * (props.balance_left / props.amount)); i++) {
-    for (let i = 1; i <= props.term; i++) {
+  for (let i = 1; i <= props.term; i++) {
     loanTable.push({
       id: i,
       date: formatDate(date[i - 1]),
@@ -219,30 +249,29 @@ function LoanProjectionModal(props) {
     });
   }
 
-    // If loanTable[0] date is before today, remove as payment should be done
-    // var today = new Date();
-    // if (today.toISOString().split('T')[0] > props.start_date){
-    //   // console.log(monthsDiff()+1)
-    //   loanTable.splice(0, monthsDiff()+1)
-    // }
+  // If loanTable[0] date is before today, remove as payment should be done
+  // var today = new Date();
+  // if (today.toISOString().split('T')[0] > props.start_date){
+  //   // console.log(monthsDiff()+1)
+  //   loanTable.splice(0, monthsDiff()+1)
+  // }
 
-
-    // Currently deleting every other array before todays date because it is deleting, lowering length, and next index is going to
-    // previously read index
-    for (let i = loanTable.length; i >= 0; i--){
-      let today = new Date();
-      let d = new Date();
-      if (loanTable[i]){
-        d = new Date (loanTable[i].date)
-      }
-      // const today = new Date();
-      // const d = new Date (loanTable[i].date);
-      if(d < today){
-        // paymentsTable.unshift(loanTable[i]);     => if I want oldest payment first
-        paymentsTable.push(loanTable[i]);
-        loanTable.splice(i, 1);
-      }
+  // Currently deleting every other array before todays date because it is deleting, lowering length, and next index is going to
+  // previously read index
+  for (let i = loanTable.length; i >= 0; i--) {
+    let today = new Date();
+    let d = new Date();
+    if (loanTable[i]) {
+      d = new Date(loanTable[i].date);
     }
+    // const today = new Date();
+    // const d = new Date (loanTable[i].date);
+    if (d < today) {
+      // paymentsTable.unshift(loanTable[i]);     => if I want oldest payment first
+      paymentsTable.push(loanTable[i]);
+      loanTable.splice(i, 1);
+    }
+  }
 
   // Get number (ie 80000.0) and convert to readable number string (80,000.00)
   const formatNumber = (number) => {
@@ -296,7 +325,7 @@ function LoanProjectionModal(props) {
               <Accordion.Header>Payments Made</Accordion.Header>
               {/* Payments Made: */}
               <Accordion.Body>
-              <Table bordered hover>
+                <Table bordered hover>
                   <thead>
                     <tr>
                       <th>#</th>
@@ -312,8 +341,8 @@ function LoanProjectionModal(props) {
                       totalPrincipal += dataObj.principal;
                       totalInterest += dataObj.interest;
 
-                      if (index === 0){
-                        balanceLeft = dataObj.balanceLeft
+                      if (index === 0) {
+                        balanceLeft = dataObj.balanceLeft;
                       }
 
                       // Prevent total paid from being run every time except last run

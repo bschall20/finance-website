@@ -1,8 +1,15 @@
 import React from 'react';
+import SideNav from '../components/SideNav'
 
 function Account() {
-    return (
-        <p>This is the Account page.</p>
+    return (<div id="account">
+        <div id="sideNav">
+            <SideNav />
+        </div>
+        <div>
+
+        </div>
+    </div>
     )
 }
 

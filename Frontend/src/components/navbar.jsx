@@ -60,7 +60,7 @@ function NavbarTop() {
             </Nav.Item>
 
             <Nav.Item>
-              <Nav.Link as={NavLink} to="/signin" eventkey="/signin" className='px-4 signInNav' style={{color: 'white'}}>Sign In</Nav.Link>
+              <Nav.Link as={NavLink} to="/signin" eventkey="/signin" className='px-4 signInNav' style={{backgroundColor: "#198754", color: 'white'}}>Sign In</Nav.Link>
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>
