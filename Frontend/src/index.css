@@ -199,13 +199,16 @@ background-blend-mode: multiply; */
     }
 
 
-    #clientPage{
-      display: flex;
-      flex-direction: row;
-    }
+
+  /**************************************/
+  /**************************************/
+  /**************SIDE NAV****************/
+  /**************************************/
+  /**************************************/
+
 
     #sideNav {
-      background-color: #008FFB;
+      background-color: #269db2;
       /* display: flex;
       align-items: center;
       justify-content: center; */
@@ -213,11 +216,28 @@ background-blend-mode: multiply; */
       width: 12.5vw;
     }
 
+    .sideNavHeader {
+      color: #1C2758;
+      font-size: .80rem;
+    }
+
+    .sideNavHR {
+      color: black;
+      width: 80%;
+    }
+
+    .sideNavLink:hover {
+      color: white !important;
+      text-decoration: underline;
+    }
+
     .sideNavContent {
       align-items: start;
       flex-direction: column;
       position: fixed;
-      top: 40%;
+      width: 12.5vw;
+      /* top: 6.5%; */
+      /* top: 40%; */
     }
 
   /**************************************/
@@ -225,6 +245,11 @@ background-blend-mode: multiply; */
   /*********FINANCE MANAGEMENT***********/
   /**************************************/
   /**************************************/  
+  #clientPage{
+    display: flex;
+    flex-direction: row;
+  }
+
     #financeManagement{
       margin: 3.5rem auto;
       width: 65%;

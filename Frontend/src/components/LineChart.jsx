@@ -1,8 +1,8 @@
 // REFERENCE: https://apexcharts.com/docs/creating-first-javascript-chart/#
 // Types of Budgets: https://localfirstbank.com/article/budgeting-101-personal-budget-categories/?fb_content_cat=fb-tsm
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Chart from "react-apexcharts";
-import Dropdown from "react-bootstrap/Dropdown";
+// import Dropdown from "react-bootstrap/Dropdown";
 
 function LineChart(props) {
   let height = 600;
@@ -21,66 +21,34 @@ function LineChart(props) {
     width = 1000;
   }
 
-  let expense = props.expense;
-  let MortgageRentArr = [];
-  let UtilitiesArr = [];
-  let InsuranceArr = [];
-  let LoansArr = [];
-  let TransportationArr = [];
-  let FoodArr = [];
-  let OtherArr = [];
-  expense.map((dataObj) => {
-    if (dataObj.expense_type === "Mortgage/Rent") {
-      return MortgageRentArr.push(dataObj.amount);
-    } else if (dataObj.expense_type === "Utilities") {
-      return UtilitiesArr.push(dataObj.amount);
-    } else if (dataObj.expense_type === "Insurance") {
-      return InsuranceArr.push(dataObj.amount);
-    } else if (dataObj.expense_type === "Loans") {
-      return LoansArr.push(dataObj.amount);
-    } else if (dataObj.expense_type === "Transportation") {
-      return TransportationArr.push(dataObj.amount);
-    } else if (dataObj.expense_type === "Food") {
-      return FoodArr.push(dataObj.amount);
-    } else if (dataObj.expense_type === "Other") {
-      return OtherArr.push(dataObj.amount);
-    }
-    return 0;
-  });
 
-//   console.log("Line chart arrays:");
-//   console.log(MortgageRentArr);
-//   console.log(UtilitiesArr);
-//   console.log(InsuranceArr);
-//   console.log(LoansArr);
-//   console.log(TransportationArr);
-//   console.log(FoodArr);
-//   console.log(OtherArr);
-//   console.log("-------------------------");
 
-  function formatDate(date) {
-    var dd = date.getDate();
-    var mm = date.getMonth() + 1;
-    var yyyy = date.getFullYear();
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    return yyyy + "-" + mm + "-" + dd;
-  }
+// MAP THROUGH DATA TO GRAB IT AND SET TOTAL AMOUNTS FOR PIE CHART.
 
-  function Last7Days() {
-    var result = [];
-    for (var i = 0; i < 7; i++) {
-      var d = new Date();
-      d.setDate(d.getDate() - i);
-      result.push(formatDate(d));
-    }
+// const lineChartData = useCallback(() => {
 
-    return result.join(",");
-  }
+
+
+//   setSeries([
+//     mortgage_rent,
+//     utilities,
+//     insurance,
+//     loans,
+//     transportation,
+//     food,
+//     other,
+//   ]);
+// }, [props.expense]);
+
+// const [date, setDate] = useState(props.date)
+// const [principal, setPrincipal] = useState(props.principal)
+// const [interest, setInterest] = useState(props.interest)
+// const [total, setTotal] = useState(props.total)
+
+//   console.log(props.date)
+//   console.log(props.principal)
+//   console.log(props.interest)
+//   console.log(props.total)
 
   let state = {
     options: {
@@ -102,34 +70,25 @@ function LineChart(props) {
       },
       colors: [
         "#008FFB",
-        "#00F0E6",
+        "#FEB019",
         "#00E396",
-        "#FFB01A",
-        "#D60027",
-        "#F038CA",
-        "#775DD0",
       ],
       dataLabels: {
         enabled: false,
       },
+      legend: {
+        tooltipHoverFormatter: function(val, opts) {
+          return val + ' - <strong>' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + '</strong>'
+        }
+      },
       stroke: {
-        // width: [5, 7, 5],
-        curve: "straight",
-        // dashArray: [0, 8, 5]
+        width: [5, 7, 5],
+        curve: 'straight',
+        dashArray: [0, 8, 5]
       },
       title: {
-        text: "Expense Statistics",
+        text: "Loan Payments Projection",
         align: "left",
-      },
-      legend: {
-        tooltipHoverFormatter: function (val, opts) {
-          return (
-            val +
-            " - <strong>" +
-            opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] +
-            "</strong>"
-          );
-        },
       },
       markers: {
         size: 0,
@@ -138,87 +97,62 @@ function LineChart(props) {
         },
       },
       xaxis: {
-        categories: [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ],
+        categories: props.date,
       },
       tooltip: {
         y: [
           {
             title: {
               formatter: function (val) {
-                // return val + " (total)";
-                return val;
-              },
-            },
+                return val + ":"
+              }
+            }
           },
-          // {
-          //   title: {
-          //     formatter: function (val) {
-          //       return val + " per session";
-          //     },
-          //   },
-          // },
-          // {
-          //   title: {
-          //     formatter: function (val) {
-          //       return val;
-          //     },
-          //   },
-          // },
-        ],
+          {
+            title: {
+              formatter: function (val) {
+                return val + ":"
+              }
+            }
+          },
+          {
+            title: {
+              formatter: function (val) {
+                return val + ":";
+              }
+            }
+          }
+        ]
       },
       grid: {
         borderColor: "#f1f1f1",
       },
     },
-    series: [
-      {
-        name: "Mortgage/Rent",
-        data: MortgageRentArr,
-      },
-      {
-        name: "Utilities",
-        data: UtilitiesArr,
-      },
-      {
-        name: "Insurance",
-        data: InsuranceArr,
-      },
-      {
-        name: "Loans",
-        data: LoansArr,
-      },
-      {
-        name: "Transportation",
-        data: TransportationArr,
-      },
-      {
-        name: "Food",
-        data: FoodArr,
-      },
-      {
-        name: "Other",
-        data: OtherArr,
-      },
+    series: [{
+      name: "Principal",
+      data: props.principal
+    },
+    {
+      name: "Interest",
+      data: props.interest
+    },
+    {
+      name: "Total Due",
+      data: props.total
+    }
+      
     ],
   };
 
 
-const [dropdownTime, setDropdownTime] = useState("Week");
-const dropdownSubmit = (eventKey) => {
-    setDropdownTime(eventKey);
-  }
+// const [dropdownTime, setDropdownTime] = useState("Week");
+// const dropdownSubmit = (eventKey) => {
+//     setDropdownTime(eventKey);
+//   }
 
   return (
     <div id="chart">
-      <h2>Expense Line Chart</h2>
+      {/* <h2>Expense Line Chart</h2>
       {console.log(dropdownTime)}
       <Dropdown onSelect={dropdownSubmit}>
         <Dropdown.Toggle variant="primary" id="dropdown-basic">
@@ -230,11 +164,12 @@ const dropdownSubmit = (eventKey) => {
           <Dropdown.Item eventKey="Month">Last Month</Dropdown.Item>
           <Dropdown.Item eventKey="Year">Last Year</Dropdown.Item>
         </Dropdown.Menu>
-      </Dropdown>
+      </Dropdown> */}
 
       <Chart
         options={state.options}
         series={state.series}
+        type="line"
         // colors={state.colors}
         // legend={state.legend}
       />

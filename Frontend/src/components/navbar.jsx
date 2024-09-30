@@ -55,7 +55,7 @@ function NavbarTop() {
                 <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Setup</NavDropdown.Item>
                 <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Security</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item as={NavLink} to="/account" eventkey="signout" style={{backgroundColor: 'white', color: '#575757'}}>Sign Out</NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} to="/signout" eventkey="signout" style={{backgroundColor: 'white', color: '#575757'}}>Sign Out</NavDropdown.Item>
               </NavDropdown>
             </Nav.Item>
 

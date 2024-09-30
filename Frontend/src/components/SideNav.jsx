@@ -1,27 +1,35 @@
 import React, { useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { BiSolidNotepad } from "react-icons/bi";
+
+import { IoPersonSharp } from "react-icons/io5";
+import { IoIosSettings } from "react-icons/io";
+import { IoMdLock } from "react-icons/io";
+
+import { FaSignOutAlt } from "react-icons/fa";
 
 
 function SideNav() {
-    const [active, setActive] = useState('/');
-    const setActiveNav = () => {
-        setActive((eventkey) => {
-            console.log(eventkey)
-            return !eventkey;
-        });
-    };
+  const location = useLocation(); // used to find path name to set active side nav
+  const [active, setActive] = useState(location.pathname);
+  const handleSelect = (eventKey) => {
+    // alert(`selected ${eventKey}`);
+    setActive(eventKey);
+  };
 
-  return <div id="sideNav" className="center">
-        <Nav
-        //   variant="underline"
-          activeKey={active}
-          onSelect={setActiveNav}
-          className="sideNavContent center"
+  return (
+    <div id="sideNav">
+      {/* <p>hello</p> */}
+      <Nav
+        // variant="underline"
+        activeKey={active}
+        onSelect={handleSelect}
+        className="sideNavContent"
         //   style={{position: 'fixed', display: 'flex', flexDirection:'column', margin: 'auto', width: '100%', alignItems: 'center', justifyContent: 'center'}}
-          
-          >
-            <Nav.Item>
+      >
+        {/* <Nav.Item>
               <Nav.Link as={NavLink} to="/account" eventkey="profile" href='/account'>Profile</Nav.Link>
             </Nav.Item>
             <Nav.Item>
@@ -33,9 +41,89 @@ function SideNav() {
             <hr style={{width: '100%'}}/>
             <Nav.Item>
             <Nav.Link as={NavLink} to="/financemanagement" eventkey="financemanagement" href='/financemanagement'>Finance Management</Nav.Link>
-            </Nav.Item>
-        </Nav>
-  </div>
+            </Nav.Item> */}
+        {/* <hr className="sideNavHR ms-3 mb-4 mt-0" /> */}
+        <p className="sideNavHeader ms-3 mb-0 mt-4">Management</p>
+
+        <Nav.Item>
+          <Nav.Link
+            className="sideNavLink ps-3"
+            as={NavLink}
+            to="/financemanagement"
+            eventkey="financemanagement"
+            href="/financemanagement"
+            style={{
+              color: active === "/financemanagement" ? "white" : "black",
+              textDecoration: active === "/financemanagement" ? "underline" : null
+            }}
+          >
+            <BiSolidNotepad className="me-3 mb-1"/>
+            Finance
+          </Nav.Link>
+        </Nav.Item>
+
+        
+        <hr className="sideNavHR ms-3 mb-4" />
+        <p className="sideNavHeader ms-3 my-0">Account</p>
+        
+        <Nav.Item>
+          <Nav.Link
+            className="sideNavLink ps-3"
+            as={NavLink}
+            to="/account"
+            eventkey="profile"
+            href="/account"
+            style={{ color: active === "/account" ? "red" : "black" }}
+          >
+            <IoPersonSharp className="me-3 mb-1"/>
+            Profile
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            className="sideNavLink ps-3"
+            as={NavLink}
+            to="/account"
+            eventkey="setup"
+            href="/account"
+            style={{ color: active === "/account" ? "red" : "black" }}
+          >
+            <IoIosSettings className="me-3 mb-1"/>
+            Setup
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            className="sideNavLink ps-3"
+            as={NavLink}
+            to="/account"
+            eventkey="security"
+            href="/account"
+            style={{ color: active === "/account" ? "red" : "black" }}
+          >
+            <IoMdLock className="me-3 mb-1"/>
+            Security
+          </Nav.Link>
+        </Nav.Item>
+
+
+        <hr className="sideNavHR ms-3 mb-4" />
+        <Nav.Item>
+          <Nav.Link
+            className="sideNavLink ps-3"
+            as={NavLink}
+            to="/signout"
+            eventkey="signout"
+            href="/signout"
+            style={{ color: active === "/signout" ? "red" : "black" }}
+          >
+            <FaSignOutAlt className="me-3 mb-1"/>
+            Sign Out
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+    </div>
+  );
 }
 
 export default SideNav;

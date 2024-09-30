@@ -31,6 +31,23 @@ function PieChart(props) {
     let transportation = 0;
     let food = 0;
     let other = 0;
+    if (props.expense.length === 0){
+      mortgage_rent = 1;
+      utilities = 1;
+      insurance = 1;
+      loans = 1;
+      transportation = 1;
+      food = 1;
+      other = 1;
+    } else {
+      mortgage_rent = 0;
+      utilities = 0;
+      insurance = 0;
+      loans = 0;
+      transportation = 0;
+      food = 0;
+      other = 0;
+    }
 
     props.expense.map((dataObj) => {
       let formAmount = dataObj.amount;
@@ -55,6 +72,7 @@ function PieChart(props) {
       }
     });
 
+
     setSeries([
       mortgage_rent,
       utilities,
@@ -65,6 +83,7 @@ function PieChart(props) {
       other,
     ]);
   }, [props.expense]);
+
 
   useEffect(() => {
     pieChartData();

@@ -16,6 +16,7 @@
 
 // import React from "react";
 import React, { useState, useEffect, useCallback } from "react";
+import LineChart from "./LineChart";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Accordion from "react-bootstrap/Accordion";
@@ -122,6 +123,10 @@ function LoanProjectionModal(props) {
   var returnPrincipal =
     monthlyPayment - props.amount * (props.interest / 100 / 12);
 
+
+
+
+
   // Get loan principal payments by AMOUNT/TERM(total months)
   const getPrincipal = (i) => {
     // What is returned as principal payment
@@ -138,19 +143,19 @@ function LoanProjectionModal(props) {
     // }
 
     if (i === 1) {
-      outstandingBalance =
-        props.amount -
-        (monthlyPayment - props.amount * (props.interest / 100 / 12));
+      outstandingBalance = props.amount - (monthlyPayment - props.amount * (props.interest / 100 / 12));
       return monthlyPayment - props.amount * (props.interest / 100 / 12);
     } else {
-      returnPrincipal =
-        monthlyPayment - outstandingBalance * (props.interest / 100 / 12);
-      outstandingBalance =
-        outstandingBalance -
-        (monthlyPayment - outstandingBalance * (props.interest / 100 / 12));
+      returnPrincipal = monthlyPayment - outstandingBalance * (props.interest / 100 / 12);
+      outstandingBalance = outstandingBalance - (monthlyPayment - outstandingBalance * (props.interest / 100 / 12));
       return returnPrincipal;
     }
   };
+
+
+
+
+
 
   // Get loan interest payments based on which interest type is selected
   // let a = 0;
@@ -203,6 +208,10 @@ function LoanProjectionModal(props) {
     // return a;
   };
 
+
+
+
+
   // Get total due per payment by PRINCIPAL + INTEREST
   const getTotalDue = (i) => {
     // return Math.round((getPrincipal(i) + getInterest(i)) * 100) / 100;
@@ -214,6 +223,11 @@ function LoanProjectionModal(props) {
 
     return monthlyPayment;
   };
+
+
+
+
+
 
   // Get balance left on loan after payment is made
   const getBalanceLeft = (i) => {
@@ -233,28 +247,61 @@ function LoanProjectionModal(props) {
     } else {return Math.round((outstandingBalance) * 100) / 100}
   };
 
+
+    // Get number (ie 80000.0) and convert to readable number string (80,000.00)
+    const formatNumber = (number) => {
+      return (
+        number
+          .toFixed(2)
+          .split(".")[0]
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+        "." +
+        number.toFixed(2).split(".")[1]
+      );
+    };
+
   // Set up loan table for use in table format
   let loanTable = [];
   let paymentsTable = [];
+  // Set up loan data for use in line graph
+  let lineGraphDate = [];
+  let lineGraphPrincipal = [];
+  let lineGraphInterest = [];
+  let lineGraphTotal = [];
+  let principalTracker;
   // Push into loan table as long as i < terms left on payment (takes % of payment left to get same % of terms left based on payments)
   // for (let i = 1; i <= Math.ceil(props.term * (props.balance_left / props.amount)); i++) {
   for (let i = 1; i <= props.term; i++) {
+    principalTracker = getPrincipal(i);
+
     loanTable.push({
       id: i,
       date: formatDate(date[i - 1]),
-      principal: getPrincipal(i),
+      principal: principalTracker,
       interest: getInterest(i),
       totalDue: getTotalDue(i),
       balanceLeft: getBalanceLeft(i),
     });
+
+    lineGraphDate.push(
+      // date: formatDate(date[i - 1]),
+      formatDate(date[i - 1])
+    )
+
+    lineGraphPrincipal.push(
+      Math.round(principalTracker * 100) / 100
+    );
+
+    lineGraphInterest.push(
+      Math.round(getInterest(i) * 100) / 100
+    );
+
+    lineGraphTotal.push(
+      Math.round(getTotalDue(i) * 100) / 100
+    );
+
   }
 
-  // If loanTable[0] date is before today, remove as payment should be done
-  // var today = new Date();
-  // if (today.toISOString().split('T')[0] > props.start_date){
-  //   // console.log(monthsDiff()+1)
-  //   loanTable.splice(0, monthsDiff()+1)
-  // }
 
   // Currently deleting every other array before todays date because it is deleting, lowering length, and next index is going to
   // previously read index
@@ -272,18 +319,6 @@ function LoanProjectionModal(props) {
       loanTable.splice(i, 1);
     }
   }
-
-  // Get number (ie 80000.0) and convert to readable number string (80,000.00)
-  const formatNumber = (number) => {
-    return (
-      number
-        .toFixed(2)
-        .split(".")[0]
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-      "." +
-      number.toFixed(2).split(".")[1]
-    );
-  };
 
   useEffect(() => {
     dateRange();
@@ -391,67 +426,6 @@ function LoanProjectionModal(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {/* {loanTable.map((dataObj, index) => {
-                      if (
-                        props.balance_left -
-                          parseFloat(dataObj.principal) * dataObj.id >
-                        -200
-                      ) {
-                        interestTotal += parseFloat(dataObj.interest);
-                        principalTotal += parseFloat(dataObj.principal);
-                        totalSpent +=
-                          parseFloat(dataObj.interest) +
-                          parseFloat(dataObj.principal);
-                        balanceLeft =
-                          props.balance_left -
-                          parseFloat(dataObj.principal) * dataObj.id;
-                      }
-                      // Format number to have commas + 2 decimals + if last index, take total number and format it
-                      else {
-                        principalTotal += balanceLeft;
-                        totalSpent +=
-                          balanceLeft + parseFloat(dataObj.interest);
-                        principalFormatted = formatNumber(principalTotal);
-                        interestFormatted = formatNumber(interestTotal);
-                        totalFormatted = formatNumber(totalSpent);
-
-                        // Last balanceLeft as payment to principal left
-                        finalPayment = formatNumber(balanceLeft);
-                        count = 1;
-                      }
-                      if (count === 0) {
-                        return (
-                          <tr key={index}>
-                            <td>{dataObj.id}</td>
-                            <td>{dataObj.date}</td>
-                            Principal
-                            <td>
-                              {getLastPrincipal(
-                                formatNumber(parseFloat(dataObj.principal)),
-                                finalPayment,
-                                dataObj.id
-                              )}
-                            </td>
-                            Interest
-                            <td>
-                              {formatNumber(parseFloat(dataObj.interest))}
-                            </td>
-                            Total (Principal payment + Interest payment)
-                            <td>
-                              {getLastTotalDue(
-                                parseFloat(dataObj.principal),
-                                parseFloat(dataObj.interest),
-                                balanceLeft,
-                                dataObj.id
-                              )}
-                            </td>
-                            Balance Left on loan
-                            <td>{getBalanceLeft(balanceLeft, dataObj.id)}</td>
-                          </tr>
-                        );
-                      }
-                    })} */}
-
                     {loanTable.map((dataObj, index) => {
                       totalPrincipal += dataObj.principal;
                       totalInterest += dataObj.interest;
@@ -486,6 +460,19 @@ function LoanProjectionModal(props) {
                 </Table>
               </Accordion.Body>
             </Accordion.Item>
+
+            <Accordion.Item eventKey="2">
+              <Accordion.Header>Projection Graph</Accordion.Header>
+              <Accordion.Body>
+                    <LineChart 
+                    date={lineGraphDate}
+                    principal={lineGraphPrincipal}
+                    interest={lineGraphInterest}
+                    total={lineGraphTotal}
+                    />
+              </Accordion.Body>
+            </Accordion.Item>
+            
           </Accordion>
 
           <div style={{ display: "flex", justifyContent: "end" }}>
