@@ -45,19 +45,19 @@ function SideNav() {
         {/* <hr className="sideNavHR ms-3 mb-4 mt-0" /> */}
         <p className="sideNavHeader ms-3 mb-0 mt-4">Management</p>
 
-        <Nav.Item>
+        <Nav.Item className="sideNavContainer">
           <Nav.Link
-            className="sideNavLink ps-3"
+            className={"sideNavLink ps-3 " + (active === "/financemanagement" ? "selectedSideNav" : null)}
             as={NavLink}
             to="/financemanagement"
             eventkey="financemanagement"
             href="/financemanagement"
-            style={{
-              color: active === "/financemanagement" ? "white" : "black",
-              textDecoration: active === "/financemanagement" ? "underline" : null
-            }}
+            // style={{
+            //   color: active === "/financemanagement" ? "white" : "black",
+            //   textDecoration: active === "/financemanagement" ? "underline" : null
+            // }}
           >
-            <BiSolidNotepad className="me-3 mb-1"/>
+            <BiSolidNotepad className="me-3 mb-1" style={{fontSize: "1.2rem"}}/>
             Finance
           </Nav.Link>
         </Nav.Item>
@@ -66,58 +66,58 @@ function SideNav() {
         <hr className="sideNavHR ms-3 mb-4" />
         <p className="sideNavHeader ms-3 my-0">Account</p>
         
-        <Nav.Item>
+        <Nav.Item className="sideNavContainer">
           <Nav.Link
-            className="sideNavLink ps-3"
+            className={"sideNavLink ps-3 " + (active === "/account" ? "test" : null)}
             as={NavLink}
             to="/account"
             eventkey="profile"
             href="/account"
             style={{ color: active === "/account" ? "red" : "black" }}
           >
-            <IoPersonSharp className="me-3 mb-1"/>
+            <IoPersonSharp className="me-3 mb-1" style={{fontSize: "1.2rem"}}/>
             Profile
           </Nav.Link>
         </Nav.Item>
-        <Nav.Item>
+        <Nav.Item className="sideNavContainer">
           <Nav.Link
-            className="sideNavLink ps-3"
+            className={"sideNavLink ps-3 " + (active === "/account" ? "test" : null)}
             as={NavLink}
             to="/account"
             eventkey="setup"
             href="/account"
             style={{ color: active === "/account" ? "red" : "black" }}
           >
-            <IoIosSettings className="me-3 mb-1"/>
+            <IoIosSettings className="me-3 mb-1" style={{fontSize: "1.2rem"}}/>
             Setup
           </Nav.Link>
         </Nav.Item>
-        <Nav.Item>
+        <Nav.Item className="sideNavContainer">
           <Nav.Link
-            className="sideNavLink ps-3"
+            className={"sideNavLink ps-3 " + (active === "/account" ? "test" : null)}
             as={NavLink}
             to="/account"
             eventkey="security"
             href="/account"
             style={{ color: active === "/account" ? "red" : "black" }}
           >
-            <IoMdLock className="me-3 mb-1"/>
+            <IoMdLock className="me-3 mb-1" style={{fontSize: "1.2rem"}}/>
             Security
           </Nav.Link>
         </Nav.Item>
 
 
         <hr className="sideNavHR ms-3 mb-4" />
-        <Nav.Item>
+        <Nav.Item className="sideNavContainer">
           <Nav.Link
-            className="sideNavLink ps-3"
+            className={"sideNavLink ps-3 " + (active === "/signout" ? "test" : null)}
             as={NavLink}
             to="/signout"
             eventkey="signout"
             href="/signout"
             style={{ color: active === "/signout" ? "red" : "black" }}
           >
-            <FaSignOutAlt className="me-3 mb-1"/>
+            <FaSignOutAlt className="me-3 mb-1" style={{fontSize: "1.2rem"}}/>
             Sign Out
           </Nav.Link>
         </Nav.Item>
