@@ -5,6 +5,9 @@ import Table from "react-bootstrap/Table";
 import { FaSort } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+// import { GrView } from "react-icons/gr";
+import { MdEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 function ExpensesTable(props) {
   const [editExpenseModalShow, setEditExpenseModalShow] = useState(false);
@@ -162,7 +165,7 @@ function ExpensesTable(props) {
   };
 
   return (
-    <Table striped bordered hover style={{ margin: "0rem auto 3.5rem" }}>
+    <Table striped bordered hover style={{ margin: "auto" }}>
       <thead>
         <tr>
           <th>
@@ -194,15 +197,15 @@ function ExpensesTable(props) {
               onClick={() => defaultDateSort()}
             />
             <Form.Control
-              style={{ width: "60%", display: "flex" }}
+              style={{display: "flex" }}
               type="date"
               className="tableSort ms-2"
               onChange={dateSort}
               value={defaultDate}
             />
           </th>
-          <th></th>
-          <th></th>
+          <th style={{border: "none"}}></th>
+          <th style={{border: "none"}}></th>
         </tr>
       </thead>
       <tbody>
@@ -223,19 +226,19 @@ function ExpensesTable(props) {
                   setModalNum(index + 1);
                 }}
               >
-                edit
+                < MdEdit />
               </td>
 
               <td
                 className="tableDelete"
-                style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                style={{ paddingLeft: "0px", paddingRight: "0px", border: "none", borderRight: "solid 1px #DEE2E6"}}
                 onClick={() => {
                   setDeleteExpenseModalShow(true);
                   setModalData(dataObj);
                   setModalNum(index + 1);
                 }}
               >
-                X
+                < MdDelete />
               </td>
             </tr>
           );

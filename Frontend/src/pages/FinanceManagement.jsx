@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SideNav from "../components/SideNav";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import SubmitExpenseModal from "../components/SubmitExpenseModal";
 import PieChart from "../components/PieChart";
 // import LineChart from "../components/LineChart";
@@ -73,49 +75,116 @@ function FinanceManagement() {
         <SideNav />
       </div>
       <div id="financeManagement" className="">
-        <h2>Add Expense</h2>
-        <Button
-          variant="primary"
-          size="lg"
-          style={{}}
-          onClick={showSubmitExpense}
+        <Tabs
+          defaultActiveKey="expense"
+          id="uncontrolled-tab-example"
+          className=""
+          // variant="pills"
+          // justify
         >
-          +
-        </Button>
-        <SubmitExpenseModal
-          show={submitExpenseModalShow}
-          onHide={() => setSubmitExpenseModalShow(false)}
-        />
+          <Tab eventKey="expense" title="Expenses">
+            {/* <h2>Add Expense</h2> */}
 
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* Expenses pie chart */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        <div>
-          <h2>
-            Expense Sectors
-            <CiCircleQuestion
-              className="infoButton"
-              onClick={() => {
-                setInfoModalShow(true);
-                setInfoTitle("Expenses Pie Chart");
-                setInfoP(
-                  "The Expense Sectors Pie Chart shows all expense categories recorded. All percentages take all expenses into account to calculate how much was spent in each sector across the account's lifespan."
-                );
-              }}
+            <div className="tabIntroInfo">
+              <h2>
+                Expense Sectors
+                <CiCircleQuestion
+                  className="infoButton"
+                  onClick={() => {
+                    setInfoModalShow(true);
+                    setInfoTitle("Expenses Pie Chart");
+                    setInfoP(
+                      "The Expense Sectors Pie Chart shows all expense categories recorded. All percentages take all expenses into account to calculate how much was spent in each sector across the account's lifespan."
+                    );
+                  }}
+                />
+              </h2>
+              <InfoModal
+                title={infoTitle}
+                description={infoP}
+                show={infoModalShow}
+                onHide={() => setInfoModalShow(false)}
+              />
+              <Button
+                variant="primary"
+                size="lg"
+                style={{}}
+                onClick={showSubmitExpense}
+              >
+                +
+              </Button>
+              <SubmitExpenseModal
+                show={submitExpenseModalShow}
+                onHide={() => setSubmitExpenseModalShow(false)}
+              />
+            </div>
+
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* Expenses pie chart */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            <div className="expenseTab center">
+              <div className="pieChart">
+                <PieChart expense={expense} />
+              </div>
+
+              {/* ////////////////////////////////////////////////////////////////////////// */}
+              {/* ////////////////////////////////////////////////////////////////////////// */}
+              {/* ////////////////////////////////////////////////////////////////////////// */}
+              {/* Expenses table */}
+              {/* ////////////////////////////////////////////////////////////////////////// */}
+              {/* ////////////////////////////////////////////////////////////////////////// */}
+              {/* ////////////////////////////////////////////////////////////////////////// */}
+              <div className="expenseTable">
+                <ExpensesTable expense={expense} expenseCopy={expenseCopy} />
+              </div>
+            </div>
+          </Tab>
+
+          <Tab eventKey="loan" title="Loans">
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* Loan tracker table */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            <h2>Loan Tracker</h2>
+            <Button variant="primary" size="lg" onClick={addLoan}>
+              +
+            </Button>
+            <LoanModal
+              show={addLoanModalShow}
+              postloan={1}
+              onHide={() => setAddLoanModalShow(false)}
             />
-          </h2>
-          <InfoModal
-            title={infoTitle}
-            description={infoP}
-            show={infoModalShow}
-            onHide={() => setInfoModalShow(false)}
-          />
-          <PieChart expense={expense} />
-        </div>
+            <LoanTable />
+          </Tab>
+
+          <Tab eventKey="goal" title="Goals">
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* Goals table */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            <h2>Add Goal</h2>
+            <Button variant="primary" size="lg" onClick={addGoal}>
+              +
+            </Button>
+            <GoalModal
+              show={addGoalModalShow}
+              postgoal={1}
+              onHide={() => setAddGoalModalShow(false)}
+            />
+
+            <GoalsTable />
+          </Tab>
+        </Tabs>
 
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
@@ -151,62 +220,15 @@ function FinanceManagement() {
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* Expenses table */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        <h2>Expenses</h2>
-        <ExpensesTable expense={expense} expenseCopy={expenseCopy} />
-
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* Daily spending heatmap */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
 
-        {/* <HeatMap
+        <HeatMap
           expense={expense}
           dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
-        /> */}
-
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* Daily spending heatmap */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        <h2>Loan Tracker</h2>
-        <Button variant="primary" size="lg" onClick={addLoan}>
-          +
-        </Button>
-        <LoanModal
-          show={addLoanModalShow}
-          postloan={1}
-          onHide={() => setAddLoanModalShow(false)}
         />
-        <LoanTable />
-
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* Goals table */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        {/* ////////////////////////////////////////////////////////////////////////// */}
-        <h2>Add Goal</h2>
-        <Button variant="primary" size="lg" onClick={addGoal}>
-          +
-        </Button>
-        <GoalModal
-          show={addGoalModalShow}
-          postgoal={1}
-          onHide={() => setAddGoalModalShow(false)}
-        />
-
-        <GoalsTable />
       </div>
     </div>
   );
