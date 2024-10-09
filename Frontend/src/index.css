@@ -279,28 +279,23 @@ background-blend-mode: multiply; */
       border: 1px solid #DEE2E6;
       border-top: none;
       flex-direction: row;
-      /* align-items: center;
-      justify-content: center; */
-      /* gap: 3rem; */
       width: 100%;
-      justify-content: space-around;
     }
-
     .tabIntroInfo {
-      border-top: none;
-      /* border-bottom: none; */
+      border-top: none; 
     }
-
+    .expenseTab {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 3rem 0;
+    }
     .pieChart {
-      width: 65%;
+      width: 50%;
     }
     .expenseTable {
-      width: 100%;
+      width: 30%;
     }
-
-    /* .expenseTable {
-
-    } */
 
     .infoButton {
       font-size: 1.25rem;

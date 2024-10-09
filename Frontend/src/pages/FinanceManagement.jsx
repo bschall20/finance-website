@@ -32,17 +32,19 @@ function FinanceManagement() {
       setExpense(
         expenseJSON.sort(function (a, b) {
           // Default sort by DATE:
-          var aa = a.date.split("/").reverse().join(),
-            bb = b.date.split("/").reverse().join();
-          return bb < aa ? -1 : bb > aa ? 1 : 0;
+          // var aa = a.date.split("/").reverse().join(),
+          //   bb = b.date.split("/").reverse().join();
+          // return bb < aa ? -1 : bb > aa ? 1 : 0;
+            return parseFloat(b.id) - parseFloat(a.id);
         })
       );
       setExpenseCopy(
         expenseJSON.sort(function (a, b) {
           // Default sort by DATE:
-          var aa = a.date.split("/").reverse().join(),
-            bb = b.date.split("/").reverse().join();
-          return bb < aa ? -1 : bb > aa ? 1 : 0;
+          // var aa = a.date.split("/").reverse().join(),
+          //   bb = b.date.split("/").reverse().join();
+          // return bb < aa ? -1 : bb > aa ? 1 : 0;
+            return parseFloat(b.id) - parseFloat(a.id);
         })
       );
     } catch (err) {
@@ -139,7 +141,11 @@ function FinanceManagement() {
               {/* ////////////////////////////////////////////////////////////////////////// */}
               {/* ////////////////////////////////////////////////////////////////////////// */}
               <div className="expenseTable">
-                <ExpensesTable expense={expense} expenseCopy={expenseCopy} />
+                <ExpensesTable
+                  expense={expense}
+                  expenseCopy={expenseCopy}
+                  table={"short"}
+                />
               </div>
             </div>
           </Tab>
@@ -224,7 +230,7 @@ function FinanceManagement() {
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
-
+                    
         <HeatMap
           expense={expense}
           dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
