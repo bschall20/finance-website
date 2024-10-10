@@ -16,6 +16,7 @@ import LoanTable from "../components/LoanTable";
 import { CiCircleQuestion } from "react-icons/ci";
 import InfoModal from "../components/InfoModal";
 
+
 function FinanceManagement() {
   const [submitExpenseModalShow, setSubmitExpenseModalShow] = useState(false);
   const [infoModalShow, setInfoModalShow] = useState(false);
@@ -24,6 +25,11 @@ function FinanceManagement() {
   const [expense, setExpense] = useState([]);
   const [expenseCopy, setExpenseCopy] = useState([]);
   let dailyAllowance = 100;
+
+  // Date year for intro tabs
+  let d = new Date();
+  let thisYear = d.getFullYear();
+  // let lastYear = d.getFullYear() - 1;
 
   const getExpenseData = async () => {
     try {
@@ -35,7 +41,7 @@ function FinanceManagement() {
           // var aa = a.date.split("/").reverse().join(),
           //   bb = b.date.split("/").reverse().join();
           // return bb < aa ? -1 : bb > aa ? 1 : 0;
-            return parseFloat(b.id) - parseFloat(a.id);
+          return parseFloat(b.id) - parseFloat(a.id);
         })
       );
       setExpenseCopy(
@@ -44,7 +50,7 @@ function FinanceManagement() {
           // var aa = a.date.split("/").reverse().join(),
           //   bb = b.date.split("/").reverse().join();
           // return bb < aa ? -1 : bb > aa ? 1 : 0;
-            return parseFloat(b.id) - parseFloat(a.id);
+          return parseFloat(b.id) - parseFloat(a.id);
         })
       );
     } catch (err) {
@@ -77,6 +83,35 @@ function FinanceManagement() {
         <SideNav />
       </div>
       <div id="financeManagement" className="">
+
+        <div className="FMIntro mb-5">
+          <div className="FMIntroBox" style={{borderLeft: "solid 3px #008FFB"}}>
+            <p className="FMIntroBoxTitle" style={{color: '#008FFB'}}>Daily Allowance:</p>
+            <p>${dailyAllowance}</p>
+          </div>
+          <div className="FMIntroBox" style={{borderLeft: "solid 3px #00E396"}}>
+            <p className="FMIntroBoxTitle" style={{color: '#00E396'}}>{thisYear} Net Income:</p>
+            ADD A +/- FROM LAST YEAR
+            <p>{dailyAllowance}</p>
+          </div>
+          <div className="FMIntroBox" style={{borderLeft: "solid 3px #FFB01A"}}>
+            <p className="FMIntroBoxTitle" style={{color: '#FFB01A'}}>Goals Completed This Year:</p>
+            <p>{dailyAllowance}</p>
+          </div>
+          <div className="FMIntroBox" style={{borderLeft: "solid 3px #D60027"}}>
+            <p className="FMIntroBoxTitle" style={{color: '#D60027'}}>Open Loans:</p>
+            <p>{dailyAllowance}</p>
+          </div>
+        
+        </div>
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* TABS*/}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+        {/* ////////////////////////////////////////////////////////////////////////// */}
+
         <Tabs
           defaultActiveKey="expense"
           id="uncontrolled-tab-example"
@@ -88,7 +123,7 @@ function FinanceManagement() {
             {/* <h2>Add Expense</h2> */}
 
             <div className="tabIntroInfo">
-              <h2>
+              <h2 className="ms-4">
                 Expense Sectors
                 <CiCircleQuestion
                   className="infoButton"
@@ -107,13 +142,14 @@ function FinanceManagement() {
                 show={infoModalShow}
                 onHide={() => setInfoModalShow(false)}
               />
+
               <Button
                 variant="primary"
                 size="lg"
-                style={{}}
+                className="me-4"
                 onClick={showSubmitExpense}
               >
-                +
+                Add Expense
               </Button>
               <SubmitExpenseModal
                 show={submitExpenseModalShow}
@@ -158,16 +194,20 @@ function FinanceManagement() {
             {/* ////////////////////////////////////////////////////////////////////////// */}
             {/* ////////////////////////////////////////////////////////////////////////// */}
             {/* ////////////////////////////////////////////////////////////////////////// */}
-            <h2>Loan Tracker</h2>
-            <Button variant="primary" size="lg" onClick={addLoan}>
-              +
+            <div className="tabIntroInfo pb-4">
+            <h2 className="ms-5">Loan Tracker</h2>
+            <Button className="me-5" variant="primary" size="lg" onClick={addLoan}>
+              Add Loan
             </Button>
             <LoanModal
               show={addLoanModalShow}
               postloan={1}
               onHide={() => setAddLoanModalShow(false)}
             />
+            </div>
+            <div className="loanTab">
             <LoanTable />
+            </div>
           </Tab>
 
           <Tab eventKey="goal" title="Goals">
@@ -178,50 +218,54 @@ function FinanceManagement() {
             {/* ////////////////////////////////////////////////////////////////////////// */}
             {/* ////////////////////////////////////////////////////////////////////////// */}
             {/* ////////////////////////////////////////////////////////////////////////// */}
-            <h2>Add Goal</h2>
-            <Button variant="primary" size="lg" onClick={addGoal}>
-              +
+            <div className="tabIntroInfo pb-4">
+            <h2 className="ms-5">Goal Tracker</h2>
+            <Button className="me-5" variant="primary" size="lg" onClick={addGoal}>
+              Add Goal
             </Button>
             <GoalModal
               show={addGoalModalShow}
               postgoal={1}
               onHide={() => setAddGoalModalShow(false)}
             />
-
-            <GoalsTable />
+            </div>
+            <div className="goalTab">
+              <GoalsTable />
+            </div>
           </Tab>
         </Tabs>
 
-        {/* ////////////////////////////////////////////////////////////////////////// */}
+
+         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* Expenses bar chart */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
-
-        <div>
-          <h2>
-            Expense Bar Chart{" "}
-            <CiCircleQuestion
-              className="infoButton"
-              onClick={() => {
-                setInfoModalShow(true);
-                setInfoTitle("Expenses Bar Chart");
-                setInfoP(
-                  "The Expenses Bar Chart Chart shows all expense categories recorded. When the timeframe is selected, it will display the categories per the time selected. For example, 'Days' will show every day of the week and the spending trends per that day of the week. 'Monday' will list all Monday expenses logged through the account's entire lifespan."
-                );
-              }}
-            />
-          </h2>
-          <InfoModal
-            title={infoTitle}
-            description={infoP}
-            show={infoModalShow}
-            onHide={() => setInfoModalShow(false)}
-          />
-          <BarChart expense={expense} />
-        </div>
+        <div className="mt-5">
+            {/* <h2>
+              Expense Bar Chart{" "}
+              <CiCircleQuestion
+                className="infoButton"
+                onClick={() => {
+                  setInfoModalShow(true);
+                  setInfoTitle("Expenses Bar Chart");
+                  setInfoP(
+                    "The Expenses Bar Chart Chart shows all expense categories recorded. When the timeframe is selected, it will display the categories per the time selected. For example, 'Days' will show every day of the week and the spending trends per that day of the week. 'Monday' will list all Monday expenses logged through the account's entire lifespan."
+                  );
+                }}
+              />
+            </h2>
+            <InfoModal
+              title={infoTitle}
+              description={infoP}
+              show={infoModalShow}
+              onHide={() => setInfoModalShow(false)}
+            /> */}
+            <BarChart expense={expense} />
+          </div>
+        
 
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
@@ -230,11 +274,13 @@ function FinanceManagement() {
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////////////////////////// */}
-                    
+
+        <div className="mt-5">
         <HeatMap
           expense={expense}
           dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
         />
+        </div>
       </div>
     </div>
   );

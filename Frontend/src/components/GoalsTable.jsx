@@ -91,11 +91,17 @@ function GoalsTable(props) {
   }
 
 
+    // Set Date from yyyy-mm-dd to mm-dd-yyyy
+    const formatDate = (dataDate) =>{
+      var d = new Date(dataDate);
+      d.setDate(d.getDate() + 1);
+      return d.toLocaleDateString();
+    }
 
 
 
 
- return <Table striped bordered hover style={{ margin: "0rem auto 3.5rem" }}>
+ return <Table striped bordered hover style={{ margin: "0rem auto 3.5rem", width: "80%" }}>
  <thead>
    <tr>
      <th>#</th>
@@ -132,12 +138,12 @@ function GoalsTable(props) {
        );
        tableStart = (
          <td style={{ backgroundColor: "#D60027" }}>
-           {dataObj.start_date}
+           {formatDate(dataObj.start_date)}
          </td>
        );
        tableDate = (
          <td style={{ backgroundColor: "#D60027" }}>
-           {dataObj.goal_date}
+           {formatDate(dataObj.goal_date)}
          </td>
        );
        tableSave = (
@@ -162,8 +168,8 @@ function GoalsTable(props) {
        tableIndex = <td>{index + 1}</td>;
        tableTitle = <td>{dataObj.title}</td>;
        tableAmount = <td>{dataObj.amount}</td>;
-       tableStart = <td>{dataObj.start_date}</td>;
-       tableDate = <td>{dataObj.goal_date}</td>;
+       tableStart = <td>{formatDate(dataObj.start_date)}</td>;
+       tableDate = <td>{formatDate(dataObj.goal_date)}</td>;
        tableSave = (
          <td>
            $

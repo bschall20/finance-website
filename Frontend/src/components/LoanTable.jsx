@@ -77,8 +77,8 @@ function LoanTracker(props) {
   // payment =
 
   return (
-    <Table striped bordered hover>
-      <thead style={{borderTop: "solid 1px white"}}>
+    <Table striped bordered hover style={{ margin: "0rem auto 3.5rem", width: "80%"}}>
+      <thead>
         <tr>
           <th style={{borderTop: "solid 1px #DEE2E6"}}>#</th>
           <th style={{borderTop: "solid 1px #DEE2E6"}}>Loan</th>
@@ -90,7 +90,7 @@ function LoanTracker(props) {
           </th> */}
           <th style={{border: "none"}}></th>
           <th style={{border: "none"}}></th>
-          <th style={{border: "none"}}></th>
+          <th style={{borderLeft: "none"}}></th>
         </tr>
       </thead>
       <tbody>

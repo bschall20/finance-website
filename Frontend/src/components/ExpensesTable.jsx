@@ -178,6 +178,13 @@ function ExpensesTable(props) {
   };
 
 
+  // Set Date from yyyy-mm-dd to mm-dd-yyyy
+  const formatDate = (dataDate) =>{
+    var d = new Date(dataDate);
+    d.setDate(d.getDate() + 1);
+    return d.toLocaleDateString();
+  }
+
   if (props.table === "full") {
     return (
       <Table striped bordered hover style={{ margin: "auto" }}>
@@ -231,7 +238,7 @@ function ExpensesTable(props) {
                 <td>{dataObj.title}</td>
                 <td>{dataObj.amount}</td>
                 <td>{dataObj.expense_type}</td>
-                <td>{dataObj.date}</td>
+                <td>{formatDate(dataObj.date)}</td>
                 <td
                   className="tableEdit"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}

@@ -60,10 +60,10 @@ function HeatMap(props) {
   });
 
 
-
-  return (
+  if (dataValues) {return (
     <div>
-      <h2>Daily Expenses</h2>
+      {/* <h2>Daily Allowance (${props.dailyAllowance}) Chart</h2> */}
+      <h2>Daily Allowance Chart (${props.dailyAllowance})</h2>
       <CalendarHeatmap
         startDate={shiftDate(today, -365)}
         endDate={today}
@@ -103,7 +103,7 @@ function HeatMap(props) {
       />
       <ReactTooltip />
     </div>
-  );
+  )};
 }
 
 export default HeatMap;
