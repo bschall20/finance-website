@@ -307,31 +307,6 @@ background-blend-mode: multiply; */
       font-weight: 600;
     }
 
-    .tabIntroInfo, .expenseTab, .loanTab, .goalTab {
-      border: 1px solid #DEE2E6;
-      border-top: none;
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-    }
-    .tabIntroInfo {
-      border-bottom: none;
-      justify-content: space-between;
-      padding: 1.5rem 3rem 0;
-    }
-    .expenseTab {
-      display: flex;
-      align-items: center;
-      justify-content: space-evenly;
-      padding: 3rem 0;
-    }
-    .pieChart {
-      width: 50%;
-    }
-    .expenseTable {
-      width: 30%;
-    }
-
     .infoButton {
       font-size: 1.25rem;
       margin-left: .5rem;
@@ -348,23 +323,56 @@ background-blend-mode: multiply; */
       color: #008FFB;
     }
 
+    .tabIntroInfo, .expenseTab, .loanTab, .goalTab {
+      border: 1px solid #DEE2E6;
+      border-top: none;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
+    .tabIntroInfo {
+      border-bottom: none;
+      justify-content: space-between;
+      padding: 1.5rem 3rem 0;
+    }
+    .expenseTab, .loanTab {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 3rem 0;
+    }
+    .loanTab {
+      padding-top: 0rem;
+    }
+    .pieChart {
+      width: 50%;
+    }
+    .expenseTable{
+      width: 30%;
+    }
+    .loanTable {
+      width: 40%;
+    }
+
     .tableTitle {
       display: flex;
       flex-direction: row;
       align-items: end;
     }
-
-    .tableView, .tableEdit, .tableDelete{
+    .tableView, .tableEdit, .tableGraph, .tableDelete{
       text-align: center;
       text-decoration: underline;
     }
-    .tableEdit:hover, .tableDelete:hover, .tableView:hover {
-      background-color: #157347;
+    .tableView:hover, .tableEdit:hover, .tableGraph:hover, .tableDelete:hover {
+      background-color: #0092d6;
       color: white;
       cursor: pointer;
     }
-    .tableView:hover {
-      background-color: #0092d6;
+    .tableEdit:hover {
+      background-color: #157347;
+    }
+    .tableGraph:hover {
+      background-color: #FFB01A;
     }
     .tableDelete:hover {
       background-color: #D60027;
@@ -403,6 +411,15 @@ background-blend-mode: multiply; */
       stroke: #555;
       stroke-width: 1px;
     }
+
+
+    .loanGraph {
+      text-align: center;
+      width: 50%;
+    }
+    .loanGraphText {
+      font-size: 2rem;
+    }
     
     
     .react-calendar-heatmap .color-github-0 {
@@ -415,14 +432,7 @@ background-blend-mode: multiply; */
       fill: #ffa080;
     }
   
-  
-    .loanTable {
-      color: blue;
-      text-decoration: underline;
-    }
-    .loanTable:hover{
-      cursor: pointer;
-    }
+
 
 
   /**************************************/

@@ -6,7 +6,7 @@ import Table from "react-bootstrap/Table";
 import { FaSort } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-// import { GrView } from "react-icons/gr";
+
 import { GrView } from "react-icons/gr";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";

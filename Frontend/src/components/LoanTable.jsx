@@ -3,13 +3,13 @@ import React, { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import DeleteLoanModal from "./DeleteLoanModal.jsx";
 import LoanModal from "./LoanModal.jsx";
-import LoanProjectionModal from "./LoanProjectionTable.jsx";
+import LoanProjectionTable from "./LoanProjectionTable.jsx";
+// import LineChart from "./LineChart.jsx";
 
+import { BsGraphUp } from "react-icons/bs";
 import { GrView } from "react-icons/gr";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-
-
 
 function LoanTracker(props) {
   // Display on view:
@@ -29,7 +29,7 @@ function LoanTracker(props) {
   const [loan, setLoan] = useState([]);
   const [deleteLoanModalShow, setDeleteLoanModalShow] = useState(false);
   const [loanModalShow, setLoanModalShow] = useState(false);
-  const [loanProjectionModal, setLoanProjectionModal] = useState(false)
+  const [loanProjectionTable, setLoanProjectionTable] = useState(false);
 
   const getLoanData = async () => {
     try {
@@ -77,34 +77,37 @@ function LoanTracker(props) {
   // payment =
 
   return (
-    <Table striped bordered hover style={{ margin: "0rem auto 3.5rem", width: "80%"}}>
-      <thead>
-        <tr>
-          <th style={{borderTop: "solid 1px #DEE2E6"}}>#</th>
-          <th style={{borderTop: "solid 1px #DEE2E6"}}>Loan</th>
-          <th style={{borderTop: "solid 1px #DEE2E6"}}>Starting Balance</th>
-          <th style={{borderTop: "solid 1px #DEE2E6"}}>Term (months)</th>
-          <th style={{borderTop: "solid 1px #DEE2E6"}}>Balance Left</th>
-          {/* <th>
+    <div className="loanTab center">
+      <Table striped bordered hover style={{ margin: "0rem", width: "40%" }}>
+        <thead>
+          <tr>
+            <th style={{ borderTop: "solid 1px #DEE2E6" }}>#</th>
+            <th style={{ borderTop: "solid 1px #DEE2E6" }}>Loan</th>
+            <th style={{ borderTop: "solid 1px #DEE2E6" }}>Starting Balance</th>
+            {/* <th style={{borderTop: "solid 1px #DEE2E6"}}>Term (months)</th>
+          <th style={{borderTop: "solid 1px #DEE2E6"}}>Balance Left</th> */}
+            {/* <th>
             Payment <span style={{ fontSize: ".75rem" }}>(+interest)</span>
           </th> */}
-          <th style={{border: "none"}}></th>
-          <th style={{border: "none"}}></th>
-          <th style={{borderLeft: "none"}}></th>
-        </tr>
-      </thead>
-      <tbody>
-        {loan.map((dataObj, index) => {
-          return (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{dataObj.title}</td>
-              <td>
-                {dataObj.amount} at {dataObj.interest}%
-              </td>
-              <td>{dataObj.term}</td>
-              <td>{dataObj.balance_left}</td>
-              {/* <td>
+            <th style={{ border: "none" }}></th>
+            <th style={{ border: "none" }}></th>
+            <th style={{ border: "none" }}></th>
+            <th style={{ borderLeft: "none" }}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {loan.map((dataObj, index) => {
+            return (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{dataObj.title}</td>
+                <td>
+                  {dataObj.amount} at {dataObj.interest}% for {dataObj.term}{" "}
+                  months
+                </td>
+                {/* <td>{dataObj.term}</td>
+              <td>{dataObj.balance_left}</td> */}
+                {/* <td>
                 {Math.round(
                   (dataObj.balance_left / termLeft() + Number.EPSILON) * 100
                 ) / 100}{" "}
@@ -116,86 +119,136 @@ function LoanTracker(props) {
                 ) / 100}
                 )
               </td> */}
-              <td
-                className="tableView"
-                style={{ paddingLeft: "0px", paddingRight: "0px", border: "none" }}
-                onClick={() => {
-                  setLoanProjectionModal(true);
-                  setModalData(dataObj);
-                  setModalNum(index + 1);
-                }}
-              >
-                < GrView />
-              </td>
-              <td
-                className="tableEdit"
-                style={{ paddingLeft: "0px", paddingRight: "0px", border: "none" }}
-                onClick={() => {
-                  setLoanModalShow(true);
-                  setModalData(dataObj);
-                  setModalNum(index + 1);
-                }}
-              >
-                < MdEdit />
-              </td>
+                <td
+                  className="tableView"
+                  style={{
+                    paddingLeft: "1px",
+                    paddingRight: "1px",
+                    border: "none",
+                  }}
+                  onClick={() => {
+                    setLoanProjectionTable(true);
+                    setModalData(dataObj);
+                    setModalNum(index + 1);
+                  }}
+                >
+                  <GrView />
+                </td>
+                <td
+                  className="tableEdit"
+                  style={{
+                    paddingLeft: "1px",
+                    paddingRight: "1px",
+                    border: "none",
+                  }}
+                  onClick={() => {
+                    setLoanModalShow(true);
+                    setModalData(dataObj);
+                    setModalNum(index + 1);
+                  }}
+                >
+                  <MdEdit />
+                </td>
+                <td
+                  className="tableGraph"
+                  style={{
+                    paddingLeft: "1px",
+                    paddingRight: "1px",
+                    border: "none",
+                  }}
+                  onClick={() => {
+                    // make this line push that this graph was selected into the linechart graph
+                    // setLoanProjectionTable(true);
+                    setModalData(dataObj);
+                    setModalNum(index + 1);
+                  }}
+                >
+                  <BsGraphUp />
+                </td>
 
-              <td
-                className="tableDelete"
-                style={{ paddingLeft: "0px", paddingRight: "0px", border: "none", borderRight: "solid 1px #DEE2E6" }}
-                onClick={() => {
-                  setDeleteLoanModalShow(true);
-                  setModalData(dataObj);
-                  setModalNum(index + 1);
-                }}
-              >
-                < MdDelete />
-              </td>
-            </tr>
-          );
-        })}
-        <LoanProjectionModal
-          show={loanProjectionModal}
-          onHide={() => setLoanProjectionModal(false)}
-          id={modalData.id}
-          num={modalNum}
-          title={modalData.title}
-          amount={modalData.amount}
-          interest={modalData.interest}
-          start_date={modalData.start_date}
-          term={modalData.term}
-          balance_left={modalData.balance_left}
-          interest_type={modalData.interest_type}
-        />
-        <LoanModal
-          show={loanModalShow}
-          showsubmit={0}
-          onHide={() => setLoanModalShow(false)}
-          id={modalData.id}
-          num={modalNum}
-          title={modalData.title}
-          amount={modalData.amount}
-          interest={modalData.interest}
-          start_date={modalData.start_date}
-          term={modalData.term}
-          balance_left={modalData.balance_left}
-          interest_type={modalData.interest_type}
-          edit_loan={1}
-        />
-        <DeleteLoanModal
-          show={deleteLoanModalShow}
-          onHide={() => setDeleteLoanModalShow(false)}
-          id={modalData.id}
-          num={modalNum}
-          title={modalData.title}
-          amount={modalData.amount}
-          interest={modalData.interest}
-          start_date={modalData.start_date}
-          term={modalData.term}
-          balance_left={modalData.balance_left}
-          interest_type={modalData.interest_type}
-        />
-      </tbody>
-    </Table>
+                <td
+                  className="tableDelete"
+                  style={{
+                    paddingLeft: "1px",
+                    paddingRight: "1px",
+                    border: "none",
+                    borderRight: "solid 1px #DEE2E6",
+                  }}
+                  onClick={() => {
+                    setDeleteLoanModalShow(true);
+                    setModalData(dataObj);
+                    setModalNum(index + 1);
+                  }}
+                >
+                  <MdDelete />
+                </td>
+              </tr>
+            );
+          })}
+          <LoanProjectionTable
+            show={loanProjectionTable}
+            onHide={() => setLoanProjectionTable(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            interest={modalData.interest}
+            start_date={modalData.start_date}
+            term={modalData.term}
+            balance_left={modalData.balance_left}
+            interest_type={modalData.interest_type}
+            data_view={"payments"}
+          />
+          <LoanModal
+            show={loanModalShow}
+            showsubmit={0}
+            onHide={() => setLoanModalShow(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            interest={modalData.interest}
+            start_date={modalData.start_date}
+            term={modalData.term}
+            balance_left={modalData.balance_left}
+            interest_type={modalData.interest_type}
+            edit_loan={1}
+          />
+          <DeleteLoanModal
+            show={deleteLoanModalShow}
+            onHide={() => setDeleteLoanModalShow(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            interest={modalData.interest}
+            start_date={modalData.start_date}
+            term={modalData.term}
+            balance_left={modalData.balance_left}
+            interest_type={modalData.interest_type}
+          />
+        </tbody>
+      </Table>
+
+      <div className="loanGraph">
+          {modalNum !== 0 ? <LoanProjectionTable
+            show={loanProjectionTable}
+            onHide={() => setLoanProjectionTable(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            interest={modalData.interest}
+            start_date={modalData.start_date}
+            term={modalData.term}
+            balance_left={modalData.balance_left}
+            interest_type={modalData.interest_type}
+            data_view={"graph"}
+          /> : <p className="loanGraphText">Select a chart to view here <br /> or add a chart above!</p>}
+        
+        
+      </div>
+    </div>
   );
 }
 

@@ -60,7 +60,7 @@ function HeatMap(props) {
   });
 
 
-  if (dataValues) {return (
+  if (dataValues !== null) {return (
     <div>
       {/* <h2>Daily Allowance (${props.dailyAllowance}) Chart</h2> */}
       <h2>Daily Allowance Chart (${props.dailyAllowance})</h2>
@@ -77,7 +77,7 @@ function HeatMap(props) {
           // value = parseInt(value)
 
           // Set colors in table. Could do multiple shades to show 20% spend up to 200%. (25, 50, 75, 100, 125, 150, 175, 200)
-          if (value.count === 0) {
+          if (value.count === 0 || value.count === null) {
             return "color-github-0";
           }
           else if (value.count <= props.dailyAllowance){

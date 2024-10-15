@@ -22,7 +22,7 @@ import Modal from "react-bootstrap/Modal";
 import Accordion from "react-bootstrap/Accordion";
 import Table from "react-bootstrap/Table";
 
-function LoanProjectionModal(props) {
+function LoanProjectionTable(props) {
   var totalPrincipal = 0;
   var totalInterest = 0;
   var totalPaid = 0;
@@ -123,10 +123,6 @@ function LoanProjectionModal(props) {
   var returnPrincipal =
     monthlyPayment - props.amount * (props.interest / 100 / 12);
 
-
-
-
-
   // Get loan principal payments by AMOUNT/TERM(total months)
   const getPrincipal = (i) => {
     // What is returned as principal payment
@@ -143,19 +139,19 @@ function LoanProjectionModal(props) {
     // }
 
     if (i === 1) {
-      outstandingBalance = props.amount - (monthlyPayment - props.amount * (props.interest / 100 / 12));
+      outstandingBalance =
+        props.amount -
+        (monthlyPayment - props.amount * (props.interest / 100 / 12));
       return monthlyPayment - props.amount * (props.interest / 100 / 12);
     } else {
-      returnPrincipal = monthlyPayment - outstandingBalance * (props.interest / 100 / 12);
-      outstandingBalance = outstandingBalance - (monthlyPayment - outstandingBalance * (props.interest / 100 / 12));
+      returnPrincipal =
+        monthlyPayment - outstandingBalance * (props.interest / 100 / 12);
+      outstandingBalance =
+        outstandingBalance -
+        (monthlyPayment - outstandingBalance * (props.interest / 100 / 12));
       return returnPrincipal;
     }
   };
-
-
-
-
-
 
   // Get loan interest payments based on which interest type is selected
   // let a = 0;
@@ -208,10 +204,6 @@ function LoanProjectionModal(props) {
     // return a;
   };
 
-
-
-
-
   // Get total due per payment by PRINCIPAL + INTEREST
   const getTotalDue = (i) => {
     // return Math.round((getPrincipal(i) + getInterest(i)) * 100) / 100;
@@ -223,11 +215,6 @@ function LoanProjectionModal(props) {
 
     return monthlyPayment;
   };
-
-
-
-
-
 
   // Get balance left on loan after payment is made
   const getBalanceLeft = (i) => {
@@ -241,24 +228,25 @@ function LoanProjectionModal(props) {
     // if (props.interest_type === "Simple"){
     //   return Math.round((props.amount - getPrincipal() * i) * 100) / 100
     // } else {return Math.round((outstandingBalance) * 100) / 100}
-    if (i === props.term){
-      return 0
-    // } else {return Math.round((props.amount - getPrincipal() * i) * 100) / 100}
-    } else {return Math.round((outstandingBalance) * 100) / 100}
+    if (i === props.term) {
+      return 0;
+      // } else {return Math.round((props.amount - getPrincipal() * i) * 100) / 100}
+    } else {
+      return Math.round(outstandingBalance * 100) / 100;
+    }
   };
 
-
-    // Get number (ie 80000.0) and convert to readable number string (80,000.00)
-    const formatNumber = (number) => {
-      return (
-        number
-          .toFixed(2)
-          .split(".")[0]
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-        "." +
-        number.toFixed(2).split(".")[1]
-      );
-    };
+  // Get number (ie 80000.0) and convert to readable number string (80,000.00)
+  const formatNumber = (number) => {
+    return (
+      number
+        .toFixed(2)
+        .split(".")[0]
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+      "." +
+      number.toFixed(2).split(".")[1]
+    );
+  };
 
   // Set up loan table for use in table format
   let loanTable = [];
@@ -286,22 +274,11 @@ function LoanProjectionModal(props) {
     lineGraphDate.push(
       // date: formatDate(date[i - 1]),
       formatDate(date[i - 1])
-    )
-
-    lineGraphPrincipal.push(
-      Math.round(principalTracker * 100) / 100
     );
-
-    lineGraphInterest.push(
-      Math.round(getInterest(i) * 100) / 100
-    );
-
-    lineGraphTotal.push(
-      Math.round(getTotalDue(i) * 100) / 100
-    );
-
+    lineGraphPrincipal.push(Math.round(principalTracker * 100) / 100);
+    lineGraphInterest.push(Math.round(getInterest(i) * 100) / 100);
+    lineGraphTotal.push(Math.round(getTotalDue(i) * 100) / 100);
   }
-
 
   // Currently deleting every other array before todays date because it is deleting, lowering length, and next index is going to
   // previously read index
@@ -324,144 +301,145 @@ function LoanProjectionModal(props) {
     dateRange();
   }, [dateRange]);
 
-  return (
-    <>
-      <Modal
-        {...props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Loan Projection Table
-          </Modal.Title>
-        </Modal.Header>
+  if (props.data_view === "payments") {
+    return (
+      <>
+        <Modal
+          {...props}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Loan Projection Table
+            </Modal.Title>
+          </Modal.Header>
 
-        <Modal.Body>
-          <p>
-            {/* Set this to the final term payment from loanTable */}
-            {/* <span>Estimated Payments Left:</span> {Math.ceil(props.term * (props.balance_left / props.amount))} */}
-            <span>Estimated Payments Left:</span> {loanTable.length}
-          </p>
-          <p>
-            <span>Start Date:</span> {formatDate(props.start_date)}
-            {/* <span>Start Date:</span> {new Date(props.start_date).getMonth() + 1 + '/' + new Date(props.start_date).getDate() + '/' + new Date(props.start_date).getFullYear()} */}
-          </p>
-          <p>
-            <span>Estimated Final Payment:</span> {projectedDueDate()}
-          </p>
-          <p>
-            <span>Interest Type:</span> {props.interest_type}
-          </p>
+          <Modal.Body>
+            <p>
+              {/* Set this to the final term payment from loanTable */}
+              {/* <span>Estimated Payments Left:</span> {Math.ceil(props.term * (props.balance_left / props.amount))} */}
+              <span>Estimated Payments Left:</span> {loanTable.length}
+            </p>
+            <p>
+              <span>Start Date:</span> {formatDate(props.start_date)}
+              {/* <span>Start Date:</span> {new Date(props.start_date).getMonth() + 1 + '/' + new Date(props.start_date).getDate() + '/' + new Date(props.start_date).getFullYear()} */}
+            </p>
+            <p>
+              <span>Estimated Final Payment:</span> {projectedDueDate()}
+            </p>
+            <p>
+              <span>Interest Type:</span> {props.interest_type}
+            </p>
 
-          <Accordion>
-            <Accordion.Item eventKey="0">
-              <Accordion.Header>Payments Made</Accordion.Header>
-              {/* Payments Made: */}
-              <Accordion.Body>
-                <Table bordered hover>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Date</th>
-                      <th>Pay to Principal</th>
-                      <th>Pay to Interest</th>
-                      <th>Total Due</th>
-                      <th>Balance Left</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paymentsTable.map((dataObj, index) => {
-                      totalPrincipal += dataObj.principal;
-                      totalInterest += dataObj.interest;
+            <Accordion>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Payments Made</Accordion.Header>
+                {/* Payments Made: */}
+                <Accordion.Body>
+                  <Table bordered hover>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Pay to Principal</th>
+                        <th>Pay to Interest</th>
+                        <th>Total Due</th>
+                        <th>Balance Left</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paymentsTable.map((dataObj, index) => {
+                        totalPrincipal += dataObj.principal;
+                        totalInterest += dataObj.interest;
 
-                      if (index === 0) {
-                        balanceLeft = dataObj.balanceLeft;
-                      }
+                        if (index === 0) {
+                          balanceLeft = dataObj.balanceLeft;
+                        }
 
-                      // Prevent total paid from being run every time except last run
-                      if (index + 1 === paymentsTable.length) {
-                        totalPaid += totalPrincipal + totalInterest;
-                        // balanceLeft = dataObj.balanceLeft
-                      }
+                        // Prevent total paid from being run every time except last run
+                        if (index + 1 === paymentsTable.length) {
+                          totalPaid += totalPrincipal + totalInterest;
+                          // balanceLeft = dataObj.balanceLeft
+                        }
 
-                      return (
-                        <tr key={index}>
-                          {/* <td>{index + 1} is {dataObj.id}</td> */}
-                          <td>{index + 1}</td>
-                          <td>{dataObj.date}</td>
-                          <td>{formatNumber(dataObj.principal)}</td>
-                          <td>{formatNumber(dataObj.interest)}</td>
-                          <td>{formatNumber(dataObj.totalDue)}</td>
-                          <td>{formatNumber(dataObj.balanceLeft)}</td>
-                        </tr>
-                      );
-                    })}
-                    {/* Totals for whole table added: */}
-                    <tr style={{ fontWeight: "900" }}>
-                      <td>Total: </td>
-                      <td></td>
-                      <td>{formatNumber(totalPrincipal)}</td>
-                      <td>{formatNumber(totalInterest)}</td>
-                      <td>{formatNumber(totalPaid)}</td>
-                      <td>{formatNumber(balanceLeft)}</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Accordion.Body>
-            </Accordion.Item>
-            <Accordion.Item eventKey="1">
-              <Accordion.Header>Payments Left</Accordion.Header>
-              <Accordion.Body>
-                <Table bordered hover>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Date</th>
-                      <th>Pay to Principal</th>
-                      <th>Pay to Interest</th>
-                      <th>Total Due</th>
-                      <th>Balance Left</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loanTable.map((dataObj, index) => {
-                      totalPrincipal += dataObj.principal;
-                      totalInterest += dataObj.interest;
+                        return (
+                          <tr key={index}>
+                            {/* <td>{index + 1} is {dataObj.id}</td> */}
+                            <td>{index + 1}</td>
+                            <td>{dataObj.date}</td>
+                            <td>{formatNumber(dataObj.principal)}</td>
+                            <td>{formatNumber(dataObj.interest)}</td>
+                            <td>{formatNumber(dataObj.totalDue)}</td>
+                            <td>{formatNumber(dataObj.balanceLeft)}</td>
+                          </tr>
+                        );
+                      })}
+                      {/* Totals for whole table added: */}
+                      <tr style={{ fontWeight: "900" }}>
+                        <td>Total: </td>
+                        <td></td>
+                        <td>{formatNumber(totalPrincipal)}</td>
+                        <td>{formatNumber(totalInterest)}</td>
+                        <td>{formatNumber(totalPaid)}</td>
+                        <td>{formatNumber(balanceLeft)}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="1">
+                <Accordion.Header>Payments Left</Accordion.Header>
+                <Accordion.Body>
+                  <Table bordered hover>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Pay to Principal</th>
+                        <th>Pay to Interest</th>
+                        <th>Total Due</th>
+                        <th>Balance Left</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {loanTable.map((dataObj, index) => {
+                        totalPrincipal += dataObj.principal;
+                        totalInterest += dataObj.interest;
 
-                      // Prevent total paid from being run every time except last run
-                      if (index + 1 === loanTable.length) {
-                        totalPaid += totalPrincipal + totalInterest;
-                      }
+                        // Prevent total paid from being run every time except last run
+                        if (index + 1 === loanTable.length) {
+                          totalPaid += totalPrincipal + totalInterest;
+                        }
 
-                      return (
-                        <tr key={index}>
-                          {/* <td>{index + 1} is {dataObj.id}</td> */}
-                          <td>{index + 1}</td>
-                          <td>{dataObj.date}</td>
-                          <td>{formatNumber(dataObj.principal)}</td>
-                          <td>{formatNumber(dataObj.interest)}</td>
-                          <td>{formatNumber(dataObj.totalDue)}</td>
-                          <td>{formatNumber(dataObj.balanceLeft)}</td>
-                        </tr>
-                      );
-                    })}
-                    {/* Totals for whole table added: */}
-                    <tr style={{ fontWeight: "900" }}>
-                      <td>Total: </td>
-                      <td></td>
-                      <td>{formatNumber(totalPrincipal)}</td>
-                      <td>{formatNumber(totalInterest)}</td>
-                      <td>{formatNumber(totalPaid)}</td>
-                      <td>0.00</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Accordion.Body>
-            </Accordion.Item>
+                        return (
+                          <tr key={index}>
+                            {/* <td>{index + 1} is {dataObj.id}</td> */}
+                            <td>{index + 1}</td>
+                            <td>{dataObj.date}</td>
+                            <td>{formatNumber(dataObj.principal)}</td>
+                            <td>{formatNumber(dataObj.interest)}</td>
+                            <td>{formatNumber(dataObj.totalDue)}</td>
+                            <td>{formatNumber(dataObj.balanceLeft)}</td>
+                          </tr>
+                        );
+                      })}
+                      {/* Totals for whole table added: */}
+                      <tr style={{ fontWeight: "900" }}>
+                        <td>Total: </td>
+                        <td></td>
+                        <td>{formatNumber(totalPrincipal)}</td>
+                        <td>{formatNumber(totalInterest)}</td>
+                        <td>{formatNumber(totalPaid)}</td>
+                        <td>0.00</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </Accordion.Body>
+              </Accordion.Item>
 
-            <Accordion.Item eventKey="2">
+              {/* <Accordion.Item eventKey="2">
               <Accordion.Header>Projection Graph</Accordion.Header>
               <Accordion.Body>
                     <LineChart 
@@ -471,23 +449,31 @@ function LoanProjectionModal(props) {
                     total={lineGraphTotal}
                     />
               </Accordion.Body>
-            </Accordion.Item>
-            
-          </Accordion>
+            </Accordion.Item> */}
+            </Accordion>
 
-          <div style={{ display: "flex", justifyContent: "end" }}>
-            <Button
-              variant="secondary"
-              className="me-3 mt-3"
-              onClick={props.onHide}
-            >
-              Close
-            </Button>
-          </div>
-        </Modal.Body>
-      </Modal>
-    </>
-  );
+            <div style={{ display: "flex", justifyContent: "end" }}>
+              <Button
+                variant="secondary"
+                className="me-3 mt-3"
+                onClick={props.onHide}
+              >
+                Close
+              </Button>
+            </div>
+          </Modal.Body>
+        </Modal>
+      </>
+    );
+  } else if (props.data_view === "graph") {
+    return (<LineChart
+      title={props.title}
+      date={lineGraphDate}
+      principal={lineGraphPrincipal}
+      interest={lineGraphInterest}
+      total={lineGraphTotal}
+    />);
+  }
 }
 
-export default LoanProjectionModal;
+export default LoanProjectionTable;

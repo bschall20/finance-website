@@ -87,7 +87,7 @@ function LineChart(props) {
         dashArray: [0, 8, 5]
       },
       title: {
-        text: "Loan Payments Projection",
+        text: `${props.title} Projection`,
         align: "left",
       },
       markers: {
@@ -150,30 +150,37 @@ function LineChart(props) {
 //     setDropdownTime(eventKey);
 //   }
 
-  return (
-    <div id="chart">
-      {/* <h2>Expense Line Chart</h2>
-      {console.log(dropdownTime)}
-      <Dropdown onSelect={dropdownSubmit}>
-        <Dropdown.Toggle variant="primary" id="dropdown-basic">
-        {dropdownTime || 'Select an option'}
-        </Dropdown.Toggle>
+  // return (
+  //   <div id="chart">
+  //     {/* <h2>Expense Line Chart</h2>
+  //     {console.log(dropdownTime)}
+  //     <Dropdown onSelect={dropdownSubmit}>
+  //       <Dropdown.Toggle variant="primary" id="dropdown-basic">
+  //       {dropdownTime || 'Select an option'}
+  //       </Dropdown.Toggle>
 
-        <Dropdown.Menu>
-          <Dropdown.Item eventKey="Week">Last Week</Dropdown.Item>
-          <Dropdown.Item eventKey="Month">Last Month</Dropdown.Item>
-          <Dropdown.Item eventKey="Year">Last Year</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown> */}
+  //       <Dropdown.Menu>
+  //         <Dropdown.Item eventKey="Week">Last Week</Dropdown.Item>
+  //         <Dropdown.Item eventKey="Month">Last Month</Dropdown.Item>
+  //         <Dropdown.Item eventKey="Year">Last Year</Dropdown.Item>
+  //       </Dropdown.Menu>
+  //     </Dropdown> */}
 
-      <Chart
+  //     <Chart
+  //       options={state.options}
+  //       series={state.series}
+  //       type="line"
+  //       // colors={state.colors}
+  //       // legend={state.legend}
+  //     />
+  //   </div>
+  // );
+
+  return (<Chart
         options={state.options}
         series={state.series}
         type="line"
-        // colors={state.colors}
-        // legend={state.legend}
       />
-    </div>
   );
 }
 
