@@ -1,4 +1,6 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+// import React, {useState} from "react";
+// import React from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -7,11 +9,21 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 function GoalModal(props) {
+  const [checkBox, setCheckBox] = useState(null);
+
+  useEffect(() => {
+    if (props.completed === "on"){
+      setCheckBox("on")
+    }
+  }, [props.completed]);
+
+
   const postGoalData = async (
     formTitle,
     formAmount,
     formStartDate,
-    formGoalDate
+    formGoalDate,
+    formCompleted
   ) => {
     try {
       const response = await fetch("http://localhost:8000/goal", {
@@ -22,6 +34,7 @@ function GoalModal(props) {
           amount: parseFloat(formAmount),
           start_date: formStartDate,
           goal_date: formGoalDate,
+          completed: formCompleted,
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -34,7 +47,8 @@ function GoalModal(props) {
     formTitle,
     formAmount,
     // formStartDate,
-    formGoalDate
+    formGoalDate,
+    formCompleted
   ) => {
     // e.preventDefault();
     try {
@@ -47,6 +61,7 @@ function GoalModal(props) {
           amount: parseFloat(formAmount),
           // start_date: formStartDate,
           goal_date: formGoalDate,
+          completed: formCompleted,
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);
@@ -71,20 +86,31 @@ function GoalModal(props) {
   };
 
   function HandleSubmit(e) {
+    // e.preventDefault();
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
     // let formStartDate = e.target[2].value;
     let formStartDate = todayDate();
     let formGoalDate = e.target[3].value;
+    // let formCompleted = e.target[4].value;
+    let formCompleted = checkBox;
 
     if (props.postgoal === 1) {
       console.log("Post goal data called");
-      return postGoalData(formTitle, formAmount, formStartDate, formGoalDate);
+      return postGoalData(formTitle, formAmount, formStartDate, formGoalDate, formCompleted);
     } else {
-      return editGoalData(formTitle, formAmount, formGoalDate);
-      // return editGoalData(formTitle, formAmount, formStartDate, formGoalDate);
+      return editGoalData(formTitle, formAmount, formGoalDate, formCompleted);
+      // return editGoalData(formTitle, formAmount, formStartDate, formGoalDate, formCompleted);
     }
   }
+
+
+  const checkBoxToggle = () => {
+    if (checkBox === "on"){
+      setCheckBox(null)
+    } else (setCheckBox("on"))
+  }
+
 
   return (
     <>
@@ -152,6 +178,21 @@ function GoalModal(props) {
                   name="endDate"
                   defaultValue={props.goaldate}
                 />
+              </Col>
+            </Row>
+
+
+            <Row className="pt-4">
+            {/* <Col></Col> */}
+            <Col>
+              <Form.Check
+                type="checkbox"
+                name="completed"
+                label={'Completed'}
+                onClick={checkBoxToggle}
+                defaultChecked={props.completed}
+                // defaultValue={checkedBox ? checked="true" : null }
+              />
               </Col>
             </Row>
 

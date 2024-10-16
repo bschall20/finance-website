@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import Table from "react-bootstrap/Table";
-import DeleteGoalModal from "./DeleteGoalModal"
+import DeleteGoalModal from "./DeleteGoalModal";
 import GoalModal from "./GoalModal";
+
+import { MdEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 function GoalsTable(props) {
   const [modalData, setModalData] = useState({});
@@ -10,6 +15,10 @@ function GoalsTable(props) {
   const [deleteGoalModalShow, setDeleteGoalModalShow] = useState(false);
   const [goalModalShow, setGoalModalShow] = useState(false);
 
+  // const [currentGoals, setCurrentGoals] = useState(0);
+  // let currentGoals = 0;
+  // let overdueGoals = 0;
+  // let completedGoals = 0;
 
   const getGoalData = async () => {
     try {
@@ -40,9 +49,6 @@ function GoalsTable(props) {
   useEffect(() => {
     getGoalData();
   }, []);
-
-
-
 
   // Days Between Goal Dates
   function daysLeft(goal_date, bool, start_date, amount) {
@@ -90,168 +96,281 @@ function GoalsTable(props) {
     }
   }
 
+  // Set Date from yyyy-mm-dd to mm-dd-yyyy
+  const formatDate = (dataDate) => {
+    var d = new Date(dataDate);
+    d.setDate(d.getDate() + 1);
+    return d.toLocaleDateString();
+  };
 
-    // Set Date from yyyy-mm-dd to mm-dd-yyyy
-    const formatDate = (dataDate) =>{
-      var d = new Date(dataDate);
-      d.setDate(d.getDate() + 1);
-      return d.toLocaleDateString();
-    }
+  const createTable = (typeOfGoal) => {
+    let count = 0;
+    return (
+      <Table
+        striped
+        bordered
+        hover
+        style={{ margin: "0rem auto 3.5rem", width: "80%" }}
+      >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Goal Title</th>
+            <th>Goal Amount </th>
+            <th>Goal Start</th>
+            <th>Goal End</th>
+            <th>
+              Save per Day{" "}
+              <span style={{ fontSize: ".75rem" }}>(from Start)</span>
+            </th>
+            <th>Days Left</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {goal.map((dataObj, index) => {
+            // Return Overdue Goals Table
+            if (
+              typeOfGoal === "overdueGoals" &&
+              daysLeft(dataObj.goal_date, true)[0] === "-" &&
+              dataObj.completed !== "on"
+            ) {
+              count++;
+              return (
+                <tr key={index}>
+                  <td>{count}</td>
+                  <td>{dataObj.title}</td>
+                  <td>{dataObj.amount}</td>
+                  <td>{formatDate(dataObj.start_date)}</td>
+                  <td>{formatDate(dataObj.goal_date)}</td>
+                  <td>
+                    $
+                    {daysLeft(
+                      dataObj.goal_date,
+                      2,
+                      dataObj.start_date,
+                      dataObj.amount
+                    )}
+                  </td>
+                  <td>{daysLeft(dataObj.goal_date, true)}</td>
 
+                  <td
+                    className="tableEdit"
+                    style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                    onClick={() => {
+                      setGoalModalShow(true);
+                      setModalData(dataObj);
+                      setModalNum(count);
+                    }}
+                  >
+                    <MdEdit />
+                  </td>
 
+                  <td
+                    className="tableDelete"
+                    style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                    onClick={() => {
+                      setDeleteGoalModalShow(true);
+                      setModalData(dataObj);
+                      setModalNum(count);
+                    }}
+                  >
+                    <MdDelete />
+                  </td>
+                </tr>
+              );
+            }
+            // Return Current Goals Table
+            else if (
+              typeOfGoal === "currentGoals" &&
+              daysLeft(dataObj.goal_date, true)[0] !== "-" &&
+              dataObj.completed !== "on"
+            ) {
+              count++;
+              return (
+                <tr key={index}>
+                  <td>{count}</td>
+                  <td>{dataObj.title}</td>
+                  <td>{dataObj.amount}</td>
+                  <td>{formatDate(dataObj.start_date)}</td>
+                  <td>{formatDate(dataObj.goal_date)}</td>
+                  <td>
+                    $
+                    {daysLeft(
+                      dataObj.goal_date,
+                      2,
+                      dataObj.start_date,
+                      dataObj.amount
+                    )}
+                  </td>
+                  <td>{daysLeft(dataObj.goal_date, true)}</td>
 
+                  <td
+                    className="tableEdit"
+                    style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                    onClick={() => {
+                      setGoalModalShow(true);
+                      setModalData(dataObj);
+                      setModalNum(count);
+                    }}
+                  >
+                    <MdEdit />
+                  </td>
 
- return <Table striped bordered hover style={{ margin: "0rem auto 3.5rem", width: "80%" }}>
- <thead>
-   <tr>
-     <th>#</th>
-     <th>Goal Title</th>
-     <th>Goal Amount </th>
-     <th>Goal Start</th>
-     <th>Goal End</th>
-     <th>Save per Day <span style={{fontSize: ".75rem"}}>(from Start)</span></th>
-     <th>Days Left</th>
-     <th></th>
-     <th></th>
-   </tr>
- </thead>
- <tbody>
-   {goal.map((dataObj, index) => {  
-     // Need to go through this later to remove redundancy.
-     let tableIndex;
-     let tableTitle;
-     let tableAmount;
-     let tableStart;
-     let tableDate;
-     let tableSave;
-     let tableLeft;
-     // Return Overdue Goal
-     if (daysLeft(dataObj.goal_date, true)[0] === "-") {
-       tableIndex = (
-         <td style={{ backgroundColor: "#D60027" }}>{index + 1}</td>
-       );
-       tableTitle = (
-         <td style={{ backgroundColor: "#D60027" }}>{dataObj.title}</td>
-       );
-       tableAmount = (
-         <td style={{ backgroundColor: "#D60027" }}>{dataObj.amount}</td>
-       );
-       tableStart = (
-         <td style={{ backgroundColor: "#D60027" }}>
-           {formatDate(dataObj.start_date)}
-         </td>
-       );
-       tableDate = (
-         <td style={{ backgroundColor: "#D60027" }}>
-           {formatDate(dataObj.goal_date)}
-         </td>
-       );
-       tableSave = (
-         <td style={{ backgroundColor: "#D60027" }}>
-           $
-           {daysLeft(
-             dataObj.goal_date,
-             2,
-             dataObj.start_date,
-             dataObj.amount
-           )}
-         </td>
-       );
-       tableLeft = (
-         <td style={{ backgroundColor: "#D60027" }}>
-           {daysLeft(dataObj.goal_date, true)}
-         </td>
-       );
-     }
-     // Return Goal with Days Left
-     else {
-       tableIndex = <td>{index + 1}</td>;
-       tableTitle = <td>{dataObj.title}</td>;
-       tableAmount = <td>{dataObj.amount}</td>;
-       tableStart = <td>{formatDate(dataObj.start_date)}</td>;
-       tableDate = <td>{formatDate(dataObj.goal_date)}</td>;
-       tableSave = (
-         <td>
-           $
-           {daysLeft(
-             dataObj.goal_date,
-             2,
-             dataObj.start_date,
-             dataObj.amount
-           )}
-         </td>
-       );
-       tableLeft = <td>{daysLeft(dataObj.goal_date, true)}</td>;
-     }
+                  <td
+                    className="tableDelete"
+                    style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                    onClick={() => {
+                      setDeleteGoalModalShow(true);
+                      setModalData(dataObj);
+                      setModalNum(count);
+                    }}
+                  >
+                    <MdDelete />
+                  </td>
+                </tr>
+              );
+            }
 
-     return (
-       <tr key={index}>
-         {tableIndex}
-         {tableTitle}
-         {tableAmount}
-         {tableStart}
-         {tableDate}
-         {tableSave}
-         {tableLeft}
-         {/* <td>{index + 1}</td>
-         <td>{dataObj.title}</td>
-         <td>{dataObj.amount}</td>
-         <td>{dataObj.start_date}</td>
-         <td>{dataObj.goal_date}</td>
-         {daysLeft(dataObj.goal_date, false)} */}
+            // Return Completed Goals Table
+            else if (
+              typeOfGoal === "completedGoals" &&
+              dataObj.completed === "on"
+            ) {
+              count++;
+              return (
+                <tr key={index}>
+                  <td>{count}</td>
+                  <td>{dataObj.title}</td>
+                  <td>{dataObj.amount}</td>
+                  <td>{formatDate(dataObj.start_date)}</td>
+                  <td>{formatDate(dataObj.goal_date)}</td>
+                  <td>
+                    $
+                    {daysLeft(
+                      dataObj.goal_date,
+                      2,
+                      dataObj.start_date,
+                      dataObj.amount
+                    )}
+                  </td>
+                  <td>Completed</td>
 
-         <td
-           className="tableEdit"
-           style={{ paddingLeft: "0px", paddingRight: "0px" }}
-           onClick={() => {
-             setGoalModalShow(true);
-             setModalData(dataObj);
-             setModalNum(index + 1);
-           }}
-         >
-           edit
-         </td>
+                  <td
+                    className="tableEdit"
+                    style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                    onClick={() => {
+                      setGoalModalShow(true);
+                      setModalData(dataObj);
+                      setModalNum(count);
+                    }}
+                  >
+                    <MdEdit />
+                  </td>
 
-         <td
-           className="tableDelete"
-           style={{ paddingLeft: "0px", paddingRight: "0px" }}
-           onClick={() => {
-             setDeleteGoalModalShow(true);
-             setModalData(dataObj);
-             setModalNum(index + 1);
-           }}
-         >
-           X
-         </td>
-       </tr>
-     );
-   })}
-   <GoalModal
-     show={goalModalShow}
-     showsubmit={0}
-     onHide={() => setGoalModalShow(false)}
-     id={modalData.id}
-     num={modalNum}
-     title={modalData.title}
-     amount={modalData.amount}
-     startdate={modalData.start_date}
-     goaldate={modalData.goal_date}
-     editgoal={1}
-   />
-   <DeleteGoalModal
-     show={deleteGoalModalShow}
-     onHide={() => setDeleteGoalModalShow(false)}
-     id={modalData.id}
-     num={modalNum}
-     title={modalData.title}
-     amount={modalData.amount}
-     startdate={modalData.start_date}
-     goaldate={modalData.goal_date}
-     // daysleft={daysLeft(modalData.start_date, modalData.goal_date).toString()}
-     daysleft={daysLeft(modalData.goal_date, true).toString()}
-   />
- </tbody>
-</Table>
+                  <td
+                    className="tableDelete"
+                    style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                    onClick={() => {
+                      setDeleteGoalModalShow(true);
+                      setModalData(dataObj);
+                      setModalNum(count);
+                    }}
+                  >
+                    <MdDelete />
+                  </td>
+                </tr>
+              );
+            }
+
+            //   return (
+            //     <tr key={index}>
+            //       {tableIndex}
+            //       {tableTitle}
+            //       {tableAmount}
+            //       {tableStart}
+            //       {tableDate}
+            //       {tableSave}
+            //       {tableLeft}
+            //       {/* <td>{index + 1}</td>
+            //  <td>{dataObj.title}</td>
+            //  <td>{dataObj.amount}</td>
+            //  <td>{dataObj.start_date}</td>
+            //  <td>{dataObj.goal_date}</td>
+            //  {daysLeft(dataObj.goal_date, false)} */}
+
+            //       <td
+            //         className="tableEdit"
+            //         style={{ paddingLeft: "0px", paddingRight: "0px" }}
+            //         onClick={() => {
+            //           setGoalModalShow(true);
+            //           setModalData(dataObj);
+            //           setModalNum(index + 1);
+            //         }}
+            //       >
+            //         <MdEdit />
+            //       </td>
+
+            //       <td
+            //         className="tableDelete"
+            //         style={{ paddingLeft: "0px", paddingRight: "0px" }}
+            //         onClick={() => {
+            //           setDeleteGoalModalShow(true);
+            //           setModalData(dataObj);
+            //           setModalNum(index + 1);
+            //         }}
+            //       >
+            //         <MdDelete />
+            //       </td>
+            //     </tr>
+            //   );
+            return null;
+          })}
+          <GoalModal
+            show={goalModalShow}
+            showsubmit={0}
+            onHide={() => setGoalModalShow(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            startdate={modalData.start_date}
+            goaldate={modalData.goal_date}
+            completed={modalData.completed}
+            editgoal={1}
+          />
+          <DeleteGoalModal
+            show={deleteGoalModalShow}
+            onHide={() => setDeleteGoalModalShow(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            startdate={modalData.start_date}
+            goaldate={modalData.goal_date}
+            completed={modalData.completed}
+            // daysleft={daysLeft(modalData.start_date, modalData.goal_date).toString()}
+            daysleft={daysLeft(modalData.goal_date, true).toString()}
+          />
+        </tbody>
+      </Table>
+    );
+  };
+
+  return (
+    <Tabs style={{ width: "80%", margin: "auto", borderBottom: "none" }}>
+      <Tab eventKey="currentGoals" title="Current Goals">
+        {createTable("currentGoals")}
+      </Tab>
+      <Tab eventKey="overdueGoals" title="Overdue Goals">
+        {createTable("overdueGoals")}
+      </Tab>
+      <Tab eventKey="completedGoals" title="Completed Goals">
+        {createTable("completedGoals")}
+      </Tab>
+    </Tabs>
+  );
 }
 
 export default GoalsTable;

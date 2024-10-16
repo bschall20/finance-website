@@ -344,6 +344,9 @@ background-blend-mode: multiply; */
     .loanTab {
       padding-top: 0rem;
     }
+    .goalTab{
+      flex-direction: column;
+    }
     .pieChart {
       width: 50%;
     }
