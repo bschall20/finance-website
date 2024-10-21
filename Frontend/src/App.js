@@ -12,6 +12,7 @@ import About from "./pages/About.jsx";
 import Account from "./pages/Account.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import SignOut from "./pages/SignOut.jsx";
+import SignUp from "./pages/SignUp.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Footer from "./components/Footer.jsx"
 import "./index.css";
@@ -28,6 +29,7 @@ function App() {
           <Route exact path='/account' element={<Account />} />
           <Route exact path='/signin' element={<SignIn />} />
           <Route exact path='/signout' element={<SignOut />} />
+          <Route exact path='/signup' element={<SignUp />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
         <Footer />

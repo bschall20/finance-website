@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
-function SignIn() {
+function SignUp() {
   const [passwordText, setPasswordText] = useState("password");
   const showPassword = () => {
     if (passwordText === "password") {
@@ -13,19 +15,31 @@ function SignIn() {
   };
 
   return (
-    <div id="signIn" className="center">
-      <h1>Sign in</h1>
+    <div id="signUp" className="center">
+      <h1 className="mb-3">Sign up</h1>
       <Form>
+        <Form.Group className="mb-3" controlId="formName">
+          {/* <Form.Label>First Name</Form.Label> */}
+          <Row>
+            <Col>
+              <Form.Control type="text" placeholder="First Name" />
+            </Col>
+            <Col>
+              <Form.Control type="text" placeholder="Last Name" />
+            </Col>
+          </Row>
+        </Form.Group>
+
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
-          <Form.Text className="text-muted">
+          {/* <Form.Label>Email address</Form.Label> */}
+          <Form.Control type="email" placeholder="Email" />
+          {/* <Form.Text className="text-muted">
             We'll never share your email with anyone else.
-          </Form.Text>
+          </Form.Text> */}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+          {/* <Form.Label>Password</Form.Label> */}
           <Form.Control type={passwordText} placeholder="Password" />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
@@ -36,14 +50,14 @@ function SignIn() {
           />
         </Form.Group>
         <Button variant="primary" type="submit" style={{ width: "100%" }}>
-          Log In
+          Join
         </Button>
         <Form.Text className="text-muted">
-          New to Build My Finance? <a href="/signup">Join now</a>
+          Already a member? <a href="/signin">Sign in</a>
         </Form.Text>
       </Form>
     </div>
   );
 }
 
-export default SignIn;
+export default SignUp;
