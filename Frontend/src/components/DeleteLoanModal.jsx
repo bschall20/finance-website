@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 function DeleteLoanModal(props) {
   const deleteLoanData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/loan`, {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

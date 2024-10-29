@@ -26,7 +26,7 @@ function GoalModal(props) {
     formCompleted
   ) => {
     try {
-      const response = await fetch("http://localhost:8000/goal", {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -52,7 +52,7 @@ function GoalModal(props) {
   ) => {
     // e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8000/goal`, {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

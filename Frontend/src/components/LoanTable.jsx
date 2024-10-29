@@ -33,7 +33,7 @@ function LoanTracker(props) {
 
   const getLoanData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/loan`);
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan`);
       const loanJSON = await response.json();
       setLoan(
         loanJSON.sort(function (a, b) {

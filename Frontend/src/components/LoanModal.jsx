@@ -18,7 +18,7 @@ function LoanModal(props) {
     formInterestType
   ) => {
     try {
-      const response = await fetch("http://localhost:8000/loan", {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -48,7 +48,7 @@ function LoanModal(props) {
   ) => {
     // e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8000/loan`, {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

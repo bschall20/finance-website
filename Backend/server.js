@@ -5,6 +5,8 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 require("dotenv").config();
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 app.use(cors());
 app.use(express.json());
@@ -26,30 +28,41 @@ app.get("/person", async (req, res) => {
 });
 
 // Post new person to database
-app.post("/person", (req, res) => {
-  const { email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
+app.post("/person", async (req, res) => {
+  const { email, password, first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
+
+  // Hash password
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(password, salt)
   console.log(
-    `info from req. body: ${email}, ${passwordhash}, ${first_name}, ${last_name}, ${phone_number}, ${address}, ${city}, ${state}, ${postal_code} `
+    `info from req. body: ${email}, ${password}, ${first_name}, ${last_name}, ${phone_number}, ${address}, ${city}, ${state}, ${postal_code} `
   );
-  //const id = uuidv4();
   try {
-    pool.query(
+    const signUp = await pool.query(
       "INSERT INTO person(email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-      [email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code]
+      [email, hashedPassword, first_name, last_name, phone_number, address, city, state, postal_code]
     );
+
+    // Prevents same email signup
+    const token = jwt.sign({ email }, 'secret', { expiresIn: "1hr"})
+    res.json({ email, token })
+
   } catch (err) {
     console.log(err);
+    if (err) {
+      res.json({ detail: err.detail })
+    }
   }
 });
 
 // Edit a person in database
 app.put("/person", async (req, res) => {
   // const { id } = req.params;
-  const { id, email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
+  const { id, email, password, first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
   try {
     const editPerson = await pool.query(
-      "UPDATE person SET email = $2, passwordhash = $3, first_name = $4, last_name = $5, phone_number = $6, address = $7, city = $8, state = $9, postal_code = $10 WHERE id = $1",
-      [id, email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code]
+      "UPDATE person SET email = $2, password = $3, first_name = $4, last_name = $5, phone_number = $6, address = $7, city = $8, state = $9, postal_code = $10 WHERE id = $1",
+      [id, email, password, first_name, last_name, phone_number, address, city, state, postal_code]
     );
     res.json(editPerson);
   } catch (err) {

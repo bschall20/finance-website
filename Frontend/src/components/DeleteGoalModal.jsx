@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 function DeleteGoalModal(props) {
   const deleteGoalData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/goal`, {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

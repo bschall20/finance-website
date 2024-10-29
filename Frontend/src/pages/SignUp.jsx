@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie"
+import Alert from 'react-bootstrap/Alert';
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -16,43 +19,57 @@ function SignUp() {
 
 
 
-  const postUser = async (formEmail, formPasswordhash, formFirst_name, formLast_name, formPhone_number, formAddress, formCity, formState, formPostal_code) => {
-    try {
-      const response = await fetch("http://localhost:8000/person", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formEmail,
-          passwordhash: formPasswordhash,
-          first_name: formFirst_name,
-          last_name: formLast_name,
-          phone_number: formPhone_number,
-          address: formAddress,
-          city: formCity,
-          state: formState,
-          postal_code: formPostal_code,
-        }),
-      });
-      console.log(`This is the response: ${response}`);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const [error, setError] = useState()
+  const [cookies, setCookie, removeCookie] = useCookies(null)
+  const navigate = useNavigate();
+  // const postUser = async (formEmail, formPassword, formFirst_name, formLast_name, formPhone_number, formAddress, formCity, formState, formPostal_code) => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/person`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         email: formEmail,
+  //         password: formPassword,
+  //         first_name: formFirst_name,
+  //         last_name: formLast_name,
+  //         phone_number: formPhone_number,
+  //         address: formAddress,
+  //         city: formCity,
+  //         state: formState,
+  //         postal_code: formPostal_code,
+  //       }),
+  //     });
+  //     // console.log(`This is the response: ${response}`);
+
+  //     const data = await response.json();
+  //     if (data.detail){
+  //       setError(data.detail) 
+  //       alert(error)
+  //     } else {
+  //       setCookie("Email", data.email)
+  //       setCookie("AuthToken", data.token)
+  //       // <Navigate to="/" replace={true} />
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
 
 
-  const HandleSubmit = (e) => {
-    // e.preventDefault();
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
 
-    let email = e.target[2].value;
-    let passwordhash = e.target[3].value;
-    let first_name = e.target[0].value;
-    let last_name = e.target[1].value;
-    let phone_number = e.target[9].value;
-    let address = e.target[5].value;
-    let city = e.target[6].value;
-    let state = e.target[7].value;
-    let postal_code = e.target[8].value;
+    // let email = e.target[2].value;
+    // let password = e.target[3].value;
+    // let first_name = e.target[0].value;
+    // let last_name = e.target[1].value;
+    // let phone_number = e.target[9].value;
+    // let address = e.target[5].value;
+    // let city = e.target[6].value;
+    // let state = e.target[7].value;
+    // let postal_code = e.target[8].value;
+
     // console.log(e.target[0].value); // First Name
     // console.log(e.target[1].value); // Last Name
     // console.log(e.target[2].value); // Email
@@ -64,7 +81,35 @@ function SignUp() {
     // console.log(e.target[8].value); // Zip Code
     // console.log(e.target[9].value); // Phone Number
 
-    postUser(email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code)
+    try {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/person`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: e.target[2].value,
+          password: e.target[3].value,
+          first_name: e.target[0].value,
+          last_name: e.target[1].value,
+          phone_number: e.target[9].value,
+          address: e.target[5].value,
+          city: e.target[6].value,
+          state: e.target[7].value,
+          postal_code: e.target[8].value,
+        }),
+      });
+      // console.log(`This is the response: ${response}`);
+
+      const data = await response.json();
+      if (data.detail){
+        setError(data.detail)
+      } else {
+        setCookie("Email", data.email)
+        setCookie("AuthToken", data.token)
+        navigate("/")
+      }
+    } catch (err) {
+      console.log(err);
+    }
 
 
   };
@@ -98,6 +143,11 @@ function SignUp() {
             Email Address *
           </Form.Label>
           <Form.Control maxLength={62} required type="email" placeholder="Email" />
+          {error &&
+            <Form.Text className="text-muted ms-0">
+              <Alert className="mt-2" key={"danger"} variant={"danger"} style={{padding: "0"}}>*This email already exists.</Alert>
+            </Form.Text>
+          }
         </Form.Group>
 
         {/* Password */}

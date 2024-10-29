@@ -10,7 +10,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 function ExpenseForm(props) {
   const postExpenseData = async (formTitle, formAmount, formType, formDate) => {
     try {
-      const response = await fetch("http://localhost:8000/expense", {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/expense`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -28,7 +28,7 @@ function ExpenseForm(props) {
 
   const editExpenseData = async (formTitle, formAmount, formType, formDate) => {
     try {
-      const response = await fetch(`http://localhost:8000/expense`, {
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/expense`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

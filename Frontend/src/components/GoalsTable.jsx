@@ -22,7 +22,7 @@ function GoalsTable(props) {
 
   const getGoalData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/goal`);
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal`);
       const goalJSON = await response.json();
       setGoal(
         goalJSON.sort(function (a, b) {
