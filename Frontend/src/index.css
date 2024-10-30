@@ -493,7 +493,7 @@ background-blend-mode: multiply; */
   /**************************************/
   /**************************************/
 
-  #signIn, #signUp {
+  #signIn, #signUp, #signOut {
     -webkit-box-shadow: 0px 0px 20px -1px rgba(0,0,0,0.76);
     -moz-box-shadow: 0px 0px 20px -1px rgba(0,0,0,0.76);
     box-shadow: 0px 0px 20px -1px rgba(0,0,0,0.76);
@@ -504,7 +504,7 @@ background-blend-mode: multiply; */
     flex-direction: column;
   }
 
-  #signIn {
+  #signIn, #signOut {
     height: 56vh;
   }
 

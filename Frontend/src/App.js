@@ -36,7 +36,6 @@ function App() {
           <Route exact path='/contact' element={<Contact />} />
           <Route exact path='/about' element={<About />} />
           <Route exact path='/account' element={<Account />} />
-          <Route exact path='/signout' element={<SignOut />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
         <Footer />
@@ -50,6 +49,7 @@ function App() {
           <Route exact path='/about' element={<About />} />
           <Route exact path='/signin' element={<SignIn />} />
           <Route exact path='/signup' element={<SignUp />} />
+          <Route exact path='/signout' element={<SignOut />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
         <Footer />

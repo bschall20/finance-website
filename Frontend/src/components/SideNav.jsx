@@ -1,23 +1,30 @@
 import React, { useState } from "react";
 import Nav from "react-bootstrap/Nav";
-import { NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { BiSolidNotepad } from "react-icons/bi";
+import { useLocation, useNavigate, NavLink } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
+import { BiSolidNotepad } from "react-icons/bi";
 import { IoPersonSharp } from "react-icons/io5";
 import { IoIosSettings } from "react-icons/io";
 import { IoMdLock } from "react-icons/io";
-
 import { FaSignOutAlt } from "react-icons/fa";
 
 
 function SideNav() {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
+  const navigate = useNavigate();
   const location = useLocation(); // used to find path name to set active side nav
   const [active, setActive] = useState(location.pathname);
   const handleSelect = (eventKey) => {
     // alert(`selected ${eventKey}`);
     setActive(eventKey);
   };
+
+  const signOut = () => {
+    removeCookie("Email")
+    removeCookie("AuthToken")
+    navigate("/signout")
+  }
 
   return (
     <div id="sideNav">
@@ -116,6 +123,7 @@ function SideNav() {
             eventkey="signout"
             href="/signout"
             style={{ color: active === "/signout" ? "red" : "black" }}
+            onClick={signOut}
           >
             <FaSignOutAlt className="me-3 mb-1" style={{fontSize: "1.2rem"}}/>
             Sign Out

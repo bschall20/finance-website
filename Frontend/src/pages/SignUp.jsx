@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie"
-import Alert from 'react-bootstrap/Alert';
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Alert from 'react-bootstrap/Alert';
+import { FiAlertTriangle } from "react-icons/fi";
+
 
 function SignUp() {
   const [passwordText, setPasswordText] = useState("password");
@@ -105,7 +107,7 @@ function SignUp() {
       } else {
         setCookie("Email", data.email)
         setCookie("AuthToken", data.token)
-        navigate("/")
+        navigate("/financemanagement")
       }
     } catch (err) {
       console.log(err);
@@ -144,8 +146,10 @@ function SignUp() {
           </Form.Label>
           <Form.Control maxLength={62} required type="email" placeholder="Email" />
           {error &&
-            <Form.Text className="text-muted ms-0">
-              <Alert className="mt-2" key={"danger"} variant={"danger"} style={{padding: "0"}}>*This email already exists.</Alert>
+            <Form.Text className="text-center ms-0">
+              <Alert className="mt-2" key={"danger"} variant={"danger"} style={{padding: "0"}}> 
+                <FiAlertTriangle className="mb-1"/> This email is already in use.
+              </Alert>
             </Form.Text>
           }
         </Form.Group>

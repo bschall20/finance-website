@@ -27,7 +27,7 @@ app.get("/person", async (req, res) => {
   }
 });
 
-// Post new person to database
+// Sign Up
 app.post("/person", async (req, res) => {
   const { email, password, first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
 
@@ -69,6 +69,35 @@ app.put("/person", async (req, res) => {
     console.log(err);
   }
 });
+
+
+// Sign In
+app.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const person = await pool.query("SELECT * FROM person WHERE email = $1", [email]);
+
+      if (!person.rows.length){
+        return res.json({ detail : "User does not exist."})
+      }
+
+      const success = await bcrypt.compare(password, person.rows[0].passwordhash);
+      const token = jwt.sign({ email }, 'secret', { expiresIn: "1hr"})
+      if (success) {
+        res.json({ "email" : person.rows[0].email, token})
+      } else {
+        res.json({ detail : "Login failed."})
+      }
+
+
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
+
+
 
 /**************************************/
 /**************************************/

@@ -277,10 +277,10 @@ function FinanceManagement() {
 
         {/* Daily spending heatmap */}
         <div className="mt-5">
-          <HeatMap
+          {/* <HeatMap
             expense={expense}
             dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
-          />
+          /> */}
         </div>
       </div>
     </div>

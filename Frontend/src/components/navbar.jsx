@@ -3,16 +3,25 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 function NavbarTop(props) {
-
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const [active, setActive] = useState('/');
   const setActiveNav = () => {
       setActive((eventkey) => {
           return !eventkey;
       });
   };
+
+  const navigate = useNavigate();
+  const signOut = () => {
+    removeCookie("Email")
+    removeCookie("AuthToken")
+    navigate("/signout")
+  }
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -57,7 +66,8 @@ function NavbarTop(props) {
                 <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Setup</NavDropdown.Item>
                 <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Security</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item as={NavLink} to="/signout" eventkey="signout" style={{backgroundColor: 'white', color: '#575757'}}>Sign Out</NavDropdown.Item>
+                {/* <NavDropdown.Item as={NavLink} to="/signout" eventkey="signout" style={{backgroundColor: 'white', color: '#575757'}}>Sign Out</NavDropdown.Item> */}
+                <NavDropdown.Item onClick={signOut} style={{backgroundColor: 'white', color: '#575757'}}>Sign Out</NavDropdown.Item>
               </NavDropdown>
             </Nav.Item>
             }
