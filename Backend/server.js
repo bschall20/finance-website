@@ -18,9 +18,10 @@ app.use(express.json());
 /**************************************/
 
 // Get all person data
-app.get("/person", async (req, res) => {
+app.get("/person/:email", async (req, res) => {
+  const { email } = req.params;
   try {
-    const person = await pool.query("SELECT * FROM person");
+    const person = await pool.query("SELECT * FROM person WHERE email = $1", [email]);
     res.json(person.rows);
   } catch (err) {
     console.log(err);
@@ -56,13 +57,13 @@ app.post("/person", async (req, res) => {
 });
 
 // Edit a person in database
-app.put("/person", async (req, res) => {
-  // const { id } = req.params;
-  const { id, email, password, first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
+app.put("/person/:email", async (req, res) => {
+  const { email } = req.params;
+  const { first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
   try {
     const editPerson = await pool.query(
-      "UPDATE person SET email = $2, password = $3, first_name = $4, last_name = $5, phone_number = $6, address = $7, city = $8, state = $9, postal_code = $10 WHERE id = $1",
-      [id, email, password, first_name, last_name, phone_number, address, city, state, postal_code]
+      "UPDATE person SET first_name = $2, last_name = $3, phone_number = $4, address = $5, city = $6, state = $7, postal_code = $8 WHERE email = $1",
+      [email, first_name, last_name, phone_number, address, city, state, postal_code]
     );
     res.json(editPerson);
   } catch (err) {
@@ -106,9 +107,10 @@ app.post("/signin", async (req, res) => {
 /**************************************/
 
 // Get all user expenses data
-app.get("/expense", async (req, res) => {
+app.get("/expense/:person_email", async (req, res) => {
+  const { person_email } = req.params;
   try {
-    const expense = await pool.query("SELECT * FROM expense");
+    const expense = await pool.query("SELECT * FROM expense WHERE person_email = $1", [person_email]);
     res.json(expense.rows);
   } catch (err) {
     console.log(err);
@@ -118,15 +120,15 @@ app.get("/expense", async (req, res) => {
 
 // Post new expense to database
 app.post("/expense", (req, res) => {
-  const { title, amount, expense_type, date } = req.body;
+  const { title, amount, expense_type, date, person_email } = req.body;
   console.log(
-    `info from req. body: ${title}, ${amount}, ${expense_type}, ${date}`
+    `info from req. body: ${title}, ${amount}, ${expense_type}, ${date}, ${person_email}`
   );
   //const id = uuidv4();
   try {
     pool.query(
-      "INSERT INTO expense(title, amount, expense_type, date) VALUES($1, $2, $3, $4)",
-      [title, amount, expense_type, date]
+      "INSERT INTO expense(title, amount, expense_type, date, person_email) VALUES($1, $2, $3, $4, $5)",
+      [title, amount, expense_type, date, person_email]
     );
   } catch (err) {
     console.log(err);
@@ -136,11 +138,11 @@ app.post("/expense", (req, res) => {
 // Edit a users expense in database
 app.put("/expense", async (req, res) => {
   // const { id } = req.params;
-  const { id, title, amount, expense_type, date } = req.body;
+  const { id, title, amount, expense_type, date, person_email } = req.body;
   try {
     const editExpense = await pool.query(
-      "UPDATE expense SET title = $2, amount = $3, expense_type = $4, date = $5 WHERE id = $1",
-      [id, title, amount, expense_type, date]
+      "UPDATE expense SET title = $2, amount = $3, expense_type = $4, date = $5, person_email = $6  WHERE id = $1",
+      [id, title, amount, expense_type, date, person_email]
     );
     res.json(editExpense);
   } catch (err) {
@@ -169,9 +171,10 @@ app.delete("/expense", async (req, res) => {
 /**************************************/
 
 // Get all user goals data
-app.get("/goal", async (req, res) => {
+app.get("/goal/:person_email", async (req, res) => {
+  const { person_email } = req.params;
   try {
-    const goal = await pool.query("SELECT * FROM goal");
+    const goal = await pool.query("SELECT * FROM goal WHERE person_email = $1", [person_email]);
     res.json(goal.rows);
   } catch (err) {
     console.log(err);
@@ -180,14 +183,14 @@ app.get("/goal", async (req, res) => {
 
 // Post new goal to database
 app.post("/goal", (req, res) => {
-  const { title, amount, start_date, goal_date, completed } = req.body;
+  const { title, amount, start_date, goal_date, completed, person_email } = req.body;
   console.log(
-    `info from req. body: ${title}, ${amount}, ${start_date}, ${goal_date}, ${completed}`
+    `info from req. body: ${title}, ${amount}, ${start_date}, ${goal_date}, ${completed}, ${person_email}`
   );
   try {
     pool.query(
-      "INSERT INTO goal(title, amount, start_date, goal_date, completed) VALUES($1, $2, $3, $4, $5)",
-      [title, amount, start_date, goal_date, completed]
+      "INSERT INTO goal(title, amount, start_date, goal_date, completed, person_email) VALUES($1, $2, $3, $4, $5, $6)",
+      [title, amount, start_date, goal_date, completed, person_email]
     );
   } catch (err) {
     console.log(err);
@@ -209,11 +212,11 @@ app.post("/goal", (req, res) => {
 // });
 // Edited from above to not change start date when edited
 app.put("/goal", async (req, res) => {
-  const { id, title, amount, goal_date, completed } = req.body;
+  const { id, title, amount, goal_date, completed, person_email } = req.body;
   try {
     const editGoal = await pool.query(
-      "UPDATE goal SET title = $2, amount = $3, goal_date = $4, completed = $5 WHERE id = $1",
-      [id, title, amount, goal_date, completed]
+      "UPDATE goal SET title = $2, amount = $3, goal_date = $4, completed = $5, person_email = $6 WHERE id = $1",
+      [id, title, amount, goal_date, completed, person_email]
     );
     res.json(editGoal);
   } catch (err) {
@@ -239,9 +242,10 @@ app.delete("/goal", async (req, res) => {
 /**************************************/
 
 // Get all user loans data
-app.get("/loan", async (req, res) => {
+app.get("/loan/:person_email", async (req, res) => {
+  const { person_email } = req.params;
   try {
-    const loan = await pool.query("SELECT * FROM loan");
+    const loan = await pool.query("SELECT * FROM loan WHERE person_email = $1", [person_email]);
     res.json(loan.rows);
   } catch (err) {
     console.log(err);
@@ -258,14 +262,15 @@ app.post("/loan", (req, res) => {
     term,
     balance_left,
     interest_type,
+    person_email,
   } = req.body;
   console.log(
-    `info from req. body: ${title}, ${amount}, ${interest}, ${start_date}, ${term}, ${balance_left}, ${interest_type}`
+    `info from req. body: ${title}, ${amount}, ${interest}, ${start_date}, ${term}, ${balance_left}, ${interest_type}, ${person_email}`
   );
   try {
     pool.query(
-      "INSERT INTO loan(title, amount, interest, start_date, term, balance_left, interest_type) VALUES($1, $2, $3, $4, $5, $6, $7)",
-      [title, amount, interest, start_date, term, balance_left, interest_type]
+      "INSERT INTO loan(title, amount, interest, start_date, term, balance_left, interest_type, person_email) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+      [title, amount, interest, start_date, term, balance_left, interest_type, person_email]
     );
   } catch (err) {
     console.log(err);
@@ -283,10 +288,11 @@ app.put("/loan", async (req, res) => {
     term,
     balance_left,
     interest_type,
+    person_email,
   } = req.body;
   try {
     const editLoan = await pool.query(
-      "UPDATE loan SET title = $2, amount = $3, interest = $4, start_date = $5, term = $6, balance_left = $7, interest_type = $8 WHERE id = $1",
+      "UPDATE loan SET title = $2, amount = $3, interest = $4, start_date = $5, term = $6, balance_left = $7, interest_type = $8, person_email = $9 WHERE id = $1",
       [
         id,
         title,
@@ -296,6 +302,7 @@ app.put("/loan", async (req, res) => {
         term,
         balance_left,
         interest_type,
+        person_email,
       ]
     );
     res.json(editLoan);

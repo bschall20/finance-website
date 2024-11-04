@@ -63,10 +63,9 @@ function NavbarTop(props) {
             <Nav.Item>
               <NavDropdown eventkey="account" title="Account" id="basic-nav-dropdown" className='px-md-4 px-lg-0' style={{textAlign: 'center'}}>
                 <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Profile</NavDropdown.Item>
-                <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Setup</NavDropdown.Item>
+                {/* <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Setup</NavDropdown.Item>
                 <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Security</NavDropdown.Item>
-                <NavDropdown.Divider />
-                {/* <NavDropdown.Item as={NavLink} to="/signout" eventkey="signout" style={{backgroundColor: 'white', color: '#575757'}}>Sign Out</NavDropdown.Item> */}
+                <NavDropdown.Divider /> */}
                 <NavDropdown.Item onClick={signOut} style={{backgroundColor: 'white', color: '#575757'}}>Sign Out</NavDropdown.Item>
               </NavDropdown>
             </Nav.Item>

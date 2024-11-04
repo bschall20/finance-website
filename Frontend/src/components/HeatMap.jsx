@@ -60,7 +60,7 @@ function HeatMap(props) {
   });
 
 
-  if (dataValues !== null) {return (
+  if (dataValues.count) {return (
     <div>
       {/* <h2>Daily Allowance (${props.dailyAllowance}) Chart</h2> */}
       <h2>Daily Allowance Chart (${props.dailyAllowance})</h2>
@@ -103,7 +103,8 @@ function HeatMap(props) {
       />
       <ReactTooltip />
     </div>
-  )};
+  )}
+  else return null;
 }
 
 export default HeatMap;

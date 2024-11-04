@@ -6,8 +6,12 @@ import Row from "react-bootstrap/Row";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useCookies } from "react-cookie";
+
 
 function LoanModal(props) {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
+
   const postLoanData = async (
     formTitle,
     formAmount,
@@ -29,6 +33,7 @@ function LoanModal(props) {
           term: parseFloat(formTerm),
           balance_left: parseFloat(formBalanceLeft),
           interest_type: formInterestType,
+          person_email: cookies.Email,
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -60,6 +65,7 @@ function LoanModal(props) {
           term: parseFloat(formTerm),
           balance_left: parseFloat(formBalanceLeft),
           interest_type: formInterestType,
+          person_email: cookies.Email,
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);

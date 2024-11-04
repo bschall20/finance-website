@@ -4,9 +4,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import SubmitExpenseModal from "../components/SubmitExpenseModal";
 import PieChart from "../components/PieChart";
-// import LineChart from "../components/LineChart";
 import BarChart from "../components/BarChart";
-// import LoanProjectionTable from "../components/LoanProjectionTable";
 import ExpensesTable from "../components/ExpensesTable";
 import HeatMap from "../components/HeatMap";
 import GoalModal from "../components/GoalModal";
@@ -16,8 +14,11 @@ import LoanModal from "../components/LoanModal";
 import LoanTable from "../components/LoanTable";
 import { CiCircleQuestion } from "react-icons/ci";
 import InfoModal from "../components/InfoModal";
+import { useCookies } from "react-cookie";
+
 
 function FinanceManagement() {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const [submitExpenseModalShow, setSubmitExpenseModalShow] = useState(false);
   const [infoModalShow, setInfoModalShow] = useState(false);
   const [infoTitle, setInfoTitle] = useState("");
@@ -33,7 +34,7 @@ function FinanceManagement() {
 
   const getExpenseData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/expense`);
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/expense/${cookies.Email}`);
       const expenseJSON = await response.json();
       setExpense(
         expenseJSON.sort(function (a, b) {
@@ -75,7 +76,7 @@ function FinanceManagement() {
 
   useEffect(() => {
     getExpenseData();
-  }, []);
+  });
 
 
 
@@ -277,10 +278,10 @@ function FinanceManagement() {
 
         {/* Daily spending heatmap */}
         <div className="mt-5">
-          {/* <HeatMap
+          <HeatMap
             expense={expense}
             dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
-          /> */}
+          />
         </div>
       </div>
     </div>

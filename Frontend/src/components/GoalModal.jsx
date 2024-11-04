@@ -7,8 +7,10 @@ import Row from "react-bootstrap/Row";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useCookies } from "react-cookie";
 
 function GoalModal(props) {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const [checkBox, setCheckBox] = useState(null);
 
   useEffect(() => {
@@ -35,6 +37,7 @@ function GoalModal(props) {
           start_date: formStartDate,
           goal_date: formGoalDate,
           completed: formCompleted,
+          person_email: cookies.Email,
         }),
       });
       console.log(`This is the response: ${response}`);
@@ -62,6 +65,7 @@ function GoalModal(props) {
           // start_date: formStartDate,
           goal_date: formGoalDate,
           completed: formCompleted,
+          person_email: cookies.Email,
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);

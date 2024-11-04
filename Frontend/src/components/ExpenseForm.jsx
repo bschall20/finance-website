@@ -6,8 +6,10 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import InputGroup from "react-bootstrap/InputGroup";
+import { useCookies } from "react-cookie";
 
 function ExpenseForm(props) {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const postExpenseData = async (formTitle, formAmount, formType, formDate) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_SERVERURL}/expense`, {
@@ -18,8 +20,13 @@ function ExpenseForm(props) {
           amount: parseFloat(formAmount),
           expense_type: formType,
           date: formDate,
+          person_email: cookies.Email,
         }),
       });
+      // const data = await response.json();
+      // setCookie("Email", data.email)
+      // setCookie("AuthToken", data.token)
+
       console.log(`This is the response: ${response}`);
     } catch (err) {
       console.log(err);
@@ -37,6 +44,7 @@ function ExpenseForm(props) {
           amount: parseFloat(formAmount),
           expense_type: formType,
           date: formDate,
+          person_email: cookies.Email,
         }),
       });
       console.log(`edit has been clicked for ${response.title}`);
@@ -62,7 +70,7 @@ function ExpenseForm(props) {
   //   getData();
   // }, []);
 
-  function HandleSubmit(e) {
+  const HandleSubmit = async (e) => {
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
     let formType = e.target[2].value;

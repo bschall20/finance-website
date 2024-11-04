@@ -5,8 +5,8 @@ import { useCookies } from "react-cookie";
 
 import { BiSolidNotepad } from "react-icons/bi";
 import { IoPersonSharp } from "react-icons/io5";
-import { IoIosSettings } from "react-icons/io";
-import { IoMdLock } from "react-icons/io";
+// import { IoIosSettings } from "react-icons/io";
+// import { IoMdLock } from "react-icons/io";
 import { FaSignOutAlt } from "react-icons/fa";
 
 
@@ -16,7 +16,6 @@ function SideNav() {
   const location = useLocation(); // used to find path name to set active side nav
   const [active, setActive] = useState(location.pathname);
   const handleSelect = (eventKey) => {
-    // alert(`selected ${eventKey}`);
     setActive(eventKey);
   };
 
@@ -28,28 +27,12 @@ function SideNav() {
 
   return (
     <div id="sideNav">
-      {/* <p>hello</p> */}
       <Nav
-        // variant="underline"
         activeKey={active}
         onSelect={handleSelect}
         className="sideNavContent"
-        //   style={{position: 'fixed', display: 'flex', flexDirection:'column', margin: 'auto', width: '100%', alignItems: 'center', justifyContent: 'center'}}
       >
-        {/* <Nav.Item>
-              <Nav.Link as={NavLink} to="/account" eventkey="profile" href='/account'>Profile</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={NavLink} to="/account" eventkey="setup" href='/account'>Setup</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={NavLink} to="/account" eventkey="security" href='/account'>Security</Nav.Link>
-            </Nav.Item>
-            <hr style={{width: '100%'}}/>
-            <Nav.Item>
-            <Nav.Link as={NavLink} to="/financemanagement" eventkey="financemanagement" href='/financemanagement'>Finance Management</Nav.Link>
-            </Nav.Item> */}
-        {/* <hr className="sideNavHR ms-3 mb-4 mt-0" /> */}
+
         <p className="sideNavHeader ms-3 mb-0 mt-4">Management</p>
 
         <Nav.Item className="sideNavContainer">
@@ -59,10 +42,6 @@ function SideNav() {
             to="/financemanagement"
             eventkey="financemanagement"
             href="/financemanagement"
-            // style={{
-            //   color: active === "/financemanagement" ? "white" : "black",
-            //   textDecoration: active === "/financemanagement" ? "underline" : null
-            // }}
           >
             <BiSolidNotepad className="me-3 mb-1" style={{fontSize: "1.2rem"}}/>
             Finance
@@ -86,7 +65,7 @@ function SideNav() {
             Profile
           </Nav.Link>
         </Nav.Item>
-        <Nav.Item className="sideNavContainer">
+        {/* <Nav.Item className="sideNavContainer">
           <Nav.Link
             className={"sideNavLink ps-3 " + (active === "/account" ? "test" : null)}
             as={NavLink}
@@ -111,10 +90,10 @@ function SideNav() {
             <IoMdLock className="me-3 mb-1" style={{fontSize: "1.2rem"}}/>
             Security
           </Nav.Link>
-        </Nav.Item>
+        </Nav.Item> */}
 
 
-        <hr className="sideNavHR ms-3 mb-4" />
+        {/* <hr className="sideNavHR ms-3 mb-4" /> */}
         <Nav.Item className="sideNavContainer">
           <Nav.Link
             className={"sideNavLink ps-3 " + (active === "/signout" ? "test" : null)}

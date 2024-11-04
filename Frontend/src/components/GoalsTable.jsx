@@ -4,11 +4,13 @@ import Tabs from "react-bootstrap/Tabs";
 import Table from "react-bootstrap/Table";
 import DeleteGoalModal from "./DeleteGoalModal";
 import GoalModal from "./GoalModal";
+import { useCookies } from "react-cookie";
 
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 
 function GoalsTable(props) {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const [modalData, setModalData] = useState({});
   const [modalNum, setModalNum] = useState(0);
   const [goal, setGoal] = useState([]);
@@ -22,7 +24,7 @@ function GoalsTable(props) {
 
   const getGoalData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal`);
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal/${cookies.Email}`);
       const goalJSON = await response.json();
       setGoal(
         goalJSON.sort(function (a, b) {

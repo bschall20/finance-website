@@ -5,6 +5,7 @@ import DeleteLoanModal from "./DeleteLoanModal.jsx";
 import LoanModal from "./LoanModal.jsx";
 import LoanProjectionTable from "./LoanProjectionTable.jsx";
 // import LineChart from "./LineChart.jsx";
+import { useCookies } from "react-cookie";
 
 import { BsGraphUp } from "react-icons/bs";
 import { GrView } from "react-icons/gr";
@@ -23,7 +24,7 @@ function LoanTracker(props) {
 
   // Table only has:
   // Name > Principal (+ interest) >
-
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const [modalData, setModalData] = useState({});
   const [modalNum, setModalNum] = useState(0);
   const [loan, setLoan] = useState([]);
@@ -33,7 +34,7 @@ function LoanTracker(props) {
 
   const getLoanData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan`);
+      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan/${cookies.Email}`);
       const loanJSON = await response.json();
       setLoan(
         loanJSON.sort(function (a, b) {

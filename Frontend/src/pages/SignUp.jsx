@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie"
+import { useCookies } from "react-cookie";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Alert from 'react-bootstrap/Alert';
+import Alert from "react-bootstrap/Alert";
 import { FiAlertTriangle } from "react-icons/fi";
+import { CiFaceSmile } from "react-icons/ci";
+import { CiFaceFrown } from "react-icons/ci";
 
 
-function SignUp() {
+function SignUp(props) {
   const [passwordText, setPasswordText] = useState("password");
   const showPassword = () => {
     if (passwordText === "password") {
@@ -19,10 +21,8 @@ function SignUp() {
     }
   };
 
-
-
-  const [error, setError] = useState()
-  const [cookies, setCookie, removeCookie] = useCookies(null)
+  const [error, setError] = useState();
+  const [cookies, setCookie, removeCookie] = useCookies(null);
   const navigate = useNavigate();
   // const postUser = async (formEmail, formPassword, formFirst_name, formLast_name, formPhone_number, formAddress, formCity, formState, formPostal_code) => {
   //   try {
@@ -45,7 +45,7 @@ function SignUp() {
 
   //     const data = await response.json();
   //     if (data.detail){
-  //       setError(data.detail) 
+  //       setError(data.detail)
   //       alert(error)
   //     } else {
   //       setCookie("Email", data.email)
@@ -57,7 +57,98 @@ function SignUp() {
   //   }
   // };
 
+  const postPersonData = async (e) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVERURL}/person`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: e.target[2].value,
+            password: e.target[3].value,
+            first_name: e.target[0].value,
+            last_name: e.target[1].value,
+            phone_number: e.target[9].value,
+            address: e.target[5].value,
+            city: e.target[6].value,
+            state: e.target[7].value,
+            postal_code: e.target[8].value,
+          }),
+        }
+      );
+      // console.log(`This is the response: ${response}`);
 
+      const data = await response.json();
+      if (data.detail) {
+        setError(data.detail);
+      } else {
+        setCookie("Email", data.email);
+        setCookie("AuthToken", data.token);
+        navigate("/financemanagement");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const [updatedInfo, setUpdatedInfo] = useState(false);
+  const [updatedError, setUpdatedError] = useState(false);
+  const editPersonData = async (e) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVERURL}/person/${cookies.Email}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            first_name: e.target[0].value,
+            last_name: e.target[1].value,
+            phone_number: e.target[7].value,
+            address: e.target[3].value,
+            city: e.target[4].value,
+            state: e.target[5].value,
+            postal_code: e.target[6].value,
+          }),
+        }
+      );
+      // Updated successfully message
+      setUpdatedInfo(true);
+      setTimeout(() => {
+        setUpdatedInfo(false);
+      }, 5000);
+    } catch (err) {
+      console.log(err);
+      // Updated unsuccessfully message
+      setUpdatedError(true);
+      setTimeout(() => {
+        setUpdatedError(false);
+      }, 5000);
+    }
+  };
+
+  const UpdateInfo = async (e) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVERURL}/person`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            first_name: e.target[0].value,
+            last_name: e.target[1].value,
+            phone_number: e.target[7].value,
+            address: e.target[3].value,
+            city: e.target[4].value,
+            state: e.target[5].value,
+            postal_code: e.target[6].value,
+          }),
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
@@ -83,44 +174,27 @@ function SignUp() {
     // console.log(e.target[8].value); // Zip Code
     // console.log(e.target[9].value); // Phone Number
 
-    try {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/person`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: e.target[2].value,
-          password: e.target[3].value,
-          first_name: e.target[0].value,
-          last_name: e.target[1].value,
-          phone_number: e.target[9].value,
-          address: e.target[5].value,
-          city: e.target[6].value,
-          state: e.target[7].value,
-          postal_code: e.target[8].value,
-        }),
-      });
-      // console.log(`This is the response: ${response}`);
-
-      const data = await response.json();
-      if (data.detail){
-        setError(data.detail)
-      } else {
-        setCookie("Email", data.email)
-        setCookie("AuthToken", data.token)
-        navigate("/financemanagement")
-      }
-    } catch (err) {
-      console.log(err);
-    }
-
-
+    if (props.person) {
+      return editPersonData(e);
+    } else return postPersonData(e);
   };
 
-  return (
-    <div id="signUp" className="center py-3">
-      <h1 className="mb-3">Sign up</h1>
-      <Form onSubmit={HandleSubmit}>
+  let divID = "signUp";
+  let passwordInfoText = "Password";
+  if (props.person) {
+    divID = "profile";
+    passwordInfoText = "Set New Password";
+  }
 
+
+  return (
+    <div id={divID} className="center py-3">
+      {props.person ? (
+        <h1 className="mb-3">Account Information</h1>
+      ) : (
+        <h1 className="mb-3">Sign up</h1>
+      )}
+      <Form onSubmit={HandleSubmit} style={{ width: "100%" }}>
         {/* First + Last Name */}
         <Form.Group className="mb-3">
           <Row>
@@ -128,57 +202,106 @@ function SignUp() {
               <Form.Label style={{ fontWeight: "bold" }}>
                 First Name *
               </Form.Label>
-              <Form.Control maxLength={50} required type="text" placeholder="First Name" />
+              <Form.Control
+                maxLength={50}
+                required
+                type="text"
+                placeholder="First Name"
+                defaultValue={props.first_name}
+              />
             </Col>
             <Col>
               <Form.Label style={{ fontWeight: "bold" }}>
                 Last Name *
               </Form.Label>
-              <Form.Control maxLength={50} required type="text" placeholder="Last Name" />
+              <Form.Control
+                maxLength={50}
+                required
+                type="text"
+                placeholder="Last Name"
+                defaultValue={props.last_name}
+              />
             </Col>
           </Row>
         </Form.Group>
-
         {/* Email */}
         <Form.Group className="mb-3">
           <Form.Label style={{ fontWeight: "bold" }}>
             Email Address *
           </Form.Label>
-          <Form.Control maxLength={62} required type="email" placeholder="Email" />
-          {error &&
+          {props.person ? (
+            <Form.Control
+              maxLength={62}
+              required
+              type="email"
+              placeholder="Email"
+              defaultValue={props.email}
+              disabled
+            />
+          ) : (
+            <Form.Control
+              maxLength={62}
+              required
+              type="email"
+              placeholder="Email"
+              defaultValue={props.email}
+            />
+          )}
+          {error && (
             <Form.Text className="text-center ms-0">
-              <Alert className="mt-2" key={"danger"} variant={"danger"} style={{padding: "0"}}> 
-                <FiAlertTriangle className="mb-1"/> This email is already in use.
+              <Alert
+                className="mt-2"
+                key={"danger"}
+                variant={"danger"}
+                style={{ padding: "0" }}
+              >
+                <FiAlertTriangle className="mb-1" /> This email is already in
+                use.
               </Alert>
             </Form.Text>
-          }
+          )}
         </Form.Group>
-
         {/* Password */}
-        <Form.Group className="mb-3">
-          <Form.Label style={{ fontWeight: "bold" }}>Password *</Form.Label>
-          <Form.Control maxLength={255} required type={passwordText} placeholder="Password" />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Check
-            type="checkbox"
-            label="Show Password"
-            onClick={() => showPassword()}
-          />
-        </Form.Group>
-
+        {props.person ? null : (
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label style={{ fontWeight: "bold" }}>Password *</Form.Label>
+              <Form.Control
+                maxLength={255}
+                required
+                type={passwordText}
+                placeholder={passwordInfoText}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Check
+                type="checkbox"
+                label="Show Password"
+                onClick={() => showPassword()}
+              />
+            </Form.Group>
+          </div>
+        )}
         {/* Address */}
         <Form.Group className="mb-3">
           <Form.Label style={{ fontWeight: "bold" }}>Address</Form.Label>
-          <Form.Control maxLength={95} type="text" placeholder="Address" />
+          <Form.Control
+            maxLength={95}
+            type="text"
+            placeholder="Address"
+            defaultValue={props.address}
+          />
         </Form.Group>
-
         {/* City */}
         <Form.Group className="mb-3">
           <Form.Label style={{ fontWeight: "bold" }}>City</Form.Label>
-          <Form.Control maxLength={35} type="text" placeholder="City" />
+          <Form.Control
+            maxLength={35}
+            type="text"
+            placeholder="City"
+            defaultValue={props.city}
+          />
         </Form.Group>
-
         {/* State + Zip Code */}
         <Form.Group className="mb-3">
           <Row>
@@ -186,8 +309,8 @@ function SignUp() {
               {/* <Form.Label style={{ fontWeight: "bold" }}>State</Form.Label>
               <Form.Control type="text" placeholder="State" /> */}
               <Form.Label style={{ fontWeight: "bold" }}>State</Form.Label>
-              <Form.Select aria-label="State">
-                <option defaultValue="Select">Select State</option>
+              <Form.Select aria-label="State" defaultValue={props.state}>  {/* Some reason isn't updated state */}
+                <option value="Select">Select State</option>
                 <option value="AL">Alabama (AL)</option>
                 <option value="AK">Alaska (AK)</option>
                 <option value="AZ">Arizona (AZ)</option>
@@ -243,24 +366,54 @@ function SignUp() {
             </Col>
             <Col>
               <Form.Label style={{ fontWeight: "bold" }}>Zip Code</Form.Label>
-              <Form.Control maxLength={10} type="number" placeholder="Zip Code" />
+              <Form.Control
+                maxLength={10}
+                type="number"
+                placeholder="Zip Code"
+                defaultValue={props.postal_code}
+              />
             </Col>
           </Row>
         </Form.Group>
-
         {/* Phone Number */}
         <Form.Group className="mb-4">
           <Form.Label style={{ fontWeight: "bold" }}>Phone Number</Form.Label>
-          <Form.Control maxLength={10} type="number" placeholder="Phone Number" />
+          <Form.Control
+            maxLength={10}
+            type="number"
+            placeholder="Phone Number"
+            defaultValue={props.phone_number}
+          />
         </Form.Group>
-
         {/* Join/Sign In buttons */}
-        <Button variant="primary" type="submit" style={{ width: "100%" }}>
-          Join
-        </Button>
-        <Form.Text className="text-muted">
-          Already a member? <a href="/signin">Sign in</a>
-        </Form.Text>
+        {!props.person ? (
+          <div>
+            <Button variant="primary" type="submit" style={{ width: "100%" }}>
+              Join
+            </Button>
+            <Form.Text className="text-muted">
+              Already a member? <a href="/signin">Sign in</a>
+            </Form.Text>
+          </div>
+        ) : (
+          <div>
+            <Button variant="primary" type="submit" style={{ width: "100%" }} className="mb-2">
+              Update Information
+            </Button>
+          </div>
+        )}
+        {updatedInfo ? (
+          <Alert key="success" variant="success" className="py-1 mt-2">
+            Information updated successfully! <CiFaceSmile className="mb-1" />
+          </Alert>
+        ) : null}
+
+        {updatedError ? (
+          <Alert key="danger" variant="danger" className="py-1 mt-2">
+            Information was not updated successfully. Please try again. <CiFaceFrown className="mb-1" />
+          </Alert>
+        ) : null}
+        
       </Form>
     </div>
   );
