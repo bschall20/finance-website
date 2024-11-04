@@ -22,6 +22,8 @@ function SignUp(props) {
   };
 
   const [error, setError] = useState();
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null);
   const navigate = useNavigate();
   // const postUser = async (formEmail, formPassword, formFirst_name, formLast_name, formPhone_number, formAddress, formCity, formState, formPostal_code) => {
@@ -96,7 +98,7 @@ function SignUp(props) {
   const [updatedError, setUpdatedError] = useState(false);
   const editPersonData = async (e) => {
     try {
-      const response = await fetch(
+      await fetch(
         `${process.env.REACT_APP_SERVERURL}/person/${cookies.Email}`,
         {
           method: "PUT",
@@ -127,28 +129,6 @@ function SignUp(props) {
     }
   };
 
-  const UpdateInfo = async (e) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVERURL}/person`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            first_name: e.target[0].value,
-            last_name: e.target[1].value,
-            phone_number: e.target[7].value,
-            address: e.target[3].value,
-            city: e.target[4].value,
-            state: e.target[5].value,
-            postal_code: e.target[6].value,
-          }),
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
@@ -185,6 +165,9 @@ function SignUp(props) {
     divID = "profile";
     passwordInfoText = "Set New Password";
   }
+
+  console.log(props.first_name)
+  console.log(props.state)
 
 
   return (

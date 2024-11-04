@@ -10,6 +10,8 @@ import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 
 function GoalsTable(props) {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const [modalData, setModalData] = useState({});
   const [modalNum, setModalNum] = useState(0);
@@ -22,35 +24,62 @@ function GoalsTable(props) {
   // let overdueGoals = 0;
   // let completedGoals = 0;
 
-  const getGoalData = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal/${cookies.Email}`);
-      const goalJSON = await response.json();
-      setGoal(
-        goalJSON.sort(function (a, b) {
-          // Default sort by DATE:
-          var aa = a.goal_date.split("/").reverse().join(),
-            bb = b.goal_date.split("/").reverse().join();
-          return aa < bb ? -1 : aa > bb ? 1 : 0;
-        })
-      );
-      // Only needed if I decide to allow goal table sorting later (no need to)
-      // setGoalCopy(
-      //   goalJSON.sort(function (a, b) {
-      //     // Default sort by DATE:
-      //     var aa = a.date.split("/").reverse().join(),
-      //       bb = b.date.split("/").reverse().join();
-      //     return bb < aa ? -1 : bb > aa ? 1 : 0;
-      //   })
-      // );
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const getGoalData = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal/${cookies.Email}`);
+  //     const goalJSON = await response.json();
+  //     setGoal(
+  //       goalJSON.sort(function (a, b) {
+  //         // Default sort by DATE:
+  //         var aa = a.goal_date.split("/").reverse().join(),
+  //           bb = b.goal_date.split("/").reverse().join();
+  //         return aa < bb ? -1 : aa > bb ? 1 : 0;
+  //       })
+  //     );
+  //     // Only needed if I decide to allow goal table sorting later (no need to)
+  //     // setGoalCopy(
+  //     //   goalJSON.sort(function (a, b) {
+  //     //     // Default sort by DATE:
+  //     //     var aa = a.date.split("/").reverse().join(),
+  //     //       bb = b.date.split("/").reverse().join();
+  //     //     return bb < aa ? -1 : bb > aa ? 1 : 0;
+  //     //   })
+  //     // );
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
 
   useEffect(() => {
+    const getGoalData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/goal/${cookies.Email}`);
+        const goalJSON = await response.json();
+        setGoal(
+          goalJSON.sort(function (a, b) {
+            // Default sort by DATE:
+            var aa = a.goal_date.split("/").reverse().join(),
+              bb = b.goal_date.split("/").reverse().join();
+            return aa < bb ? -1 : aa > bb ? 1 : 0;
+          })
+        );
+        // Only needed if I decide to allow goal table sorting later (no need to)
+        // setGoalCopy(
+        //   goalJSON.sort(function (a, b) {
+        //     // Default sort by DATE:
+        //     var aa = a.date.split("/").reverse().join(),
+        //       bb = b.date.split("/").reverse().join();
+        //     return bb < aa ? -1 : bb > aa ? 1 : 0;
+        //   })
+        // );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     getGoalData();
-  }, []);
+  }, [cookies.Email]);
 
   // Days Between Goal Dates
   function daysLeft(goal_date, bool, start_date, amount) {
@@ -143,7 +172,7 @@ function GoalsTable(props) {
                 <tr key={index}>
                   <td>{count}</td>
                   <td>{dataObj.title}</td>
-                  <td>{dataObj.amount}</td>
+                  <td>${dataObj.amount}</td>
                   <td>{formatDate(dataObj.start_date)}</td>
                   <td>{formatDate(dataObj.goal_date)}</td>
                   <td>
@@ -194,7 +223,7 @@ function GoalsTable(props) {
                 <tr key={index}>
                   <td>{count}</td>
                   <td>{dataObj.title}</td>
-                  <td>{dataObj.amount}</td>
+                  <td>${dataObj.amount}</td>
                   <td>{formatDate(dataObj.start_date)}</td>
                   <td>{formatDate(dataObj.goal_date)}</td>
                   <td>
@@ -245,7 +274,7 @@ function GoalsTable(props) {
                 <tr key={index}>
                   <td>{count}</td>
                   <td>{dataObj.title}</td>
-                  <td>{dataObj.amount}</td>
+                  <td>${dataObj.amount}</td>
                   <td>{formatDate(dataObj.start_date)}</td>
                   <td>{formatDate(dataObj.goal_date)}</td>
                   <td>

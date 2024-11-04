@@ -60,7 +60,7 @@ function HeatMap(props) {
   });
 
 
-  if (dataValues.count) {return (
+  if (dataValues) {return (
     <div>
       {/* <h2>Daily Allowance (${props.dailyAllowance}) Chart</h2> */}
       <h2>Daily Allowance Chart (${props.dailyAllowance})</h2>

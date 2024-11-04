@@ -25,7 +25,7 @@ function Contact() {
           <Form
             action="mailto:"
             method="post"
-            enctype="text/plain"
+            encType="text/plain"
           >
             <Form.Group
               className="mb-3"

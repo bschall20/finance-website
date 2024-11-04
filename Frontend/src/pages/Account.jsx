@@ -4,28 +4,40 @@ import SignUp from "./SignUp";
 import { useCookies } from "react-cookie";
 
 function Account() {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null);
   const [person, setPerson] = useState([]);
 
-  const getAccountData = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVERURL}/person/${cookies.Email}`
-      );
-      const personJSON = await response.json();
-      setPerson(personJSON[0]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const getAccountData = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.REACT_APP_SERVERURL}/person/${cookies.Email}`
+  //     );
+  //     const personJSON = await response.json();
+  //     setPerson(personJSON[0]);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   useEffect(() => {
-    getAccountData();
-  }, []);
+    const getAccountData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_SERVERURL}/person/${cookies.Email}`
+        );
+        const personJSON = await response.json();
+        setPerson(personJSON[0]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-//   const [USState, setUSState] = useState(person.state)
-  console.log(person)
-  console.log(person.state)
+    getAccountData();
+  }, [cookies.Email]);
+
+
 
   return (
     <div id="account">
@@ -33,12 +45,12 @@ function Account() {
         <SideNav />
       </div>
       {/* <div id="profile" className="center"> */}
-        {/* <h1 className="mb-3">Account Information</h1> */}
-        {/* {person?.map((dataObj, index) => {
+      {/* <h1 className="mb-3">Account Information</h1> */}
+      {/* {person?.map((dataObj, index) => {
           return <SignUp person={person} />;
         })} */}
-        <SignUp 
-        person={person} 
+      <SignUp
+        person={person}
         email={person.email}
         first_name={person.first_name}
         last_name={person.last_name}
@@ -47,7 +59,7 @@ function Account() {
         city={person.city}
         state={person.state}
         postal_code={person.postal_code}
-        />
+      />
       {/* </div> */}
     </div>
   );

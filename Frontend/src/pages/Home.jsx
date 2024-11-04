@@ -3,11 +3,16 @@ import LifeBlocks from "../images/life-blocks.jpg";
 import Relax from "../images/relax.jpg";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
+import Button from "react-bootstrap/Button";
+import { useCookies } from "react-cookie";
 import { FaHandHoldingDollar } from "react-icons/fa6";
 import { FaRegClock } from "react-icons/fa6";
 import { FaCalendarDays } from "react-icons/fa6";
 
 function Home() {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
+  const [cookies, setCookie, removeCookie] = useCookies(null);
   return (
     <div id="home">
       <div className="homeSlim">
@@ -20,7 +25,11 @@ function Home() {
               Personalize all of your incomes and expenses with graphic charts
               to better plan for your future.
             </p>
-            <button className="btn btn-success">Sign Up Today.</button>
+            {
+            cookies.Email? <a href="/financemanagement"><Button variant="success">Sign Up Today.</Button></a> : 
+            <a href="/signup"><Button variant="success">Sign Up Today.</Button></a>
+            }
+
           </div>
           <div className="homeIntroR">
             <img

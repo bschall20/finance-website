@@ -18,6 +18,8 @@ import { useCookies } from "react-cookie";
 
 
 function FinanceManagement() {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const [submitExpenseModalShow, setSubmitExpenseModalShow] = useState(false);
   const [infoModalShow, setInfoModalShow] = useState(false);
@@ -32,32 +34,32 @@ function FinanceManagement() {
   let thisYear = d.getFullYear();
   // let lastYear = d.getFullYear() - 1;
 
-  const getExpenseData = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/expense/${cookies.Email}`);
-      const expenseJSON = await response.json();
-      setExpense(
-        expenseJSON.sort(function (a, b) {
-          // Default sort by DATE:
-          // var aa = a.date.split("/").reverse().join(),
-          //   bb = b.date.split("/").reverse().join();
-          // return bb < aa ? -1 : bb > aa ? 1 : 0;
-          return parseFloat(b.id) - parseFloat(a.id);
-        })
-      );
-      setExpenseCopy(
-        expenseJSON.sort(function (a, b) {
-          // Default sort by DATE:
-          // var aa = a.date.split("/").reverse().join(),
-          //   bb = b.date.split("/").reverse().join();
-          // return bb < aa ? -1 : bb > aa ? 1 : 0;
-          return parseFloat(b.id) - parseFloat(a.id);
-        })
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const getExpenseData = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/expense/${cookies.Email}`);
+  //     const expenseJSON = await response.json();
+  //     setExpense(
+  //       expenseJSON.sort(function (a, b) {
+  //         // Default sort by DATE:
+  //         // var aa = a.date.split("/").reverse().join(),
+  //         //   bb = b.date.split("/").reverse().join();
+  //         // return bb < aa ? -1 : bb > aa ? 1 : 0;
+  //         return parseFloat(b.id) - parseFloat(a.id);
+  //       })
+  //     );
+  //     setExpenseCopy(
+  //       expenseJSON.sort(function (a, b) {
+  //         // Default sort by DATE:
+  //         // var aa = a.date.split("/").reverse().join(),
+  //         //   bb = b.date.split("/").reverse().join();
+  //         // return bb < aa ? -1 : bb > aa ? 1 : 0;
+  //         return parseFloat(b.id) - parseFloat(a.id);
+  //       })
+  //     );
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   // Used for showing submit expense + add goal + add loan modals
   const showSubmitExpense = () => {
@@ -73,10 +75,37 @@ function FinanceManagement() {
   const addLoan = () => {
     setAddLoanModalShow(true);
   };
+  
 
   useEffect(() => {
+    const getExpenseData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/expense/${cookies.Email}`);
+        const expenseJSON = await response.json();
+        setExpense(
+          expenseJSON.sort(function (a, b) {
+            // Default sort by DATE:
+            // var aa = a.date.split("/").reverse().join(),
+            //   bb = b.date.split("/").reverse().join();
+            // return bb < aa ? -1 : bb > aa ? 1 : 0;
+            return parseFloat(b.id) - parseFloat(a.id);
+          })
+        );
+        setExpenseCopy(
+          expenseJSON.sort(function (a, b) {
+            // Default sort by DATE:
+            // var aa = a.date.split("/").reverse().join(),
+            //   bb = b.date.split("/").reverse().join();
+            // return bb < aa ? -1 : bb > aa ? 1 : 0;
+            return parseFloat(b.id) - parseFloat(a.id);
+          })
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
     getExpenseData();
-  });
+  }, [cookies.Email]);
 
 
 

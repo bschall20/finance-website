@@ -24,6 +24,10 @@ function LoanTracker(props) {
 
   // Table only has:
   // Name > Principal (+ interest) >
+  
+  
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const [modalData, setModalData] = useState({});
   const [modalNum, setModalNum] = useState(0);
@@ -32,46 +36,53 @@ function LoanTracker(props) {
   const [loanModalShow, setLoanModalShow] = useState(false);
   const [loanProjectionTable, setLoanProjectionTable] = useState(false);
 
-  const getLoanData = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan/${cookies.Email}`);
-      const loanJSON = await response.json();
-      setLoan(
-        loanJSON.sort(function (a, b) {
-          // Default sort by DATE:
-          // var aa = a.start_date.split("/").reverse().join(),
-          //   bb = b.start_date.split("/").reverse().join();
-          // return aa < bb ? -1 : aa > bb ? 1 : 0;
+  // const getLoanData = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan/${cookies.Email}`);
+  //     const loanJSON = await response.json();
+  //     setLoan(
+  //       loanJSON.sort(function (a, b) {
+  //         // Default sort by DATE:
+  //         // var aa = a.start_date.split("/").reverse().join(),
+  //         //   bb = b.start_date.split("/").reverse().join();
+  //         // return aa < bb ? -1 : aa > bb ? 1 : 0;
 
-          //Default sort by ID:
-          return a.id - b.id;
-        })
-      );
-      // Only needed if I decide to allow goal table sorting later (no need to)
-      // setLoanCopy(
-      //   loanJSON.sort(function (a, b) {
-      //     // Default sort by DATE:
-      //     var aa = a.date.split("/").reverse().join(),
-      //       bb = b.date.split("/").reverse().join();
-      //     return bb < aa ? -1 : bb > aa ? 1 : 0;
-      //   })
-      // );
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // const payment = (amount, term) => {
-  //   return (amount/term)
-  // }
-
-  // const termLeft = () => {
-  //   return 60;
+  //         //Default sort by ID:
+  //         return a.id - b.id;
+  //       })
+  //     );
+  //     // Only needed if I decide to allow goal table sorting later (no need to)
+  //     // setLoanCopy(
+  //     //   loanJSON.sort(function (a, b) {
+  //     //     // Default sort by DATE:
+  //     //     var aa = a.date.split("/").reverse().join(),
+  //     //       bb = b.date.split("/").reverse().join();
+  //     //     return bb < aa ? -1 : bb > aa ? 1 : 0;
+  //     //   })
+  //     // );
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
   // };
 
+
   useEffect(() => {
+    const getLoanData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/loan/${cookies.Email}`);
+        const loanJSON = await response.json();
+        setLoan(
+          loanJSON.sort(function (a, b) {
+            return a.id - b.id;
+          })
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     getLoanData();
-  }, []);
+  }, [cookies.Email]);
 
   // reference: https://www.investopedia.com/calculate-principal-and-interest-5211981
   // start date + term length months then find months from today until that day
@@ -103,7 +114,7 @@ function LoanTracker(props) {
                 <td>{index + 1}</td>
                 <td>{dataObj.title}</td>
                 <td>
-                  {dataObj.amount} at {dataObj.interest}% for {dataObj.term}{" "}
+                  ${dataObj.amount} at {dataObj.interest}% for {dataObj.term}{" "}
                   months
                 </td>
                 {/* <td>{dataObj.term}</td>

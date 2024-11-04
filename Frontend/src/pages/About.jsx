@@ -9,6 +9,7 @@ import { FaBookOpen } from "react-icons/fa6";
 import { FaPuzzlePiece } from "react-icons/fa6";
 import { FaBrain } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
+import { useCookies } from "react-cookie";
 
 import Family from "../images/family.jpg";
 
@@ -18,6 +19,9 @@ import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 
 function About() {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
+  const [cookies, setCookie, removeCookie] = useCookies(null);
   return (
     <div id="about" className="center">
       <div className="aboutIntro pageIntro center">
@@ -44,10 +48,9 @@ function About() {
           </p>
           <div className="missionStatement center">
             <TbTargetArrow style={{ width: "500px", height: "50px" }} />
+            <div>
+            <h4>Our Mission.</h4>
             <p>
-              <span>
-                <h4>Our Mission.</h4>
-              </span>
               To make the world of finances easier to navigate and keep money in
               your hands. At Build My Finance, we believe the best way to view
               your money, is to see your money. Visualizing where you spend your
@@ -55,6 +58,7 @@ function About() {
               understanding of where you may want to, or not want to, spend your
               hard earned cash.
             </p>
+            </div>
           </div>
         </div>
       </div>
@@ -112,7 +116,11 @@ function About() {
             you may have. From you, your family, or your business, we're here to assist you
             and your future.
           </p>
-          <a href="/contact"><Button variant="info">Let's Get Started</Button></a>
+          {
+            cookies.Email? <a href="/financemanagement"><Button variant="info">Let's Get Started</Button></a> : 
+            <a href="/signin"><Button variant="info">Let's Get Started</Button></a>
+          }
+          
         </div>
         <Row xs={1} md={2} className="g-4">
           <Col>
