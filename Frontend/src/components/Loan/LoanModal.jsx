@@ -10,6 +10,8 @@ import { useCookies } from "react-cookie";
 
 
 function LoanModal(props) {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
 
   const postLoanData = async (

@@ -7,7 +7,9 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
-function NavbarTop(props) {
+function TopNav(props) {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const [active, setActive] = useState('/');
   const setActiveNav = () => {
@@ -83,4 +85,4 @@ function NavbarTop(props) {
   );
 }
 
-export default NavbarTop;
+export default TopNav;

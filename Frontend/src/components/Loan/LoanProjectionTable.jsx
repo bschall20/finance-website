@@ -16,7 +16,7 @@
 
 // import React from "react";
 import React, { useState, useEffect, useCallback } from "react";
-import LineChart from "./LineChart";
+import LineChart from "../LineChart";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Accordion from "react-bootstrap/Accordion";

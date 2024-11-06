@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import EditExpenseModal from "../components/EditExpenseModal";
-import DeleteExpenseModal from "../components/DeleteExpenseModal";
+import EditExpenseModal from "./EditExpenseModal";
+import DeleteExpenseModal from "./DeleteExpenseModal";
 import ExpensesTableModal from "./ExpensesTableModal";
 import Table from "react-bootstrap/Table";
 import { FaSort } from "react-icons/fa";

@@ -48,7 +48,7 @@ function HeatMap(props) {
   const dataValues = getRange(365).map((index) => {
     let date = shiftDate(today, -index);
     let count; // Keeps track of amount spent on index (day)
-    let dateIndex = dateAmountTotal().findIndex(value => value.date === date.toISOString().slice(0, 10));
+    let dateIndex = dateAmountTotal().findIndex(values => values.date === date.toISOString().slice(0, 10));
     if (dateIndex !== -1){
       count = dateAmountTotal()[dateIndex].amountSpent
     } else {count = 0}
@@ -68,7 +68,7 @@ function HeatMap(props) {
         startDate={shiftDate(today, -365)}
         endDate={today}
         values={dataValues}
-        classForValue={(value) => {
+        classForValue={(values) => {
           // if (!value) {
           //   return "color-empty";
           // }
@@ -77,28 +77,28 @@ function HeatMap(props) {
           // value = parseInt(value)
 
           // Set colors in table. Could do multiple shades to show 20% spend up to 200%. (25, 50, 75, 100, 125, 150, 175, 200)
-          if (value.count === 0 || value.count === null) {
+          if (values.count === 0 || values.count === null) {
             return "color-github-0";
           }
-          else if (value.count <= props.dailyAllowance){
+          else if (values.count <= props.dailyAllowance){
             return `color-github-1`;
           }
-          else if (value.count > props.dailyAllowance){
+          else if (values.count > props.dailyAllowance){
             return `color-github-2`;
           }
           // return `color-github-${value.count}`;
         }}
-        tooltipDataAttrs={(value) => {
+        tooltipDataAttrs={(values) => {
           return {
-            "data-tip": `${value.date.toISOString().slice(0, 10)} has count: ${
+            "data-tip": `${values.date.toISOString().slice(0, 10)} has count: ${
             // "data-tip": `${value.date} has count: ${
-              value.count
+              values.count
             }`,
           };
         }}
         showWeekdayLabels={true}
-        onClick={(value) =>
-          alert(`You spent $${value.count} on ${value.date}.`)
+        onClick={(values) =>
+          alert(`You spent $${values.count} on ${values.date}.`)
         }
       />
       <ReactTooltip />

@@ -10,6 +10,8 @@ import Modal from "react-bootstrap/Modal";
 import { useCookies } from "react-cookie";
 
 function GoalModal(props) {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const [checkBox, setCheckBox] = useState(null);
 

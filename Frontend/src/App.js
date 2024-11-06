@@ -5,7 +5,7 @@ import {
   Route, 
 } from "react-router-dom";
 import { useCookies } from "react-cookie"
-import Navbar from "./components/navbar.jsx";
+import TopNav from "./components/TopNav.jsx";
 import Home from "./pages/Home.jsx";
 import FinanceManagement from "./pages/FinanceManagement.jsx";
 import Contact from "./pages/Contact.jsx";
@@ -19,7 +19,8 @@ import Footer from "./components/Footer.jsx"
 import "./index.css";
 
 function App() {
-
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const authToken = cookies.AuthToken
   //const userEmail = cookies.Email // set this in the financemanagement page? to getData @ ${userEmail}
@@ -29,7 +30,7 @@ function App() {
   return (<div className="app">
     {authToken && 
       <Router>
-        <Navbar signedIn={true}/>
+        <TopNav signedIn={true}/>
         <Routes>
           <Route exact path='/' element={<Home />} />
           <Route exact path='/financemanagement' element={<FinanceManagement />} />
@@ -42,7 +43,7 @@ function App() {
       </Router>}
 
       {!authToken && <Router>
-        <Navbar signedIn={false}/>
+        <TopNav signedIn={false}/>
         <Routes>
           <Route exact path='/' element={<Home />} />
           <Route exact path='/contact' element={<Contact />} />

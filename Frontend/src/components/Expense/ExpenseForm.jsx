@@ -9,6 +9,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { useCookies } from "react-cookie";
 
 function ExpenseForm(props) {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const postExpenseData = async (formTitle, formAmount, formType, formDate) => {
     try {

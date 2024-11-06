@@ -323,7 +323,7 @@ background-blend-mode: multiply; */
       color: #008FFB;
     }
 
-    .tabIntroInfo, .expenseTab, .loanTab, .goalTab {
+    .tabIntroInfo, .expenseTab, .incomeTab, .loanTab, .goalTab {
       border: 1px solid #DEE2E6;
       border-top: none;
       display: flex;
@@ -335,7 +335,7 @@ background-blend-mode: multiply; */
       justify-content: space-between;
       padding: 1.5rem 3rem 0;
     }
-    .expenseTab, .loanTab {
+    .expenseTab, .incomeTab, .loanTab {
       display: flex;
       align-items: center;
       justify-content: space-evenly;
@@ -347,10 +347,10 @@ background-blend-mode: multiply; */
     .goalTab{
       flex-direction: column;
     }
-    .pieChart {
+    .pieChart, .columnChart {
       width: 50%;
     }
-    .expenseTable{
+    .expenseTable, .incomeTable{
       width: 30%;
     }
     .loanTable {
