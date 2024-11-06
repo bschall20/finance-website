@@ -14,6 +14,8 @@ import ColumnChart from "../components/Income/ColumnChart";
 import LoanModal from "../components/Loan/LoanModal";
 import LoanTable from "../components/Loan/LoanTable";
 
+import IncomeModal from "../components/Income/IncomeModal";
+
 import GoalModal from "../components/Goal/GoalModal";
 import GoalsTable from "../components/Goal/GoalsTable";
 
@@ -73,12 +75,17 @@ function FinanceManagement() {
   const showSubmitExpense = () => {
     setSubmitExpenseModalShow(true);
   };
-  // Add goal modal
+  // Add GOAL modal
   const [addGoalModalShow, setAddGoalModalShow] = useState(false);
   const addGoal = () => {
     setAddGoalModalShow(true);
   };
-  // Add loan modal
+    // Add INCOME modal
+    const [addIncomeModalShow, setAddIncomeModalShow] = useState(false);
+    const addIncome = () => {
+      setAddIncomeModalShow(true);
+    };
+  // Add LOAN modal
   const [addLoanModalShow, setAddLoanModalShow] = useState(false);
   const addLoan = () => {
     setAddLoanModalShow(true);
@@ -256,14 +263,15 @@ function FinanceManagement() {
                 className="me-5"
                 variant="primary"
                 size="lg"
-                onClick={addLoan}
+                onClick={addIncome}
               >
                 Add Income
               </Button>
-              <LoanModal
-                show={addLoanModalShow}
-                postloan={1}
-                onHide={() => setAddLoanModalShow(false)}
+              <IncomeModal
+                show={addIncomeModalShow}
+                postincome={1}
+                showsubmit={1}
+                onHide={() => setAddIncomeModalShow(false)}
               />
             </div>
             <div className="incomeTab center">
