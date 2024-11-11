@@ -27,12 +27,17 @@ function ExpensesTableModal(props) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            All Expenses Table
+            {
+              props.income === 1 ? "All Income Table" : "All Expenses Table"
+            }
           </Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-        <ExpensesTable expense={expense} expenseCopy={expenseCopy} table={"full"}/>
+          {
+            props.income === 1 ? <ExpensesTable expense={expense} expenseCopy={expenseCopy} table={"full"} income={1}/> : 
+            <ExpensesTable expense={expense} expenseCopy={expenseCopy} table={"full"}/>
+          }
 
           <div style={{ display: "flex", justifyContent: "end" }}>
             <Button

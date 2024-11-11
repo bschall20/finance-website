@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import EditExpenseModal from "./EditExpenseModal";
 import DeleteExpenseModal from "./DeleteExpenseModal";
 import ExpensesTableModal from "./ExpensesTableModal";
+
+import IncomeModal from "../Income/IncomeModal";
+
 import Table from "react-bootstrap/Table";
 import { FaSort } from "react-icons/fa";
 import Form from "react-bootstrap/Form";
@@ -14,6 +17,7 @@ import { MdDelete } from "react-icons/md";
 function ExpensesTable(props) {
   const [editExpenseModalShow, setEditExpenseModalShow] = useState(false);
   const [deleteExpenseModalShow, setDeleteExpenseModalShow] = useState(false);
+  const [incomeModalShow, setIncomeModalShow]= useState(false);
   const [defaultTitleSearch, setDefaultTitleSearch] = useState("");
   const [defaultDate, setDefaultDate] = useState("");
   const [modalData, setModalData] = useState({});
@@ -243,7 +247,7 @@ function ExpensesTable(props) {
                   className="tableEdit"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
                   onClick={() => {
-                    setEditExpenseModalShow(true);
+                    props.income === 1 ? setIncomeModalShow(true) : setEditExpenseModalShow(true);
                     setModalData(dataObj);
                     setModalNum(index + 1);
                   }}
@@ -299,7 +303,7 @@ function ExpensesTable(props) {
         <thead>
           <tr>
             <th>#</th>
-            <th style={{ borderRight: "none" }}>Expense</th>
+            <th style={{ borderRight: "none" }}>{props.income === 1 ? "Income" : "Expense"}</th>
             {/* <th style={{ border: "none" }}></th> */}
             <th
               colSpan="2"
@@ -327,7 +331,7 @@ function ExpensesTable(props) {
                   className="tableEdit"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
                   onClick={() => {
-                    setEditExpenseModalShow(true);
+                    props.income === 1 ? setIncomeModalShow(true) : setEditExpenseModalShow(true);
                     setModalData(dataObj);
                     setModalNum(index + 1);
                   }}
@@ -359,6 +363,19 @@ function ExpensesTable(props) {
             onHide={() => setExpenseAllTableModal(false)}
             expense={props.expense}
             expensecopy={props.expenseCopy}
+            income={props.income}
+          />
+          <IncomeModal 
+            show={incomeModalShow}
+            onHide={() => setIncomeModalShow(false)}
+            id={modalData.id}
+            title={modalData.title}
+            amount={modalData.amount}
+            payment_interval={modalData.payment_interval}
+            start_date={modalData.start_date}
+            occurring={modalData.occurring}
+            end_date={modalData.end_date}
+            edit_income={1}
           />
           <EditExpenseModal
             show={editExpenseModalShow}
@@ -379,6 +396,10 @@ function ExpensesTable(props) {
             amount={modalData.amount}
             expensetype={modalData.expense_type}
             date={modalData.date}
+            payment_interval={modalData.payment_interval}
+            start_date={modalData.start_date}
+            occurring={modalData.occurring}
+            end_date={modalData.end_date}
           />
         </tbody>
       </Table>

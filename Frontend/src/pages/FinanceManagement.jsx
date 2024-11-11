@@ -37,6 +37,8 @@ function FinanceManagement() {
   const [infoP, setInfoP] = useState("");
   const [expense, setExpense] = useState([]);
   const [expenseCopy, setExpenseCopy] = useState([]);
+  const [income, setIncome] = useState([]);
+  const [incomeCopy, setIncomeCopy] = useState([]);
   let dailyAllowance = 100;
 
   // Date year for intro tabs
@@ -120,7 +122,38 @@ function FinanceManagement() {
         console.log(err);
       }
     };
+
+    const getIncomeData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_SERVERURL}/income/${cookies.Email}`
+        );
+        const incomeJSON = await response.json();
+        setIncome(
+          incomeJSON.sort(function (a, b) {
+            // Default sort by DATE:
+            // var aa = a.date.split("/").reverse().join(),
+            //   bb = b.date.split("/").reverse().join();
+            // return bb < aa ? -1 : bb > aa ? 1 : 0;
+            return parseFloat(b.id) - parseFloat(a.id);
+          })
+        );
+        setIncomeCopy(
+          incomeJSON.sort(function (a, b) {
+            // Default sort by DATE:
+            // var aa = a.date.split("/").reverse().join(),
+            //   bb = b.date.split("/").reverse().join();
+            // return bb < aa ? -1 : bb > aa ? 1 : 0;
+            return parseFloat(b.id) - parseFloat(a.id);
+          })
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     getExpenseData();
+    getIncomeData();
   }, [cookies.Email]);
 
   // const isLogIn = false
@@ -280,8 +313,9 @@ function FinanceManagement() {
               </div>
               <div className="incomeTable">
                 <ExpensesTable
-                  expense={expense}
-                  expenseCopy={expenseCopy}
+                  expense={income}
+                  expenseCopy={incomeCopy}
+                  income={1}
                   table={"short"}
                 />
               </div>
@@ -331,10 +365,10 @@ function FinanceManagement() {
 
         {/* Daily spending heatmap */}
         <div className="mt-5">
-          <HeatMap
+          {/* <HeatMap
             expense={expense}
             dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
-          />
+          /> */}
         </div>
       </div>
     </div>

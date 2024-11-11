@@ -235,6 +235,78 @@ app.delete("/goal", async (req, res) => {
   }
 });
 
+
+
+
+/**************************************/
+/**************************************/
+/***************INCOME*****************/
+/**************************************/
+/**************************************/
+
+// Get all user income data
+app.get("/income/:person_email", async (req, res) => {
+  const { person_email } = req.params;
+  try {
+    const income = await pool.query("SELECT * FROM income WHERE person_email = $1", [person_email]);
+    res.json(income.rows);
+  } catch (err) {
+    console.log(err);
+    // console.error(error);
+  }
+});
+
+// Post new income to database
+app.post("/income", (req, res) => {
+  const { title, amount, payment_interval, start_date, occurring, end_date, person_email } = req.body;
+  console.log(
+    `info from req. body: ${title}, ${amount}, ${payment_interval}, ${start_date}, ${occurring}, ${end_date}, ${person_email}`
+  );
+  try {
+    pool.query(
+      "INSERT INTO income(title, amount, payment_interval, start_date, occurring, end_date, person_email) VALUES($1, $2, $3, $4, $5, $6, $7)",
+      [title, amount, payment_interval, start_date, occurring, end_date, person_email]
+    );
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// Edit a users income in database
+app.put("/income", async (req, res) => {
+  const { id, title, amount, payment_interval, start_date, occurring, end_date, person_email } = req.body;
+  console.log(
+    `info from req. body: ${id}, ${title}, ${amount}, ${payment_interval}, ${start_date}, ${occurring}, ${end_date}, ${person_email}`
+  );
+  try {
+    const editIncome = await pool.query(
+      "UPDATE income SET title = $2, amount = $3, payment_interval = $4, start_date = $5, occurring = $6, end_date = $7, person_email = $8 WHERE id = $1",
+      [id, title, amount, payment_interval, start_date, occurring, end_date, person_email]
+    );
+    res.json(editIncome);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// DELETE a users income in database
+app.delete("/income", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const deleteIncome = await pool.query(
+      "DELETE FROM income WHERE id = $1",
+      [id]
+    );
+    res.json(deleteIncome);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
+
+
+
 /**************************************/
 /**************************************/
 /****************LOANS*****************/

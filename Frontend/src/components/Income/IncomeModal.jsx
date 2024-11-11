@@ -13,16 +13,15 @@ function IncomeModal(props) {
   // Ignore unused variables on next line:
   // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
-  const [paymentEnd, setPaymentEnd] = useState(false)
+  const [paymentEnd, setPaymentEnd] = useState(props.payment_interval)
 
   const postIncomeData = async (
     formTitle,
     formAmount,
-    formInterest,
+    formPaymentInterval,
     formStartDate,
-    formTerm,
-    formBalanceLeft,
-    formInterestType
+    formPaymentOccurring,
+    formEndDate,
   ) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_SERVERURL}/income`, {
@@ -31,11 +30,10 @@ function IncomeModal(props) {
         body: JSON.stringify({
           title: formTitle,
           amount: parseFloat(formAmount),
-          interest: parseFloat(formInterest),
+          payment_interval: formPaymentInterval,
           start_date: formStartDate,
-          term: parseFloat(formTerm),
-          balance_left: parseFloat(formBalanceLeft),
-          interest_type: formInterestType,
+          occurring: formPaymentOccurring,
+          end_date: formEndDate,
           person_email: cookies.Email,
         }),
       });
@@ -48,11 +46,10 @@ function IncomeModal(props) {
   const editIncomeData = async (
     formTitle,
     formAmount,
-    formInterest,
+    formPaymentInterval,
     formStartDate,
-    formTerm,
-    formBalanceLeft,
-    formInterestType
+    formPaymentOccurring,
+    formEndDate,
   ) => {
     // e.preventDefault();
     try {
@@ -63,11 +60,10 @@ function IncomeModal(props) {
           id: props.id,
           title: formTitle,
           amount: parseFloat(formAmount),
-          interest: parseFloat(formInterest),
+          payment_interval: formPaymentInterval,
           start_date: formStartDate,
-          term: parseFloat(formTerm),
-          balance_left: parseFloat(formBalanceLeft),
-          interest_type: formInterestType,
+          occurring: formPaymentOccurring,
+          end_date: formEndDate,
           person_email: cookies.Email,
         }),
       });
@@ -80,40 +76,45 @@ function IncomeModal(props) {
   function HandleSubmit(e) {
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
-    let formBalanceLeft = parseInt(e.target[2].value);
-    let formStartDate = e.target[3].value; // end date calculated in table
-    let formTerm = e.target[4].value;
-    let formInterest = parseInt(e.target[5].value);
-    let formInterestType = e.target[6].value;
+    let formPaymentInterval = e.target[2].value;
+    let formStartDate = e.target[3].value;
+    let formPaymentOccurring = paymentEnd;
+    let formEndDate = parseInt(e.target[5].value);
 
-    if (formInterestType === "SelectTypeOfIncome") {
-      console.log("No entry - used default Select Type of Income.");
-      alert("Entry not submitted. Please resubmit and choose a valid Interest Type.");
+    if (formPaymentInterval === "SelectIncomeInterval") {
+      alert("Entry not submitted. Please resubmit and choose a valid Payment Interval.");
       return null;
     }
     if (props.postincome === 1) {
-      console.log("Post income data called");
       return postIncomeData(
         formTitle,
         formAmount,
-        formInterest,
+        formPaymentInterval,
         formStartDate,
-        formTerm,
-        formBalanceLeft,
-        formInterestType
+        formPaymentOccurring,
+        formEndDate,
       );
     } else {
       return editIncomeData(
         formTitle,
         formAmount,
-        formInterest,
+        formPaymentInterval,
         formStartDate,
-        formTerm,
-        formBalanceLeft,
-        formInterestType
+        formPaymentOccurring,
+        formEndDate,
       );
     }
   }
+
+  const HandlePaymentInterval = () => {
+    if (props.payment_interval === "on" || paymentEnd === "on"){
+      setPaymentEnd(null)
+    } else setPaymentEnd("on")
+    console.log(paymentEnd)
+  }
+
+  // console.log(typeof props.payment_interval)
+  console.log(typeof paymentEnd)
 
   return (
     <>
@@ -167,8 +168,8 @@ function IncomeModal(props) {
           <Form.Select
             aria-label="Default select example"
             className="mb-3"
-            name="incomeinterval"
-            defaultValue={props.incomeinterval}
+            name="payment_interval"
+            defaultValue={props.payment_interval}
           >
             <option value="SelectIncomeInterval" hidden>Select Income Payment Interval</option>
             <option value="OneTime">One Time</option>
@@ -186,28 +187,29 @@ function IncomeModal(props) {
             type="date"
             required
             name="startdate"
-            defaultValue={props.startdate}
+            defaultValue={props.start_date}
           />
         </Col>
       </Row>
 
       <Row className="mb-4">
       <Col>
-        <Form.Check // prettier-ignore
+        <Form.Check
             type="checkbox"
             label="Payment no longer occurs."
             className="mt-3"
-            onClick={() => setPaymentEnd(!paymentEnd)}
+            onClick={HandlePaymentInterval}
+            defaultChecked={props.payment_interval === "on" ? "on" : null}
           />
         </Col>
         <Col>
-        {paymentEnd === true ? <div>
+        {paymentEnd === "on" ? <div>
         <Form.Label>End Date</Form.Label>
           <Form.Control
             type="date"
             required
-            name="startdate"
-            defaultValue={props.startdate}
+            name="date"
+            defaultValue={props.end_date}
           />
           </div> : null
         }
