@@ -156,7 +156,9 @@ function FinanceManagement() {
     getIncomeData();
   }, [cookies.Email]);
 
-  // const isLogIn = false
+
+
+
 
   return (
     <div id="clientPage">
@@ -309,7 +311,7 @@ function FinanceManagement() {
             </div>
             <div className="incomeTab center">
               <div className="columnChart">
-                <ColumnChart />
+                <ColumnChart income={income}/>
               </div>
               <div className="incomeTable">
                 <ExpensesTable
@@ -365,10 +367,10 @@ function FinanceManagement() {
 
         {/* Daily spending heatmap */}
         <div className="mt-5">
-          {/* <HeatMap
+          <HeatMap
             expense={expense}
             dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
-          /> */}
+          />
         </div>
       </div>
     </div>

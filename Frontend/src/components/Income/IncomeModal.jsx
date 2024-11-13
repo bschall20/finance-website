@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 // import React from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -13,7 +13,7 @@ function IncomeModal(props) {
   // Ignore unused variables on next line:
   // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
-  const [paymentEnd, setPaymentEnd] = useState(props.payment_interval)
+  const [paymentEnd, setPaymentEnd] = useState()
 
   const postIncomeData = async (
     formTitle,
@@ -73,14 +73,27 @@ function IncomeModal(props) {
     }
   };
 
+
   function HandleSubmit(e) {
     let formTitle = e.target[0].value;
     let formAmount = parseInt(e.target[1].value);
     let formPaymentInterval = e.target[2].value;
     let formStartDate = e.target[3].value;
     let formPaymentOccurring = paymentEnd;
-    let formEndDate = parseInt(e.target[5].value);
+    let formEndDate = e.target[5].value;
 
+    // No date entered if payment is still occurring
+    if (paymentEnd === null){
+      formEndDate = null
+    }
+
+    // One Time payment no longer occurs. Pass no longer occurring + end date of start date
+    if (formPaymentInterval === "OneTime"){
+      formPaymentOccurring = "on"
+      formEndDate = formStartDate
+    }
+
+    // Reset form if not entered properly. Invalid selection from dropdown
     if (formPaymentInterval === "SelectIncomeInterval") {
       alert("Entry not submitted. Please resubmit and choose a valid Payment Interval.");
       return null;
@@ -107,15 +120,19 @@ function IncomeModal(props) {
   }
 
   const HandlePaymentInterval = () => {
-    if (props.payment_interval === "on" || paymentEnd === "on"){
+    if (paymentEnd === "on"){
       setPaymentEnd(null)
     } else setPaymentEnd("on")
-    console.log(paymentEnd)
   }
 
-  // console.log(typeof props.payment_interval)
-  console.log(typeof paymentEnd)
 
+  useEffect(() => {
+    setPaymentEnd(props.occurring)
+  }, [props.occurring]);
+
+
+
+  
   return (
     <>
       <Modal
@@ -199,7 +216,8 @@ function IncomeModal(props) {
             label="Payment no longer occurs."
             className="mt-3"
             onClick={HandlePaymentInterval}
-            defaultChecked={props.payment_interval === "on" ? "on" : null}
+            // defaultChecked={props.payment_interval === "on" ? "on" : null}
+            defaultChecked={props.occurring === "on" ? true : false}
           />
         </Col>
         <Col>
