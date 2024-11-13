@@ -17,12 +17,12 @@ import { MdDelete } from "react-icons/md";
 function ExpensesTable(props) {
   const [editExpenseModalShow, setEditExpenseModalShow] = useState(false);
   const [deleteExpenseModalShow, setDeleteExpenseModalShow] = useState(false);
-  const [incomeModalShow, setIncomeModalShow]= useState(false);
+  const [incomeModalShow, setIncomeModalShow] = useState(false);
   const [defaultTitleSearch, setDefaultTitleSearch] = useState("");
   const [defaultDate, setDefaultDate] = useState("");
   const [modalData, setModalData] = useState({});
   const [modalNum, setModalNum] = useState(0);
-  const [expenseAllTableModal, setExpenseAllTableModal] = useState(false)
+  const [expenseAllTableModal, setExpenseAllTableModal] = useState(false);
 
   const [expense, setExpense] = useState([]);
   // const [latestExpense, setLatestExpenses] = useState();
@@ -38,9 +38,7 @@ function ExpensesTable(props) {
     //     bb = b.date.split("/").reverse().join();
     //   return bb < aa ? -1 : bb > aa ? 1 : 0;
     // }))
-
   }, [props.expense, props.expenseCopy]);
-
 
   // Table string comparator to all lower case
   const compareStrings = (a, b) => {
@@ -122,12 +120,20 @@ function ExpensesTable(props) {
   const expenseTypeSort = () => {
     if (expenseTypeOrder === 0) {
       expense.sort(function (a, b) {
-        return compareStrings(a.expense_type, b.expense_type);
+        if (props.income) {
+          return compareStrings(a.payment_interval, b.payment_interval);
+        } else {
+          return compareStrings(a.expense_type, b.expense_type);
+        }
       });
       setExpenseTypeOrder(1);
     } else {
       expense.sort(function (a, b) {
-        return compareStrings(b.expense_type, a.expense_type);
+        if (props.income) {
+          return compareStrings(b.payment_interval, a.payment_interval);
+        } else {
+          return compareStrings(b.expense_type, a.expense_type);
+        }
       });
       setExpenseTypeOrder(0);
     }
@@ -141,7 +147,11 @@ function ExpensesTable(props) {
     // console.log(e.target.value);
     try {
       let result = expenseCopy.filter((a) => {
-        let expenseDate = a.date;
+        let expenseDate;
+        if (props.income){
+          expenseDate = a.start_date;
+        } else { expenseDate = a.date}
+
         if (dateSearch === expenseDate) {
           return a;
         } else {
@@ -162,7 +172,23 @@ function ExpensesTable(props) {
   // Sort table by chronological date
   const [dateOrder, setDateOrder] = useState(1); // Set to 1 as default is already on order 0 (newest first)
   const defaultDateSort = (a, b) => {
-    if (dateOrder === 0) {
+    if (dateOrder === 0 && props.income) {
+      setDateOrder(1);
+      expense.sort(function (a, b) {
+        // Default sort by NEWEST DATE:
+        var aa = a.start_date.split("/").reverse().join(),
+          bb = b.start_date.split("/").reverse().join();
+        return bb < aa ? -1 : bb > aa ? 1 : 0;
+      });
+    } else if (dateOrder === 1 && props.income) {
+      setDateOrder(0);
+      expense.sort(function (a, b) {
+        // Default sort by OLDEST DATE:
+        var aa = a.start_date.split("/").reverse().join(),
+          bb = b.start_date.split("/").reverse().join();
+        return bb > aa ? -1 : bb < aa ? 1 : 0;
+      });
+    } else if (dateOrder === 0) {
       setDateOrder(1);
       expense.sort(function (a, b) {
         // Default sort by NEWEST DATE:
@@ -170,6 +196,7 @@ function ExpensesTable(props) {
           bb = b.date.split("/").reverse().join();
         return bb < aa ? -1 : bb > aa ? 1 : 0;
       });
+    // } else if (dateOrder === 1) {
     } else {
       setDateOrder(0);
       expense.sort(function (a, b) {
@@ -181,15 +208,14 @@ function ExpensesTable(props) {
     }
   };
 
-
   // Set Date from yyyy-mm-dd to mm-dd-yyyy
-  const formatDate = (dataDate) =>{
+  const formatDate = (dataDate) => {
     var d = new Date(dataDate);
     d.setDate(d.getDate() + 1);
     return d.toLocaleDateString();
-  }
+  };
 
-  if (props.table === "full") {
+  if (props.income && props.table === "full") {
     return (
       <Table striped bordered hover style={{ margin: "auto" }}>
         <thead>
@@ -197,9 +223,14 @@ function ExpensesTable(props) {
             <th>
               #{/* <FaSort onClick={() => idSort()} className="tableSort" /> */}
             </th>
-            <th className="tableTitle">
+            <th className="tableTitle" 
+            // style={{display: "flex", flexDirection: "row", alignItems: "end"}}
+            >
               Title{" "}
-              <FaSort className="tableSort ms-1 mb-1" onClick={() => titleSort()} />
+              <FaSort
+                className="tableSort ms-1 mb-1"
+                onClick={() => titleSort()}
+              />
               <InputGroup style={{ width: "60%", display: "flex" }}>
                 <Form.Control
                   aria-label="Title"
@@ -209,12 +240,139 @@ function ExpensesTable(props) {
                 />
               </InputGroup>
             </th>
-            <th style={{width: '15%'}}>
-              Amount <FaSort className="tableSort mb-1" onClick={() => amountSort()} />
+            <th style={{ width: "13%" }}>
+              Amount{" "}
+              <FaSort className="tableSort mb-1" onClick={() => amountSort()} />
             </th>
-            <th style={{width: '20%'}}>
+            <th style={{ width: "13%" }}>
+              Interval{" "}
+              <FaSort
+                className="tableSort mb-1"
+                onClick={() => expenseTypeSort()}
+              />
+            </th>
+            <th className="tableTitle">
+              Start{" "}
+              <FaSort
+                className="tableSort ms-2 mb-1"
+                onClick={() => defaultDateSort()}
+              />
+              <Form.Control
+                style={{ display: "flex" }}
+                type="date"
+                className="tableSort ms-2"
+                onChange={dateSort}
+                value={defaultDate}
+              />
+            </th>
+            <th style={{ width: "13%" }}>End</th>
+            <th style={{ borderRight: "none", width: "3%" }}></th>
+            <th style={{ borderLeft: "none", width: "3%" }}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {expense.map((dataObj, index) => {
+            return <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{dataObj.title}</td>
+              <td>{dataObj.amount}</td>
+              <td>{dataObj.payment_interval}</td>
+              <td>{dataObj.start_date}</td>
+              <td>{dataObj.end_date === null ? "Occurring" : dataObj.end_date}</td>
+              <td
+                  className="tableEdit"
+                  style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                  onClick={() => {
+                    props.income === 1
+                      ? setIncomeModalShow(true)
+                      : setEditExpenseModalShow(true);
+                    setModalData(dataObj);
+                    setModalNum(index + 1);
+                  }}
+                >
+                  <MdEdit />
+                </td>
+
+                <td
+                  className="tableDelete"
+                  style={{
+                    paddingLeft: "0px",
+                    paddingRight: "0px",
+                    border: "none",
+                    borderRight: "solid 1px #DEE2E6",
+                  }}
+                  onClick={() => {
+                    setDeleteExpenseModalShow(true);
+                    setModalData(dataObj);
+                    setModalNum(index + 1);
+                  }}
+                >
+                  <MdDelete />
+                </td>
+            </tr>;
+          })}
+           <IncomeModal
+            show={incomeModalShow}
+            onHide={() => setIncomeModalShow(false)}
+            id={modalData.id}
+            title={modalData.title}
+            amount={modalData.amount}
+            payment_interval={modalData.payment_interval}
+            start_date={modalData.start_date}
+            occurring={modalData.occurring}
+            end_date={modalData.end_date}
+            edit_income={1}
+          />
+          <DeleteExpenseModal
+            show={deleteExpenseModalShow}
+            onHide={() => setDeleteExpenseModalShow(false)}
+            id={modalData.id}
+            num={modalNum}
+            title={modalData.title}
+            amount={modalData.amount}
+            expensetype={modalData.expense_type}
+            date={modalData.date}
+            payment_interval={modalData.payment_interval}
+            start_date={modalData.start_date}
+            occurring={modalData.occurring}
+            end_date={modalData.end_date}
+          />
+        </tbody>
+      </Table>
+    );
+  } else if (props.table === "full") {
+    return (
+      <Table striped bordered hover style={{ margin: "auto" }}>
+        <thead>
+          <tr>
+            <th>
+              #{/* <FaSort onClick={() => idSort()} className="tableSort" /> */}
+            </th>
+            <th className="tableTitle">
+              Title{" "}
+              <FaSort
+                className="tableSort ms-1 mb-1"
+                onClick={() => titleSort()}
+              />
+              <InputGroup style={{ width: "60%", display: "flex" }}>
+                <Form.Control
+                  aria-label="Title"
+                  className="ms-2"
+                  onChange={titleSearchSort}
+                  value={defaultTitleSearch}
+                />
+              </InputGroup>
+            </th>
+            <th style={{ width: "15%" }}>
+              Amount{" "}
+              <FaSort className="tableSort mb-1" onClick={() => amountSort()} />
+            </th>
+            <th style={{ width: "20%" }}>
               Expense Type{" "}
-              <FaSort className="tableSort mb-1" onClick={() => expenseTypeSort()} />
+              <FaSort
+                className="tableSort mb-1"
+                onClick={() => expenseTypeSort()}
+              />
             </th>
             <th className="tableTitle">
               Date{" "}
@@ -230,8 +388,8 @@ function ExpensesTable(props) {
                 value={defaultDate}
               />
             </th>
-            <th style={{ borderRight: "none", width: '3%' }}></th>
-            <th style={{ borderLeft: "none", width: '3%' }}></th>
+            <th style={{ borderRight: "none", width: "3%" }}></th>
+            <th style={{ borderLeft: "none", width: "3%" }}></th>
           </tr>
         </thead>
         <tbody>
@@ -247,7 +405,9 @@ function ExpensesTable(props) {
                   className="tableEdit"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
                   onClick={() => {
-                    props.income === 1 ? setIncomeModalShow(true) : setEditExpenseModalShow(true);
+                    props.income === 1
+                      ? setIncomeModalShow(true)
+                      : setEditExpenseModalShow(true);
                     setModalData(dataObj);
                     setModalNum(index + 1);
                   }}
@@ -303,7 +463,9 @@ function ExpensesTable(props) {
         <thead>
           <tr>
             <th>#</th>
-            <th style={{ borderRight: "none" }}>{props.income === 1 ? "Income" : "Expense"}</th>
+            <th style={{ borderRight: "none" }}>
+              {props.income === 1 ? "Income" : "Expense"}
+            </th>
             {/* <th style={{ border: "none" }}></th> */}
             <th
               colSpan="2"
@@ -331,7 +493,9 @@ function ExpensesTable(props) {
                   className="tableEdit"
                   style={{ paddingLeft: "0px", paddingRight: "0px" }}
                   onClick={() => {
-                    props.income === 1 ? setIncomeModalShow(true) : setEditExpenseModalShow(true);
+                    props.income === 1
+                      ? setIncomeModalShow(true)
+                      : setEditExpenseModalShow(true);
                     setModalData(dataObj);
                     setModalNum(index + 1);
                   }}
@@ -365,7 +529,7 @@ function ExpensesTable(props) {
             expensecopy={props.expenseCopy}
             income={props.income}
           />
-          <IncomeModal 
+          <IncomeModal
             show={incomeModalShow}
             onHide={() => setIncomeModalShow(false)}
             id={modalData.id}
