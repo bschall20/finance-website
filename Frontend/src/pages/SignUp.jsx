@@ -292,7 +292,7 @@ function SignUp(props) {
               {/* <Form.Label style={{ fontWeight: "bold" }}>State</Form.Label>
               <Form.Control type="text" placeholder="State" /> */}
               <Form.Label style={{ fontWeight: "bold" }}>State</Form.Label>
-              <Form.Select aria-label="State" defaultValue={props.state}>  {/* Some reason isn't updated state */}
+              <Form.Select aria-label="State" value={props.state}>  {/* Some reason isn't updated state when defaultValue instead of Value */}
                 <option value="Select">Select State</option>
                 <option value="AL">Alabama (AL)</option>
                 <option value="AK">Alaska (AK)</option>

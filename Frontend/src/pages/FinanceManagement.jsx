@@ -9,11 +9,11 @@ import InfoModal from "../components/InfoModal";
 import SubmitExpenseModal from "../components/Expense/SubmitExpenseModal";
 import ExpensesTable from "../components/Expense/ExpensesTable";
 
-import ColumnChart from "../components/Income/ColumnChart";
-
 import LoanModal from "../components/Loan/LoanModal";
 import LoanTable from "../components/Loan/LoanTable";
 
+import ColumnChart from "../components/Income/ColumnChart";
+import getLast5YearsIncome from "../components/Income/getLast5YearsIncome";
 import IncomeModal from "../components/Income/IncomeModal";
 
 import GoalModal from "../components/Goal/GoalModal";
@@ -39,7 +39,6 @@ function FinanceManagement() {
   const [expenseCopy, setExpenseCopy] = useState([]);
   const [income, setIncome] = useState([]);
   const [incomeCopy, setIncomeCopy] = useState([]);
-  let dailyAllowance = 100;
 
   // Date year for intro tabs
   let d = new Date();
@@ -92,6 +91,66 @@ function FinanceManagement() {
   const addLoan = () => {
     setAddLoanModalShow(true);
   };
+
+
+
+  const getDailyAllowance = () => {
+    const leap = new Date(thisYear, 1, 29).getDate() === 29;
+    let yearIncome = getLast5YearsIncome(income)[4];
+    if (leap){
+      return Math.floor((yearIncome/366 + Number.EPSILON) * 100) / 100
+    } else return Math.floor((yearIncome/365 + Number.EPSILON) * 100) / 100
+    
+  }
+
+  // Compare last years income to this years
+  const incomeCompare = () => {
+    let difference = getLast5YearsIncome(income)[4] - getLast5YearsIncome(income)[3];
+    if (difference < 0){
+      return <sup className="negative ms-1">${difference}</sup>
+    } else return <sup className="positive ms-1">+${difference}</sup>
+  }
+
+  const yearExpenses = () => {
+    let thisYearExpenseTotal = 0;
+    let lastYearExpenseTotal = 0;
+    expense.map((dataObj) => {
+      // parseInt(dataObj.date) === thisYear ? expenseTotal += dataObj.amount : null;
+      if (parseInt(dataObj.date) === thisYear){
+        thisYearExpenseTotal += dataObj.amount
+      } else if (parseInt(dataObj.date) === thisYear-1){
+        lastYearExpenseTotal += dataObj.amount
+      }
+      return 0
+    })
+
+    let expenses = [lastYearExpenseTotal, thisYearExpenseTotal]
+    return expenses;
+  }
+
+  const expenseCompare = () => {
+    let difference = yearExpenses()[1] - yearExpenses()[0];
+    if (difference > 0){
+      return <sup className="negative ms-1">-${difference}</sup>
+    } else return <sup className="positive ms-1">${difference}</sup>
+  }
+
+  const spentToday = () => {
+    let today = new Date();
+    let todayExpenses = 0;
+    expense.map((dataObj) => {
+      if (dataObj.date === today.toISOString().split('T')[0]){
+        todayExpenses += dataObj.amount;
+      }
+      return 0;
+    })
+
+    return todayExpenses;
+  }
+
+
+
+
 
   useEffect(() => {
     const getExpenseData = async () => {
@@ -174,7 +233,7 @@ function FinanceManagement() {
             <p className="FMIntroBoxTitle" style={{ color: "#008FFB" }}>
               Daily Allowance:
             </p>
-            <p>${dailyAllowance}</p>
+            <p className="center" style={{fontSize: "1.1rem"}}>${getDailyAllowance()}</p>
           </div>
           <div
             className="FMIntroBox"
@@ -183,26 +242,26 @@ function FinanceManagement() {
             <p className="FMIntroBoxTitle" style={{ color: "#00E396" }}>
               {thisYear} Net Income:
             </p>
-            ADD A +/- FROM LAST YEAR
-            <p>{dailyAllowance}</p>
+            {/* ADD A +/- FROM LAST YEAR */}
+            <p className="center" style={{fontSize: "1.1rem"}}>${getLast5YearsIncome(income)[4]}{incomeCompare()}</p>
           </div>
           <div
             className="FMIntroBox"
             style={{ borderLeft: "solid 3px #FFB01A" }}
           >
             <p className="FMIntroBoxTitle" style={{ color: "#FFB01A" }}>
-              Goals Completed This Year:
+              {thisYear} Expense Total:
             </p>
-            <p>{dailyAllowance}</p>
+            <p className="center" style={{fontSize: "1.1rem"}}>${yearExpenses()[1]}{expenseCompare()}</p>
           </div>
           <div
             className="FMIntroBox"
             style={{ borderLeft: "solid 3px #D60027" }}
           >
             <p className="FMIntroBoxTitle" style={{ color: "#D60027" }}>
-              Open Loans:
+              Spent Today:
             </p>
-            <p>{dailyAllowance}</p>
+            <p className="center" style={{fontSize: "1.1rem"}}>${spentToday()}</p>
           </div>
         </div>
 
@@ -369,7 +428,7 @@ function FinanceManagement() {
         <div className="mt-5">
           <HeatMap
             expense={expense}
-            dailyAllowance={dailyAllowance} // Change this to users daily allowance based on income/365
+            dailyAllowance={getDailyAllowance()} // Change this to users daily allowance based on income/365
           />
         </div>
       </div>
