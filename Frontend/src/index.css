@@ -99,13 +99,16 @@ background-blend-mode: multiply; */
     flex-direction: column;
     margin-left: 10rem;
   }
-  /* Intro Right */
+  /* Intro Right Pic */
   .lifeBlocks {
     border-bottom-left-radius: 100px;
     height: 100%;
+    width: 100%;
   }
   .homeIntroR {
     height: 100%;
+    width: 100%;
+    /* overflow: hidden; */
   }
 
   /* Home 2 Section */
@@ -195,6 +198,7 @@ background-blend-mode: multiply; */
     /* Outro Left */
     .relaxImg, .homeOutroL {
       height: 100%;
+      width: 110%;
       border-bottom-right-radius: 100px;
     }
 
@@ -602,7 +606,7 @@ background-blend-mode: multiply; */
 
 #footer {
   background-color: #1C2758;
-  height: 20vh;
+  /* height: 20vh; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -623,8 +627,15 @@ background-blend-mode: multiply; */
 }
 .footerBoxL {
   flex-direction: column;
-  border-right: 1px solid lightgray;
+  /* border-right: 1px solid lightgray; */
   padding-right: 5rem;
+}
+
+.footerBoxR {
+  border-left: 1px solid lightgray;
+  height: 100px;
+  margin: auto;
+  align-items: center;
 }
 
 .connectFooter, .navigateFooter {
@@ -659,4 +670,59 @@ background-blend-mode: multiply; */
 
 
 
+/* *************************LARGE DEVICE SECTION************************* */
+@media only screen and (max-width: 1500px) {
+  .homeIntro {
+    height: 40vh;
+    gap: 5rem;
+  }
+  #home h2 {
+    font-size: 1.8rem;
+  }
+  .homeIntro p, .home2Info p {
+    font-size: 1rem;
+  }
+  .homeIntroL {
+    margin-left: 6rem;
+  }
+  .homeOutro {
+    height: 40vh;
+  }
+  .homeOutroContent {
+    gap: 5rem;
+  }
+  .homeOutroR {
+    margin-right: 5rem;
+  }
+  .relaxImg, .homeOutroL {
+    width: 100%;
+  }
 
+
+}
+
+@media only screen and (max-width: 1300px) {
+  .footerContent {
+    flex-direction: column-reverse;
+  }
+  .footerBoxL {
+    padding-right: 0rem;
+  }
+  .footerBoxR {
+    border-left: none;
+  }
+}
+
+/* *************************MEDIUM DEVICE SECTION************************* */
+@media only screen and (max-width: 1024px) {
+
+}
+
+/* *************************MOBILE DEVICE SECTION************************* */
+@media only screen and (max-width: 800px) {
+
+}
+
+@media only screen and (max-width: 500px) {
+
+}

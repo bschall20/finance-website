@@ -1,6 +1,7 @@
 import React from "react";
 import LifeBlocks from "../images/life-blocks.jpg";
 import Relax from "../images/relax.jpg";
+
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import Button from "react-bootstrap/Button";

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCookies } from "react-cookie";
 import { FaSquareFacebook } from "react-icons/fa6";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaSquareInstagram } from "react-icons/fa6";
@@ -10,6 +11,10 @@ import { FaTiktok } from "react-icons/fa6";
 
 
 function Footer() {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
+  const [cookies, setCookie, removeCookie] = useCookies(null);
+
     return (
         <div id="footer">
             <div className="footerContent">
@@ -26,14 +31,19 @@ function Footer() {
                 <p className="footerBrand" style={{textAlign: "center"}}><a href="/">Build My Finance.</a></p>
             </div>
 
-            <div className="footerBoxR">
-                {/* <p className="navigateFooter">Navigate:</p> */}
+            {/* Logged in vs not */}
+            {cookies.Email ? <div className="footerBoxR">
                 <p><a href="/">Home</a></p>
-                <p><a href="/financemanagement">Finance Management</a></p>
+                <p><a href="/financemanagement">Finances</a></p>
                 <p><a href="/contact">Contact</a></p>
                 <p><a href="/about">About</a></p>
                 <p><a href="/account">Account</a></p>
-            </div>
+            </div> : <div className="footerBoxR">
+                <p><a href="/">Home</a></p>
+                <p><a href="/signin">Finances</a></p>
+                <p><a href="/contact">Contact</a></p>
+                <p><a href="/about">About</a></p>
+            </div>}
             </div>
         </div>
     )
