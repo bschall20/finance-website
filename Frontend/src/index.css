@@ -123,7 +123,8 @@ background-blend-mode: multiply; */
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 25vh;
+    /* height: 25vh; */
+    padding: 2rem 0;
     width: 65%;
   }
 
@@ -545,8 +546,10 @@ background-blend-mode: multiply; */
     flex-direction: row;
     text-align: center;
     width: 62.5%;
+    gap: 2rem;
+    margin: 3rem 0;
    }
-   .aboutImg {
+   .aboutImg, .aboutImg2 {
     border: 15px solid #dddddd;
     border-radius: 15px;
     /* position: relative;
@@ -554,11 +557,14 @@ background-blend-mode: multiply; */
     right: 0; */
     transition: all ease 1s;
    }
-   .aboutImg:hover {
+   .aboutImg:hover, .aboutImg2:hover {
     /* right: -20px;
     top: -20px; */
     border-color: #1C2758;
     color: #000;
+   }
+   .aboutImg2 {
+    display: none;
    }
    .aboutInfo1L, .aboutInfo1R {
     flex-direction: column;
@@ -574,6 +580,7 @@ background-blend-mode: multiply; */
     position: relative;
     top: 0;
     transition: all ease 0.5s;
+    flex-direction: row;
    }
    .missionStatement:hover {
     background-color: #3ADAFA;
@@ -611,6 +618,10 @@ background-blend-mode: multiply; */
   align-items: center;
   justify-content: center;
   /* gap: 8rem; */
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  /* margin-top: auto; */
 }
 
 .footerContent {
@@ -668,6 +679,10 @@ background-blend-mode: multiply; */
   text-decoration: underline;
 }
 
+.footerLinkHome {
+  padding-left: 8rem;
+}
+
 
 
 /* *************************LARGE DEVICE SECTION************************* */
@@ -704,6 +719,8 @@ background-blend-mode: multiply; */
 @media only screen and (max-width: 1300px) {
   .footerContent {
     flex-direction: column-reverse;
+    padding: 0 1rem;
+    width: 100%;
   }
   .footerBoxL {
     padding-right: 0rem;
@@ -711,18 +728,155 @@ background-blend-mode: multiply; */
   .footerBoxR {
     border-left: none;
   }
+  .footerLinkHome {
+    padding-left: 0;
+  }
+
+  /* CONTACT  */
+  .contactContent {
+     width: 100%;
+  }
+
+  /* ABOUT  */
+  .aboutInfo1 {
+    padding: 0 3rem;
+    width: 100%;
+  }
+  .aboutInfo2 {
+    width: 90%;
+  }
+  
+  .aboutInfo3 {
+     flex-direction: column;
+   }
+  .aboutInfo3Header {
+    text-align: center;
+  }
+
+  /* SIGN IN/OUT  */
+  #signIn, #signOut {
+    width: 40%;
+  }
+
 }
 
 /* *************************MEDIUM DEVICE SECTION************************* */
 @media only screen and (max-width: 1024px) {
+  /* HOME  */
+  .homeIntroL {
+    margin-left: 3rem;
+  }
+  .homeSlim, .homeOutroContent {
+    width: 100%;
+  }
+  .homeOutroL, .relaxImg {
+   width: 100%;
+  }
+  .homeOutroR {
+    margin-right: 1rem;
+  }
 
+
+  /* ABOUT */
+  .aboutImg {
+    height: 40rem;
+    width: 100%;
+  }
 }
 
 /* *************************MOBILE DEVICE SECTION************************* */
 @media only screen and (max-width: 800px) {
+  /* HOME  */
+  .lifeBlocks, .relaxImg, .homeOutroL {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0;
+  }
 
+  /* CONTACT  */
+  .contactContent {
+    flex-direction: column;
+    width: 80%;
+    /* margin: auto; */
+  }
+  .contactInfo {
+    margin-left: 0;
+    padding-left: 2rem;
+  }
+  .contactForm {
+    margin-right: 0rem;
+    padding: 2rem;
+  }
+
+  /* ABOUT */
+  .aboutInfo1 {
+    flex-direction: column-reverse;
+    margin: 2rem 0 0;
+  }
+  .aboutInfo1RHeader {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    gap: 2rem;
+  }
+  .aboutImg {
+    display: none;
+  }
+  .aboutImg2 { 
+    display: block;
+    height: 40vh;
+    margin: auto;
+    width: 40%;
+  }
+
+  .missionStatement{
+    margin-bottom: 0;
+  }
+
+  /* SIGN IN/OUT  */
+   #signIn, #signOut {
+    width: 60%;
+   }
 }
 
 @media only screen and (max-width: 500px) {
+  /* HOME  */
+  .homeIntro, .homeOutroContent {
+    gap: 1rem;
+  }
+  .homeIntro {
+    height: 50vh;
+    /* padding: 5rem 0; */
+  }
+  .homeIntroL {
+    margin-left: 1rem;
+    /* height: 100%; */
+  }
+  .homeOutroR, .homeIntroL {
+    width: 100%;
+  }
+  .homeBreak {
+    display: none;
+  }
 
+  /* ABOUT */
+  .aboutInfo1RHeader {
+    flex-direction: column-reverse;
+    gap: 0;
+  }
+  .aboutImg2 {
+    height: 50vh;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  /* HOME  */
+  .homeIntro {
+    height: 60vh;
+  }
+
+  /* SIGN IN/OUT  */
+  #signIn, #signOut {
+    width: 70%;
+   }
 }

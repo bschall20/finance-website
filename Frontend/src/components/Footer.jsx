@@ -28,18 +28,18 @@ function Footer() {
                     <a href="https://www.tiktok.com" target="_blank" rel="noreferrer"><FaTiktok className="connectLogo mx-1 mb-1"/></a>
                 </p>
                 <p className="copyrightFooter">Copyright © {new Date().getFullYear()}. Build My Finance. All Rights Reserved.</p>
-                <p className="footerBrand" style={{textAlign: "center"}}><a href="/">Build My Finance.</a></p>
+                <p className="footerBrand" ><a href="/">Build My Finance.</a></p>
             </div>
 
             {/* Logged in vs not */}
             {cookies.Email ? <div className="footerBoxR">
-                <p><a href="/">Home</a></p>
+                <p className="footerLinkHome" style={{margin: '0'}}><a href="/">Home</a></p>
                 <p><a href="/financemanagement">Finances</a></p>
                 <p><a href="/contact">Contact</a></p>
                 <p><a href="/about">About</a></p>
                 <p><a href="/account">Account</a></p>
             </div> : <div className="footerBoxR">
-                <p><a href="/">Home</a></p>
+                <p className="footerLinkHome" style={{margin: '0'}}><a href="/">Home</a></p>
                 <p><a href="/signin">Finances</a></p>
                 <p><a href="/contact">Contact</a></p>
                 <p><a href="/about">About</a></p>

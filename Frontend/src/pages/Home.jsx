@@ -20,7 +20,7 @@ function Home() {
         <div className="homeIntro">
           <div className="homeIntroL">
             <h2>
-              Visualize All of Your <br /> Finances in One Place.
+              Visualize All of Your <br className="homeBreak"/> Finances in One Place.
             </h2>
             <p>
               Personalize all of your incomes and expenses with graphic charts
@@ -108,7 +108,7 @@ function Home() {
             />
           </div>
           <div className="homeOutroR">
-            <h2>Kickback and Relax.</h2>
+            <h2>Kick Back and Relax.</h2>
             <p>
               Relax and remain stress-free on the state of your financials with
               our advanced planning for your future.
