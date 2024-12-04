@@ -63,7 +63,7 @@ function TopNav(props) {
 
             { props.signedIn &&
             <Nav.Item>
-              <NavDropdown eventkey="account" title="Account" id="basic-nav-dropdown" className='px-md-4 px-lg-0' style={{textAlign: 'center'}}>
+              <NavDropdown eventkey="account" title="Account" id="basic-nav-dropdown" className='px-4 px-lg-0'>
                 <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Profile</NavDropdown.Item>
                 {/* <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Setup</NavDropdown.Item>
                 <NavDropdown.Item as={NavLink} to="/account" eventkey="account" style={{backgroundColor: 'white', color: '#575757'}}>Security</NavDropdown.Item>

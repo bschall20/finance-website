@@ -97,6 +97,13 @@ function SignUp(props) {
   const [updatedInfo, setUpdatedInfo] = useState(false);
   const [updatedError, setUpdatedError] = useState(false);
   const editPersonData = async (e) => {
+    let d = new Date();
+    let day = d.getDate();
+    let month = d.getMonth()+1;
+    let year = d.getFullYear();
+    let time = d.toLocaleTimeString();
+    let loginDate = `${month}-${day}-${year} @ ${time}`
+
     try {
       await fetch(
         `${process.env.REACT_APP_SERVERURL}/person/${cookies.Email}`,
@@ -111,6 +118,7 @@ function SignUp(props) {
             city: e.target[4].value,
             state: e.target[5].value,
             postal_code: e.target[6].value,
+            last_login: loginDate,
           }),
         }
       );

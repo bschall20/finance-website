@@ -217,7 +217,7 @@ function ExpensesTable(props) {
 
   if (props.income && props.table === "full") {
     return (
-      <Table striped bordered hover style={{ margin: "auto" }}>
+      <Table responsive striped bordered hover style={{ margin: "auto" }}>
         <thead>
           <tr>
             <th>
@@ -342,7 +342,7 @@ function ExpensesTable(props) {
     );
   } else if (props.table === "full") {
     return (
-      <Table striped bordered hover style={{ margin: "auto" }}>
+      <Table responsive striped bordered hover style={{ margin: "auto" }}>
         <thead>
           <tr>
             <th>
@@ -459,7 +459,7 @@ function ExpensesTable(props) {
     );
   } else if (props.table === "short") {
     return (
-      <Table striped bordered hover style={{ margin: "auto" }}>
+      <Table responsive striped bordered hover style={{ margin: "auto" }}>
         <thead>
           <tr>
             <th>#</th>

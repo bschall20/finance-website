@@ -138,6 +138,7 @@ function GoalsTable(props) {
     let count = 0;
     return (
       <Table
+        responsive
         striped
         bordered
         hover

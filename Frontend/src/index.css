@@ -283,6 +283,7 @@ background-blend-mode: multiply; */
 
     .FMIntro {
       display: flex;
+      flex-wrap: wrap;
       flex-direction: row;
       justify-content: space-between;
       /* width: 100%; */
@@ -518,8 +519,19 @@ background-blend-mode: multiply; */
     flex-direction: column;
   }
 
-  #signIn, #signOut {
-    height: 56vh;
+  #signIn, #signOut, #notFound {
+    /* height: 56vh; */
+    height: 70vh;
+  }
+
+  .guestLoginButton {
+    border: none;
+    background-color: white;
+    color: #0D6EFD;
+    text-decoration: underline;
+  }
+  .guestLoginButton:hover {
+    color: #0A58CA;
   }
 
   #profile {
@@ -600,10 +612,22 @@ background-blend-mode: multiply; */
     gap: 5rem;
     width: 62.5%;
    }
+
+
+
+  /**************************************/
+  /**************************************/
+  /*************NOT FOUND****************/
+  /**************************************/
+  /**************************************/
+  #notFound {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: auto;
+    height: 80vh;
+  }
    
-
-
-
 
   /**************************************/
   /**************************************/
@@ -618,8 +642,6 @@ background-blend-mode: multiply; */
   align-items: center;
   justify-content: center;
   /* gap: 8rem; */
-  position: fixed;
-  bottom: 0;
   width: 100%;
   /* margin-top: auto; */
 }
@@ -665,6 +687,9 @@ background-blend-mode: multiply; */
 .connectLogo:hover {
   top: -10px;
   color: lightgray;
+}
+.footerBreak {
+  display: none;
 }
 .copyrightFooter, .footerBrand a, .footerBoxR p a{
   font-size: 1rem;
@@ -754,7 +779,7 @@ background-blend-mode: multiply; */
   }
 
   /* SIGN IN/OUT  */
-  #signIn, #signOut {
+  #signIn, #signOut, #notFound {
     width: 40%;
   }
 
@@ -782,6 +807,28 @@ background-blend-mode: multiply; */
     height: 40rem;
     width: 100%;
   }
+
+
+  /* FINANCE MANAGEMENT */
+  #sideNav {
+    display: none;
+  }
+  .FMIntro > div {
+    flex: 40%;
+  }
+  .FMIntro {
+    row-gap: 1rem;
+    column-gap: 1rem;
+  }
+
+  .expenseTab, .incomeTab, .loanTab, .goalTab {
+    flex-direction: column;
+    gap: 2rem;
+  } 
+  .pieChart, .columnChart, .expenseTable, .incomeTable, .loanTable, .loanGraph {
+    width: 90%;
+  }
+
 }
 
 /* *************************MOBILE DEVICE SECTION************************* */
@@ -832,10 +879,59 @@ background-blend-mode: multiply; */
     margin-bottom: 0;
   }
 
+  /* FINANCE MANAGEMENT */
+  .tabIntroInfo {
+    flex-direction: column;
+  }
+
   /* SIGN IN/OUT  */
-   #signIn, #signOut {
+   #signIn, #signOut, #notFound {
     width: 60%;
    }
+}
+
+@media only screen and (max-width: 650px) {
+  /* HOME */
+  .homeIntro {
+    height: 50vh;
+    flex-direction: column;
+    gap: 2rem;
+    /* padding: 5rem 0; */
+  }
+  .homeIntroL, .homeOutroR {
+    padding: 0rem 2rem;
+    margin: 1rem 0 0;
+    width: 80%;
+    /* height: 100%; */
+  }
+  .homeIntroR, .homeOutroL {
+    height: 80%;
+    width: 80%;
+  }
+  .home2 {
+    margin-top: 7rem;
+  }
+  .homeOutro{
+    margin-top: 10rem;
+    padding-bottom: 4rem;
+  }
+  .homeOutroR {
+    padding-bottom: 10rem;
+  }
+  .homeOutroContent {
+    flex-direction: column;
+  }
+
+
+  /* FINANCE MANAGEMENT */
+  #financeManagement {
+    width: 95%;
+  }
+
+    /* SIGN IN/OUT  */
+    #signIn {
+      width: 70%;
+     }
 }
 
 @media only screen and (max-width: 500px) {
@@ -845,10 +941,12 @@ background-blend-mode: multiply; */
   }
   .homeIntro {
     height: 50vh;
+    flex-direction: column;
     /* padding: 5rem 0; */
   }
   .homeIntroL {
-    margin-left: 1rem;
+    padding: 2rem;
+    margin: 1rem;
     /* height: 100%; */
   }
   .homeOutroR, .homeIntroL {
@@ -867,16 +965,44 @@ background-blend-mode: multiply; */
     height: 50vh;
     width: 100%;
   }
+
+  /* FOOTER */
+  .footerBoxL {
+    width: 90%;
+  }
+  .footerBreak {
+    display: inline-block;
+  }
+
 }
 
 @media only screen and (max-width: 400px) {
   /* HOME  */
-  .homeIntro {
+  .homeIntro, .homeOutro {
     height: 60vh;
+  }
+  .homeIntroR, .homeOutroL {
+    height: 80%;
+    width: 80%;
+  }
+  .home2 {
+    margin-top: 0rem;
+  }
+
+
+  .homeOutro{
+    margin-top: 0rem;
+    padding-bottom: 0rem;
+  }
+  .homeOutroR {
+    padding-bottom: 4rem;
+  }
+  .homeOutroContent {
+    flex-direction: column;
   }
 
   /* SIGN IN/OUT  */
-  #signIn, #signOut {
+  #signIn, #signOut, #notFound {
     width: 70%;
    }
 }

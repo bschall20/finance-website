@@ -20,6 +20,7 @@ function Footer() {
             <div className="footerContent">
             <div className="footerBoxL">
                 <p className="connectFooter pt-3">Connect With Us: 
+                    <br className="footerBreak" />
                     <a href="https://www.facebook.com" target="_blank" rel="noreferrer"><FaSquareFacebook className="connectLogo ms-2 me-1 mb-1"/></a>
                     <a href="https://www.x.com" target="_blank" rel="noreferrer"><FaSquareXTwitter className="connectLogo mx-1 mb-1"/></a>
                     <a href="https://www.instagram.com" target="_blank" rel="noreferrer"><FaSquareInstagram className="connectLogo mx-1 mb-1"/></a>
@@ -27,7 +28,7 @@ function Footer() {
                     <a href="https://www.youtube.com" target="_blank" rel="noreferrer"><FaSquareYoutube className="connectLogo mx-1 mb-1"/></a>
                     <a href="https://www.tiktok.com" target="_blank" rel="noreferrer"><FaTiktok className="connectLogo mx-1 mb-1"/></a>
                 </p>
-                <p className="copyrightFooter">Copyright © {new Date().getFullYear()}. Build My Finance. All Rights Reserved.</p>
+                <p className="copyrightFooter">Copyright © {new Date().getFullYear()}. Build My Finance. <br/>All Rights Reserved.</p>
                 <p className="footerBrand" ><a href="/">Build My Finance.</a></p>
             </div>
 

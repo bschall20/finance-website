@@ -23,6 +23,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Button from "react-bootstrap/esm/Button";
 
+
 import { useCookies } from "react-cookie";
 
 import { CiCircleQuestion } from "react-icons/ci";
@@ -269,13 +270,12 @@ function FinanceManagement() {
         <Tabs
           defaultActiveKey="expense"
           id="uncontrolled-tab-example"
-          className=""
           // variant="pills"
           // justify
         >
           <Tab eventKey="expense" title="Expenses">
             <div className="tabIntroInfo">
-              <h2 className="ms-4">
+              <h2 className="ms-md-4">
                 Expense Sectors
                 <CiCircleQuestion
                   className="infoButton"
@@ -329,7 +329,7 @@ function FinanceManagement() {
           <Tab eventKey="goal" title="Goals">
             {/* Goals table */}
             <div className="tabIntroInfo pb-4">
-              <h2 className="ms-5">Goal Tracker</h2>
+              <h2 className="ms-md-5">Goal Tracker</h2>
               <Button
                 className="me-5"
                 variant="primary"
@@ -352,7 +352,7 @@ function FinanceManagement() {
           <Tab eventKey="income" title="Income">
             {/* Income tracker table */}
             <div className="tabIntroInfo pb-4">
-              <h2 className="ms-5">Income Tracker</h2>
+              <h2 className="ms-md-5">Income Tracker</h2>
               <Button
                 className="me-5"
                 variant="primary"
@@ -386,7 +386,7 @@ function FinanceManagement() {
           <Tab eventKey="loan" title="Loans">
             {/* Loan tracker table */}
             <div className="tabIntroInfo pb-4">
-              <h2 className="ms-5">Loan Tracker</h2>
+              <h2 className="ms-md-5">Loan Tracker</h2>
               <Button
                 className="me-5"
                 variant="primary"

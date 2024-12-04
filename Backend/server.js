@@ -31,7 +31,7 @@ app.get("/person/:email", async (req, res) => {
 // Sign Up
 app.post("/person", async (req, res) => {
   const { email, password, first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
-
+  const currentDate = new Date();
   // Hash password
   const salt = bcrypt.genSaltSync(10);
   const hashedPassword = bcrypt.hashSync(password, salt)
@@ -40,8 +40,8 @@ app.post("/person", async (req, res) => {
   );
   try {
     const signUp = await pool.query(
-      "INSERT INTO person(email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-      [email, hashedPassword, first_name, last_name, phone_number, address, city, state, postal_code]
+      "INSERT INTO person(email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code, last_login) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
+      [email, hashedPassword, first_name, last_name, phone_number, address, city, state, postal_code, currentDate]
     );
 
     // Prevents same email signup
@@ -59,15 +59,27 @@ app.post("/person", async (req, res) => {
 // Edit a person in database
 app.put("/person/:email", async (req, res) => {
   const { email } = req.params;
-  const { first_name, last_name, phone_number, address, city, state, postal_code } = req.body;
-  try {
-    const editPerson = await pool.query(
-      "UPDATE person SET first_name = $2, last_name = $3, phone_number = $4, address = $5, city = $6, state = $7, postal_code = $8 WHERE email = $1",
-      [email, first_name, last_name, phone_number, address, city, state, postal_code]
-    );
-    res.json(editPerson);
-  } catch (err) {
-    console.log(err);
+  const { first_name, last_name, phone_number, address, city, state, postal_code, last_login } = req.body;
+  if (first_name){
+    try {
+      const editPerson = await pool.query(
+        "UPDATE person SET first_name = $2, last_name = $3, phone_number = $4, address = $5, city = $6, state = $7, postal_code = $8, last_login = $9 WHERE email = $1",
+        [email, first_name, last_name, phone_number, address, city, state, postal_code, last_login]
+      );
+      res.json(editPerson);
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    try {
+      const editPerson = await pool.query(
+        "UPDATE person SET last_login = $2 WHERE email = $1",
+        [email, last_login]
+      );
+      res.json(editPerson);
+    } catch (err) {
+      console.log(err);
+    }
   }
 });
 

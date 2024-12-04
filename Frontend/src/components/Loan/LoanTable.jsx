@@ -90,7 +90,8 @@ function LoanTracker(props) {
 
   return (
     <div className="loanTab center">
-      <Table striped bordered hover style={{ margin: "0rem", width: "40%" }}>
+      <div className="loanTable">
+      <Table responsive striped bordered hover style={{ margin: "0rem"}} className="loanTable">
         <thead>
           <tr>
             <th style={{ borderTop: "solid 1px #DEE2E6" }}>#</th>
@@ -241,6 +242,7 @@ function LoanTracker(props) {
           />
         </tbody>
       </Table>
+      </div>
 
       <div className="loanGraph">
           {modalNum !== 0 ? <LoanProjectionTable
