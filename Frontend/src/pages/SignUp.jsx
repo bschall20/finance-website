@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Button from "react-bootstrap/Button";
@@ -174,8 +174,12 @@ function SignUp(props) {
     passwordInfoText = "Set New Password";
   }
 
-  console.log(props.first_name)
-  console.log(props.state)
+
+  const [userState, setUserState] = useState(props.state)
+  useEffect(() => {
+    setUserState(props.state)
+  }, [props.state])
+
 
 
   return (
@@ -300,7 +304,7 @@ function SignUp(props) {
               {/* <Form.Label style={{ fontWeight: "bold" }}>State</Form.Label>
               <Form.Control type="text" placeholder="State" /> */}
               <Form.Label style={{ fontWeight: "bold" }}>State</Form.Label>
-              <Form.Select aria-label="State" value={props.state}>  {/* Some reason isn't updated state when defaultValue instead of Value */}
+              <Form.Select aria-label="State" onChange={(e) => {setUserState(e.target.value)}} value={userState}> {/* Some reason isn't updated state when defaultValue instead of Value */}
                 <option value="Select">Select State</option>
                 <option value="AL">Alabama (AL)</option>
                 <option value="AK">Alaska (AK)</option>

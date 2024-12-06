@@ -49,7 +49,7 @@ function SignIn() {
         setCookie("Email", data.email)
         setCookie("AuthToken", data.token)
         navigate("/financemanagement")
-        console.log(data);
+        // console.log(data);
         await fetch(
           `${process.env.REACT_APP_SERVERURL}/person/${data.email}`,
           {

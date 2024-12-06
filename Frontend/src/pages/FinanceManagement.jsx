@@ -27,11 +27,16 @@ import Button from "react-bootstrap/esm/Button";
 import { useCookies } from "react-cookie";
 
 import { CiCircleQuestion } from "react-icons/ci";
+import { CiCircleAlert } from "react-icons/ci";
+
 
 function FinanceManagement() {
   // Ignore unused variables on next line:
   // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null);
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
+  const [email, setEmail] = useState(cookies.Email);
   const [submitExpenseModalShow, setSubmitExpenseModalShow] = useState(false);
   const [infoModalShow, setInfoModalShow] = useState(false);
   const [infoTitle, setInfoTitle] = useState("");
@@ -152,12 +157,11 @@ function FinanceManagement() {
 
 
 
-
   useEffect(() => {
     const getExpenseData = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_SERVERURL}/expense/${cookies.Email}`
+          `${process.env.REACT_APP_SERVERURL}/expense/${email}`
         );
         const expenseJSON = await response.json();
         setExpense(
@@ -186,7 +190,7 @@ function FinanceManagement() {
     const getIncomeData = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_SERVERURL}/income/${cookies.Email}`
+          `${process.env.REACT_APP_SERVERURL}/income/${email}`
         );
         const incomeJSON = await response.json();
         setIncome(
@@ -214,18 +218,18 @@ function FinanceManagement() {
 
     getExpenseData();
     getIncomeData();
-  }, [cookies.Email]);
-
-
-
+  }, [email]);
 
 
   return (
     <div id="clientPage">
-      <div id="sideNav" className="">
+      <div id="sideNav">
         <SideNav />
       </div>
-      <div id="financeManagement" className="">
+      <div id="financeManagement">
+        {email === "guest@buildmyfinance.com" ? <div className="FMGuest">
+            <p className="m-auto"><CiCircleAlert className="alertButton" />This is a public account. All additions and deletions are public and will be seen by every user who uses the 'Guest' account.<CiCircleAlert className="alertButton" /></p>
+        </div> : null}
         <div className="FMIntro mb-5">
           <div
             className="FMIntroBox"
