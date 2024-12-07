@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Finance Website",
   "scripts": {
-    "build": "if-env TYPE=server && (cd server && npm install) || (cd client && npm install)",
+    "build": "if-env TYPE=server && (cd Backend && npm install) || (cd Frontend && npm install)",
     "server": "node ./server/server.js",
     "client": "cd client && npm start"
   },
