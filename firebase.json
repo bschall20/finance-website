@@ -6,7 +6,6 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "hosting": {"site": "build-my-finance"},
     "rewrites": [
       {
         "source": "**",
