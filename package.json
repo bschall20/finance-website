@@ -19,6 +19,7 @@
   "homepage": "https://github.com/bschall20/finance-website#readme",
   "dependencies": {
     "firebase": "^11.0.2",
+    "firebase-tools": "^13.28.0",
     "if-env": "^1.0.4"
   }
 }
