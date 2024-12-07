@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.26f86df6.css",
+    "main.js": "/static/js/main.059f09b5.js",
+    "static/media/family.jpg": "/static/media/family.a1979a7cc17c94df28eb.jpg",
+    "static/media/relax.jpg": "/static/media/relax.6c839b3dd72b6861ed31.jpg",
+    "static/media/contact.jpg": "/static/media/contact.29d915a7a79e38473f8d.jpg",
+    "static/media/about.jpg": "/static/media/about.b19da619ba89692f1cb7.jpg",
+    "static/media/life-blocks.jpg": "/static/media/life-blocks.919dc6953f298e7d1087.jpg",
+    "index.html": "/index.html",
+    "main.26f86df6.css.map": "/static/css/main.26f86df6.css.map",
+    "main.059f09b5.js.map": "/static/js/main.059f09b5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.26f86df6.css",
+    "static/js/main.059f09b5.js"
+  ]
+}
