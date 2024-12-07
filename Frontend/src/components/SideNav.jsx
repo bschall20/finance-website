@@ -11,6 +11,8 @@ import { FaSignOutAlt } from "react-icons/fa";
 
 
 function SideNav() {
+  // Ignore unused variables on next line:
+  // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const navigate = useNavigate();
   const location = useLocation(); // used to find path name to set active side nav
