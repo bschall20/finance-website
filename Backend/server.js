@@ -35,9 +35,9 @@ app.post("/person", async (req, res) => {
   // Hash password
   const salt = bcrypt.genSaltSync(10);
   const hashedPassword = bcrypt.hashSync(password, salt)
-  console.log(
-    `info from req. body: ${email}, ${password}, ${first_name}, ${last_name}, ${phone_number}, ${address}, ${city}, ${state}, ${postal_code} `
-  );
+  // console.log(
+  //   `info from req. body: ${email}, ${password}, ${first_name}, ${last_name}, ${phone_number}, ${address}, ${city}, ${state}, ${postal_code} `
+  // );
   try {
     const signUp = await pool.query(
       "INSERT INTO person(email, passwordhash, first_name, last_name, phone_number, address, city, state, postal_code, last_login) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
@@ -133,9 +133,9 @@ app.get("/expense/:person_email", async (req, res) => {
 // Post new expense to database
 app.post("/expense", (req, res) => {
   const { title, amount, expense_type, date, person_email } = req.body;
-  console.log(
-    `info from req. body: ${title}, ${amount}, ${expense_type}, ${date}, ${person_email}`
-  );
+  // console.log(
+  //   `info from req. body: ${title}, ${amount}, ${expense_type}, ${date}, ${person_email}`
+  // );
   //const id = uuidv4();
   try {
     pool.query(
@@ -196,9 +196,9 @@ app.get("/goal/:person_email", async (req, res) => {
 // Post new goal to database
 app.post("/goal", (req, res) => {
   const { title, amount, start_date, goal_date, completed, person_email } = req.body;
-  console.log(
-    `info from req. body: ${title}, ${amount}, ${start_date}, ${goal_date}, ${completed}, ${person_email}`
-  );
+  // console.log(
+  //   `info from req. body: ${title}, ${amount}, ${start_date}, ${goal_date}, ${completed}, ${person_email}`
+  // );
   try {
     pool.query(
       "INSERT INTO goal(title, amount, start_date, goal_date, completed, person_email) VALUES($1, $2, $3, $4, $5, $6)",
@@ -271,9 +271,9 @@ app.get("/income/:person_email", async (req, res) => {
 // Post new income to database
 app.post("/income", (req, res) => {
   const { title, amount, payment_interval, start_date, occurring, end_date, person_email } = req.body;
-  console.log(
-    `info from req. body: ${title}, ${amount}, ${payment_interval}, ${start_date}, ${occurring}, ${end_date}, ${person_email}`
-  );
+  // console.log(
+  //   `info from req. body: ${title}, ${amount}, ${payment_interval}, ${start_date}, ${occurring}, ${end_date}, ${person_email}`
+  // );
   try {
     pool.query(
       "INSERT INTO income(title, amount, payment_interval, start_date, occurring, end_date, person_email) VALUES($1, $2, $3, $4, $5, $6, $7)",
@@ -287,9 +287,9 @@ app.post("/income", (req, res) => {
 // Edit a users income in database
 app.put("/income", async (req, res) => {
   const { id, title, amount, payment_interval, start_date, occurring, end_date, person_email } = req.body;
-  console.log(
-    `info from req. body: ${id}, ${title}, ${amount}, ${payment_interval}, ${start_date}, ${occurring}, ${end_date}, ${person_email}`
-  );
+  // console.log(
+  //   `info from req. body: ${id}, ${title}, ${amount}, ${payment_interval}, ${start_date}, ${occurring}, ${end_date}, ${person_email}`
+  // );
   try {
     const editIncome = await pool.query(
       "UPDATE income SET title = $2, amount = $3, payment_interval = $4, start_date = $5, occurring = $6, end_date = $7, person_email = $8 WHERE id = $1",
@@ -348,9 +348,9 @@ app.post("/loan", (req, res) => {
     interest_type,
     person_email,
   } = req.body;
-  console.log(
-    `info from req. body: ${title}, ${amount}, ${interest}, ${start_date}, ${term}, ${balance_left}, ${interest_type}, ${person_email}`
-  );
+  // console.log(
+  //   `info from req. body: ${title}, ${amount}, ${interest}, ${start_date}, ${term}, ${balance_left}, ${interest_type}, ${person_email}`
+  // );
   try {
     pool.query(
       "INSERT INTO loan(title, amount, interest, start_date, term, balance_left, interest_type, person_email) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
