@@ -538,6 +538,13 @@ background-blend-mode: multiply; */
     height: 70vh;
   }
 
+  #signUp {
+    height: 100vh;
+    width: 40%;
+  }
+
+  
+
   .guestLoginButton {
     border: none;
     background-color: white;
@@ -902,6 +909,9 @@ background-blend-mode: multiply; */
    #signIn, #signOut, #notFound {
     width: 60%;
    }
+   #signUp {
+    width: 80%;
+   }
 }
 
 @media only screen and (max-width: 650px) {
@@ -945,6 +955,9 @@ background-blend-mode: multiply; */
     /* SIGN IN/OUT  */
     #signIn {
       width: 70%;
+     }
+     #signUp {
+      width: 80%;
      }
 }
 
